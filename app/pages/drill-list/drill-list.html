@@ -1,0 +1,19 @@
+<ion-navbar *navbar>
+  <button menuToggle>
+    <ion-icon name="menu"></ion-icon>
+  </button>
+  <ion-title>Drills for session {{trainingSession.description}}</ion-title>
+</ion-navbar>
+
+<ion-content class="outer-content drill-list">
+  <ion-list>
+
+  <ion-item-group *ngFor="let group of groups" >
+    <ion-item-divider light>{{group.groupName}}</ion-item-divider>  
+    <ion-item text-wrap *ngFor="let drill of group.drills" (click)="goToDrillDetails(drill)">
+      <h2>{{drill.title}}</h2>
+        <p>{{drill.description}}</p>
+    </ion-item>
+  </ion-item-group>    
+  </ion-list>
+</ion-content>

@@ -1,0 +1,12 @@
+<ion-navbar *navbar>
+	<ion-title>{{drill.title}}</ion-title>
+</ion-navbar>
+<ion-content padding class="drill-detail">
+	<p>{{drill.description}}</p>
+	<ion-slides *ngIf="drill.imgUrls.length">
+		<ion-slide *ngFor="let imageUrl of drill.imgUrls">
+			<img [src]="imageUrl">
+		</ion-slide>
+	</ion-slides>
+	<button *ngIf="drill.videoUrl" (click)="goToYoutube(drill)" ion-button outline>Youtube</button>
+</ion-content>

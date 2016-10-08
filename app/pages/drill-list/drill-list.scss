@@ -1,0 +1,22 @@
+
+.drill-list {
+
+  ion-card.drill ion-card-header .item {
+    padding: 12px;
+  }
+
+  ion-card.drill ion-card-content .list {
+    margin: 0;
+  }
+
+  ion-card.drill ion-card-header,
+  ion-card.drill ion-card-content,
+  ion-card.drill ion-card-content .list ion-item-content, {
+    padding: 0;
+  }
+
+  p {
+    height:40px;
+  }
+  
+}

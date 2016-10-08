@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<config>
+    <propel>
+        <database>
+            <connections>
+                <connection id="garantieapp">
+                    <adapter>pgsql</adapter>
+                    <classname>Propel\Runtime\Connection\ConnectionWrapper</classname>
+                    <dsn>pgsql:host=localhost;dbname=garantieapp_prod</dsn>
+                    <user>garantieapp</user>
+                    <password>Cho1jeex</password>
+                </connection>
+            </connections>
+        </database>
+        <runtime>
+            <defaultConnection>garantieapp</defaultConnection>
+            <connection>garantieapp</connection>
+            <log name="defaultLogger">
+                <type>stream</type>
+                <path>/var/www/html/garantie-app/logs/propel.log</path>
+                <level>300</level>
+            </log>
+            <log name="garantieapp">
+                <type>stream</type>
+                <path>/var/www/html/garantie-app/logs/propel.log</path>
+            </log>            
+        </runtime>
+        <generator>
+            <defaultConnection>garantieapp</defaultConnection>
+            <connection>garantieapp</connection>
+        </generator>
+    </propel>
+</config>

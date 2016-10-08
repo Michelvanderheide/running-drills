@@ -1,0 +1,14 @@
+<ion-navbar *navbar>
+	<ion-title>{{drill.title}}</ion-title>
+</ion-navbar>
+<ion-content padding class="drill-youtube">
+	<a *ngIf="drill.videoUrl"> 
+		<div class="row">
+			<div class="col">
+				<div class="video-container">
+					<iframe [src]="drill.videoUrl" frameborder="0" allowfullscreen></iframe>
+				</div>
+			</div>
+		</div>
+	</a>
+</ion-content>

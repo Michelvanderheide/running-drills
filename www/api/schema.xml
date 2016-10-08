@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="garantieapp" defaultIdMethod="native">
+
+	<table name="account">
+		<column name="account_pk" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+		<column name="guid" type="varchar" required="false" />
+		<column name="name" type="varchar" required="false" />
+		<column name="email" type="varchar" required="false" />
+		<column name="password" type="varchar" required="false" />
+		<column name="address" type="varchar" required="false" />
+		<column name="zipcode" type="varchar" required="false" />
+		<column name="city" type="varchar" required="false" />
+		<column name="phone" type="varchar" required="false" />
+		<column name="removed" type="boolean" required="true" default="false" />
+		<unique name="idx_account_email">
+			<unique-column name="email" />
+		</unique>		
+	</table>
+
+	<table name="dossier">
+		<column name="dossier_pk" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+		<column name="guid" type="varchar" required="false" />
+		<column name="creation_date" type="date" required="false" defaultExpr="CURRENT_DATE" />
+		<column name="name" type="varchar" required="false" />
+		<column name="description" type="varchar" required="false" />
+		<column name="use_ocr" type="boolean" required="true" default="false" />
+	</table>
+
+	<table name="account_dossier_mapping">
+		<column name="account_dossier_mapping_pk" type="integer" required="true" primaryKey="true" autoIncrement="true"  isCrossRef="true" />
+		<column name="account_fk" type="integer" required="true" />
+		<column name="dossier_fk" type="integer" required="true" />
+		<column name="is_admin" type="boolean" required="true" default="false"/>
+		<foreign-key foreignTable="account" onDelete="CASCADE">
+			<reference local="account_fk" foreign="account_pk" />
+		</foreign-key>
+		<foreign-key foreignTable="dossier" onDelete="CASCADE">
+			<reference local="dossier_fk" foreign="dossier_pk" />
+		</foreign-key>
+	</table>
+
+	<table name="store">
+		<column name="store_pk" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+		<column name="store_chain_fk" type="integer" required="false" />
+		<column name="name" type="varchar" required="false" />
+		<column name="address" type="varchar" required="false" />
+		<column name="zip_code" type="varchar" required="false" />
+		<column name="city" type="varchar" required="false" />
+		<column name="phone" type="varchar" required="false" />
+		<column name="email" type="varchar" required="false" />
+		<foreign-key foreignTable="store_chain" onDelete="CASCADE">
+			<reference local="store_chain_fk" foreign="store_chain_pk" />
+		</foreign-key>
+	</table>
+
+	<table name="store_chain">
+		<column name="store_chain_pk" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+		<column name="name" type="varchar" required="false" />
+		<column name="phone" type="varchar" required="false" />
+		<column name="website" type="varchar" required="false" />
+		<column name="email" type="varchar" required="false" />
+		<column name="img_url" type="varchar" required="false" />
+	</table>
+
+	<table name="product">
+		<column name="product_pk" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+		<column name="dossier_fk" type="integer" required="true" />
+		<column name="store_fk" type="integer" required="false" />
+		<column name="store_chain_fk" type="integer" required="false" />
+		<column name="creation_date" type="date" required="false"  defaultExpr="CURRENT_DATE" />
+		<column name="name" type="varchar" required="false" />
+		<column name="description" type="varchar" required="false" />
+		<column name="price" type="numeric" required="false" />
+		<column name="purchase_date" type="date" required="false" />
+		<column name="due_date" type="date" required="false" />
+		<foreign-key foreignTable="dossier" onDelete="CASCADE">
+			<reference local="dossier_fk" foreign="dossier_pk" />
+		</foreign-key>
+		<foreign-key foreignTable="store">
+			<reference local="store_fk" foreign="store_pk" />
+		</foreign-key>
+		<foreign-key foreignTable="store_chain">
+			<reference local="store_chain_fk" foreign="store_chain_pk" />
+		</foreign-key>
+	</table>
+
+	<table name="product_comment">
+		<column name="product_comment_pk" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+		<column name="product_fk" type="integer" required="true" />
+		<column name="creation_date" type="timestamp" required="false"  defaultExpr="CURRENT_TIMESTAMP" />
+		<column name="comment" type="varchar" required="false" />
+		<foreign-key foreignTable="product" onDelete="CASCADE">
+			<reference local="product_fk" foreign="product_pk"/>
+		</foreign-key>
+	</table>
+
+	<table name="ocr_task">
+		<column name="ocr_task_pk" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+		<column name="product_fk" type="integer" required="true" />
+		<column name="ocr_task_status_fk" type="integer" required="true" default="1" />
+		<column name="task_id" type="varchar" required="false" />
+		<column name="creation_time" type="timestamp" required="false" defaultExpr="CURRENT_TIMESTAMP" />
+		<column name="start_time" type="timestamp" required="false"  />
+		<column name="start_counter" type="integer" required="false"  />
+		<column name="source_file_path" type="varchar" required="false" />
+		<column name="parsed_text" type="varchar" required="false" />
+		<column name="status_message" type="varchar" required="false" />
+		<foreign-key foreignTable="product" onDelete="CASCADE">
+			<reference local="product_fk" foreign="product_pk" />
+		</foreign-key>
+		<foreign-key foreignTable="ocr_task_status">
+			<reference local="ocr_task_status_fk" foreign="ocr_task_status_pk" />
+		</foreign-key>
+	</table>
+
+	<table name="ocr_task_status">
+		<column name="ocr_task_status_pk" type="integer" required="true" primaryKey="true" />
+		<column name="status_name" type="varchar" required="false" />
+	</table>
+
+</database>
