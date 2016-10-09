@@ -39,7 +39,10 @@
       "locator": "https://github.com/apache/cordova-plugin-splashscreen.git",
       "id": "cordova-plugin-splashscreen"
     },
-    "cordova-plugin-file-transfer"
+    "cordova-plugin-file-transfer",
+    "cordova-plugin-nativestorage",
+    "cordova.plugins.diagnostic",
+    "cordova-plugin-network-information"
   ],
   "cordovaPlatforms": [
     "ios",

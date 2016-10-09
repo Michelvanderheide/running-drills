@@ -1,6 +1,6 @@
 import {ViewChild} from '@angular/core';
 import {App, Events, Platform, MenuController, NavController} from 'ionic-angular';
-import {StatusBar, Splashscreen} from 'ionic-native';
+import {StatusBar, Splashscreen, Network} from 'ionic-native';
 import {DrillData} from './providers/drill-data';
 import {TabsPage} from './pages/tabs/tabs';
 import {SessionListPage} from './pages/session-list/session-list';
@@ -23,12 +23,13 @@ import { AppSettings } from './providers/app-settings';
     nav: new ViewChild('content')
   }
 })
-class RunningDrillsApp {
+export class RunningDrillsApp {
   nav: NavController;
   events: Events;
   menu: MenuController;
   appPages: any[];
   root: any;
+  drillData: DrillData;
   static get parameters() {
     return [
       [Events], [DrillData], [Platform], [MenuController]
@@ -38,11 +39,34 @@ class RunningDrillsApp {
   constructor(events: Events, drillData:DrillData, platform: Platform, menu: MenuController) {
     this.events = events;
     this.menu = menu;
+    this.drillData = drillData;
 
       console.log("location...."+ window.location.hostname);
       if (window.location.hostname.search("local") > -1) {
         AppSettings.setDevEnvironment();
       }
+
+// watch network for a disconnect
+let disconnectSubscription = Network.onDisconnect().subscribe(() => {
+  console.log('network was disconnected :-(');
+  this.drillData.isConnected = false;
+});
+
+// watch network for a connection
+let connectSubscription = Network.onConnect().subscribe(() => {
+  console.log('network connected!'); 
+  // We just got a connection but we need to wait briefly
+   // before we determine the connection type.  Might need to wait 
+  // prior to doing any api requests as well.
+  setTimeout(() => {
+    this.drillData.isConnected = true;
+    if (Network.connection === 'wifi') {
+      console.log('we got a wifi connection, woohoo!');
+
+    }
+  }, 3000);
+});
+
 
 
     // Call any initial plugins when ready
@@ -60,8 +84,9 @@ class RunningDrillsApp {
     this.appPages = [
       { title: 'Sessions', component: SessionListPage, icon: 'session-list' },
     ];
+    
 
-  }
+   }
 
   openPage(page) {
     // find the nav component and set what the root page should be
@@ -73,6 +98,10 @@ class RunningDrillsApp {
       this.nav.setRoot(page.component);
     }
 
+  }
+
+  setToggleFilter(idx) {
+    this.drillData.toggleDrillFilter(idx);
   }
 
 }

@@ -215,6 +215,13 @@ define(COL_HOOFDPROGRAMMA,
 			$drill['id'] = $drillId;
 			$drill['title'] = $row[COL_TITLE];
 			$drill['description'] = $row[COL_OMSCHRIJVING];
+			$drill['isKring'] = strtolower($row[COL_KRING]) === 'x';
+			$drill['isBaan'] = strtolower($row[COL_BAAN]) === 'x';
+			$drill['isWarmingUp'] = strtolower($row[COL_WARMING_UP]) === 'x';
+			$drill['isCoreStability'] = strtolower($row[COL_CORE_STABILITY]) === 'x';
+			$drill['isLoopschroling'] = strtolower($row[COL_LOOPSCHOLING]) === 'x';
+			$drill['isTussenprogramma'] = strtolower($row[COL_TUSSENPROGRAMMA]) === 'x';
+			$drill['isHoofdprogramma'] = strtolower($row[COL_HOOFDPROGRAMMA]) === 'x';
 
 			foreach($row as $k => $v) {
 

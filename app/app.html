@@ -10,22 +10,12 @@
 
     <ion-list>
       <ion-list-header>
-        Navigate
+        Filters
       </ion-list-header>
-      <button ion-item menuClose *ngFor="let p of appPages" (click)="openPage(p)">
-        <ion-icon item-left [name]="p.icon"></ion-icon>
-        {{p.title}}
-      </button>
-    </ion-list>
-
-    <ion-list>
-      <ion-list-header>
-        Account
-      </ion-list-header>
-      <button ion-item menuClose *ngFor="let p of loggedOutPages" (click)="openPage(p)">
-        <ion-icon item-left [name]="p.icon"></ion-icon>
-        {{p.title}}
-      </button>
+      <ion-item *ngFor="let filter of drillData.drillFilters; let i = index">
+        <ion-label>{{filter.title}}</ion-label>
+        <ion-toggle [checked]="filter.value" (click)="setToggleFilter(i)"></ion-toggle>      
+      </ion-item>
     </ion-list>
   </ion-content>
 

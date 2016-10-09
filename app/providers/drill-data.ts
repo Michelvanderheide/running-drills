@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { AppSettings } from './app-settings';
+import {Network, Connection} from 'ionic-native';
 import 'rxjs/add/operator/map';
 
 
@@ -26,13 +27,20 @@ export class DrillData {
 	private sessionData: any;
 	private http: Http;
 	private errorMessage: string;
+	private drillFilters: any[];
+	public isConnected: boolean;
 
 	static get parameters(){
 		return [[Http]];
 	}	
 	constructor(http: Http) {
+		this.isConnected = true;
+		if (Network.connection == Connection.NONE) {
+			this.isConnected = false;
+		}
 		this.http = http;
     	this.errorMessage = '';
+    	this.initDrillFilters();
 	}
 
 	private handleError (error: any) {
@@ -45,20 +53,63 @@ export class DrillData {
 		return Promise.reject(errMsg);
 	}
 
+
 	getTrainingSessions() {
-		console.log("runningdrils - getTrainingSessions");
-		console.log("runningdrils - url:" + AppSettings.BASE_API_URL + "/trainingsessions");
+
 		return this.http.get(AppSettings.BASE_API_URL + "/trainingsessions", this.getRequestOptions()).toPromise().then(res => {
 		    let result = res.json();
 			if (result.status === false) {
 				this.errorMessage = result.message;
-				return [];
+				return this.trainingSessions;
 			} else {
 				this.trainingSessions = result.data;
+				localStorage.setItem("trainingSessions", JSON.stringify(this.trainingSessions));
 				return this.trainingSessions;
 			}		    
-		}).catch(this.handleError);		
+		}).catch(this.handleError);
+
 	}
+
+	getCachedSessions() {
+
+		let localTrainingsSession = localStorage.getItem("trainingSessions");
+		if (localTrainingsSession !== null) {
+			this.trainingSessions = JSON.parse(localTrainingsSession);
+		}
+		console.debug("getCachedSessions",localTrainingsSession);
+		return this.trainingSessions;
+	}
+
+	initDrillFilters() {
+		let localDrillFilter = localStorage.getItem("drillFilters");
+		if (localDrillFilter ==  null) {
+			this.drillFilters = [ 
+		      {title: "Warming up", value: true},
+		      {title: "Core Stability", value: true},
+		      {title: "Kring", value: true},
+		      {title: "Vierkant", value: true},
+		      {title: "400m Baan", value: true},
+		      {title: "Loopscholing", value: true},
+		      {title: "Tussenprogramma", value: true},
+		      {title: "Hoofdprogramma", value: true},
+		      {title: "Overig", value: true}
+	   		];
+
+			localStorage.setItem("drillFilters", JSON.stringify(this.drillFilters));
+		} else {
+			this.drillFilters = JSON.parse(localDrillFilter);
+		}
+	}
+
+	public getDrillFilters(){
+		return this.drillFilters;
+
+	}
+	
+	public toggleDrillFilter(idx) {
+    	this.drillFilters[idx].value = (!this.drillFilters[idx].value);
+    	localStorage.setItem("drillFilters", JSON.stringify(this.drillFilters));
+ 	}
 
 	private getRequestOptions() {
 		let headers = new Headers();

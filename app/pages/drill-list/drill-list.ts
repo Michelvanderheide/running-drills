@@ -14,7 +14,7 @@ export class DrillListPage {
   drills: any;
   groups: any;
   static get parameters() {
-    return [[NavController], [NavParams]];
+    return [[NavController], [NavParams], [DrillData]];
   }
 
   constructor(nav: NavController, navParams: NavParams, drillData: DrillData) {
@@ -22,8 +22,17 @@ export class DrillListPage {
     this.drillData = drillData;
     this.trainingSession = navParams.get("trainingSession");
     this.drills = this.trainingSession.drills;
-    this.groups = this.trainingSession.groups;
-
+    this.groups = [];
+console.debug("this.drillData:",drillData);
+     this.trainingSession.groups.forEach(group => {
+       console.log("sessionGroup:",group);
+       this.drillData.getDrillFilters().forEach(drillFilter => {
+         console.debug("drillFilter:",drillFilter);
+         if (drillFilter.value == true && group.groupName.search(drillFilter.title) > 0) {
+           this.groups.push(group); // = this.trainingSession.groups;
+         }
+       })
+     });
   }
 
   goToDrillDetails(drill) {

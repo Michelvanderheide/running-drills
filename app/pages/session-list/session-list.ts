@@ -19,9 +19,15 @@ export class SessionListPage {
     this.drillData = drillData;
     this.trainingSessions = [];
 
-    drillData.getTrainingSessions().then(trainingSessions => {
-      this.trainingSessions = trainingSessions;
-    });
+    if (drillData.isConnected) {
+      console.log("Is connected")
+      drillData.getTrainingSessions().then(trainingSessions => {
+        this.trainingSessions = trainingSessions;
+      });
+    } else{
+      console.log("Is not connected")
+      this.trainingSessions = drillData.getCachedSessions();
+    }
   }
 
   goToDrillList(trainingSession) {
