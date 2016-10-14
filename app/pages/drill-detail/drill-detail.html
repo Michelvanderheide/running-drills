@@ -2,11 +2,15 @@
 	<ion-title>{{drill.title}}</ion-title>
 </ion-navbar>
 <ion-content padding class="drill-detail">
-	<p>{{drill.description}}</p>
-	<ion-slides *ngIf="drill.imgUrls.length">
-		<ion-slide *ngFor="let imageUrl of drill.imgUrls">
-			<img [src]="imageUrl">
+	<ion-slides *ngFor="let drill of drills;" option="slideOptions">
+		<ion-slide>
+			<p>{{drill.description}}</p>
+			<ion-slides *ngIf="drill.imgUrls.length" pager>
+				<ion-slide *ngFor="let imageUrl of drill.imgUrls" [attr.data-index]="i">
+					<img [src]="imageUrl">
+				</ion-slide>
+				<button *ngIf="drill.videoUrl" (click)="goToYoutube(drill)" ion-button outline>Youtube</button>
+			</ion-slides>			
 		</ion-slide>
 	</ion-slides>
-	<button *ngIf="drill.videoUrl" (click)="goToYoutube(drill)" ion-button outline>Youtube</button>
 </ion-content>

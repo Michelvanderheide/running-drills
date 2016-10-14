@@ -84,6 +84,7 @@ export class DrillData {
 		let localDrillFilter = localStorage.getItem("drillFilters");
 		if (localDrillFilter ==  null) {
 			this.drillFilters = [ 
+		      {title: "Inleiding", value: true},
 		      {title: "Warming up", value: true},
 		      {title: "Core Stability", value: true},
 		      {title: "Kring", value: true},

@@ -12,8 +12,11 @@ define('COL_LOOPSCHOLING', 'Loopscholing');
 define('COL_TUSSENPROGRAMMA', 'Tussenprogramma');
 define('COL_HOOFDPROGRAMMA', 'Hoofdprogramma');
 define('COL_YOUTUBE_ID', 'Youtube Id');
+define('COL_ALT_DESCRIPTION', 'Alt. Omschrijving');
 
 $apiConfig = array();
+$apiConfig['titles']['IL'] = 'Inleiding';
+$apiConfig['titles']['AL'] = 'Algemeen';
 $apiConfig['titles']['WU'] = 'Warming Up';
 $apiConfig['titles']['CS'] = 'Core Stability';
 $apiConfig['titles']['KR'] = 'Kring';

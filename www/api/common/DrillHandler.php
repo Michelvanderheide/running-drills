@@ -215,6 +215,7 @@ define(COL_HOOFDPROGRAMMA,
 			$drill['id'] = $drillId;
 			$drill['title'] = $row[COL_TITLE];
 			$drill['description'] = $row[COL_OMSCHRIJVING];
+
 			$drill['isKring'] = strtolower($row[COL_KRING]) === 'x';
 			$drill['isBaan'] = strtolower($row[COL_BAAN]) === 'x';
 			$drill['isWarmingUp'] = strtolower($row[COL_WARMING_UP]) === 'x';
@@ -222,6 +223,8 @@ define(COL_HOOFDPROGRAMMA,
 			$drill['isLoopschroling'] = strtolower($row[COL_LOOPSCHOLING]) === 'x';
 			$drill['isTussenprogramma'] = strtolower($row[COL_TUSSENPROGRAMMA]) === 'x';
 			$drill['isHoofdprogramma'] = strtolower($row[COL_HOOFDPROGRAMMA]) === 'x';
+			$drill['isAltDescription'] = false;
+
 
 			foreach($row as $k => $v) {
 
@@ -233,8 +236,9 @@ $this -> logger -> addInfo("readCsvData row:".print_r($row,true));
 					$k = str_replace('TS-', '', $k);
 					// is a training session column
 					if ($v) {
-						$arr = explode(".", strtoupper($v));
-						if (count($arr) == 3) {
+
+						$arr = explode(".", $v);
+						if (count($arr) >= 3) {
 
 							$this -> logger -> addInfo("readCsvData arr:".print_r($arr,true));
 							$this -> logger -> addInfo("readCsvData apiConfig-:".print_r($apiConfig,true));
@@ -260,6 +264,12 @@ $this -> logger -> addInfo("readCsvData row:".print_r($row,true));
 								$drill['videoUrl'] = 'https://www.youtube.com/embed/'.$row[COL_YOUTUBE_ID].'&rel=0&autoplay=1';
 							}
 							//$drill['videoUrl'] = 'https://www.youtube.com/embed/jnS8UT6_Uws?rel=0'; //'http://www.youtube.com/embed/shGhZzJ7o-g?rel=0'
+
+							if (strtolower($row[COL_ALT_DESCRIPTION]) === 'x' && count($arr)>3) {
+								$drill['description'] = implode(".", array_slice($arr, 3));
+								$drill['isAltDescription'] = true;
+							}						
+
 
 							$trainingSessions[$k]['id'] = $k;
 							$trainingSessions[$k]['description'] = $k;
