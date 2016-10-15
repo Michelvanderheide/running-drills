@@ -9,6 +9,7 @@ export class DrillDetailPage {
   navParams: NavParams;
   drill: any;
   drills: any[];
+  allDrills: any[];
   idx: number;
   slideOptions: any;
   static get parameters() {
@@ -20,8 +21,10 @@ export class DrillDetailPage {
     this.nav = nav;
     this.navParams = navParams;
     this.drill = navParams.get("drill"); //navParams.data;
-    this.drills = navParams.get("drills"); //navParams.data;
-    this.slideOptions = { direction: "horizontal", initialSlide:this.drill.drillIdx};
+    this.allDrills = navParams.get("drills"); //navParams.data;
+    this.idx = this.drill.drillIdx;
+    this.setSlidesStack(this.idx);
+    this.slideOptions = { direction: "horizontal", initialSlide:1};
     console.debug(this.slideOptions);
   }
   goBack():void {
@@ -30,17 +33,34 @@ export class DrillDetailPage {
   goToYoutube(drill):void {
     this.nav.push(DrillYoutubePage, {drill});
   }
-  swipeEvent(e) {
-    console.debug("Swipe event:"+e.direction);
-    if (e.direction == 2 && this.drills.length > this.idx+1) {
-      this.idx++;
-      this.drill = this.drills[this.idx];
-    } else if (e.direction == 4 && this.idx > 0) {
-      this.idx--;
-      this.drill = this.drills[this.idx];
+  
+  swipeEvent(swiper:any, drillIdx) {
+    console.debug("Swipe event:"+ swiper);
+    let newIdx = drillIdx;
+    let backward = swiper.swipeDirection === 'prev';
+    if (backward) {
+       console.debug("Swipe back:"+ drillIdx);
+      //this.setSlidesStack(drillIdx-1); 
+
+    } else {
+      console.debug("Swipe forward:"+ drillIdx);
+      //this.setSlidesStack(drillIdx+1); 
     }
+   
+    //this.drills = [this.drill];
 
   }
+
+  setSlidesStack(slideIdx) {
+    console.log("setSlidesStack:",slideIdx);
+    this.drills = [];
+    for (let i=-1; i<2; i++) {
+      if (this.allDrills[slideIdx+i]) {
+        this.drills.push(this.allDrills[slideIdx-1]);
+      }
+    }
+  }
+  
 }
 
 
