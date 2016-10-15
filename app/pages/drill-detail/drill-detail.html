@@ -1,9 +1,10 @@
 <ion-navbar *navbar>
-	<ion-title>{{drill.title}}</ion-title>
+	<ion-title>Details</ion-title>
 </ion-navbar>
 <ion-content padding class="drill-detail">
-	<ion-slides *ngFor="let drill of drills;" option="slideOptions">
-		<ion-slide>
+	<ion-slides  [options]="slideOptions" top>
+		<ion-slide *ngFor="let drill of drills" top>
+			<h2>{{drill.title}}</h2>
 			<p>{{drill.description}}</p>
 			<ion-slides *ngIf="drill.imgUrls.length" pager>
 				<ion-slide *ngFor="let imageUrl of drill.imgUrls" [attr.data-index]="i">

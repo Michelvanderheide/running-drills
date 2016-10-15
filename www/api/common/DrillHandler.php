@@ -210,9 +210,10 @@ define(COL_HOOFDPROGRAMMA,
   tags: string;
   orderBy: number;
 */
-		foreach($data as $row) {
+		foreach($data as $drillIdx => $row) {
 			$drillId = $row[COL_ID];
 			$drill['id'] = $drillId;
+			$drill['drillIdx'] = $drillIdx+1;
 			$drill['title'] = $row[COL_TITLE];
 			$drill['description'] = $row[COL_OMSCHRIJVING];
 

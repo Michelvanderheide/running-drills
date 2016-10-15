@@ -39,9 +39,9 @@ export class DrillListPage {
      });
   }
 
-  goToDrillDetails(drill, idx) {
+  goToDrillDetails(drill) {
     //let idx = jQuery.inArray(drill, this.drills);
-    this.nav.push(DrillDetailPage, {drill:drill, drills:this.drills, idx:idx});
+    this.nav.push(DrillDetailPage, {drill:drill, drills:this.drills});
   }  
 
 }

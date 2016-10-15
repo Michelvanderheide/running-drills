@@ -20,9 +20,9 @@ export class DrillDetailPage {
     this.nav = nav;
     this.navParams = navParams;
     this.drill = navParams.get("drill"); //navParams.data;
-    this.idx = navParams.get("idx"); //navParams.data;
     this.drills = navParams.get("drills"); //navParams.data;
-    this.slideOptions = { direction: "horizontal", initialSlide:this.idx};
+    this.slideOptions = { direction: "horizontal", initialSlide:this.drill.drillIdx};
+    console.debug(this.slideOptions);
   }
   goBack():void {
     this.nav.rootNav.pop();
