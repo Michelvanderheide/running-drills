@@ -213,7 +213,7 @@ define(COL_HOOFDPROGRAMMA,
 		foreach($data as $drillIdx => $row) {
 			$drillId = $row[COL_ID];
 			$drill['id'] = $drillId;
-			$drill['drillIdx'] = $drillIdx+1;
+			
 			$drill['title'] = $row[COL_TITLE];
 			$drill['description'] = $row[COL_OMSCHRIJVING];
 
@@ -269,12 +269,14 @@ $this -> logger -> addInfo("readCsvData row:".print_r($row,true));
 							if (strtolower($row[COL_ALT_DESCRIPTION]) === 'x' && count($arr)>3) {
 								$drill['description'] = implode(".", array_slice($arr, 3));
 								$drill['isAltDescription'] = true;
-							}						
+							}			
+
 
 
 							$trainingSessions[$k]['id'] = $k;
 							$trainingSessions[$k]['description'] = $k;
 							$trainingSessions[$k]['drills'][$idx] = $drill;
+							$trainingSessions[$k]['drills'][$idx]['drillIdx'] = count($trainingSessions[$k]['drills']);
 						}
 
 					}

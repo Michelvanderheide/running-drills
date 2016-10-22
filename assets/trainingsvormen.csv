@@ -7,47 +7,48 @@ W001,Inlopen,Zelfstand inlopen,,,,,x,,,x,,,,,,WU.4B.2,WU.4B.2
 W002,Armen zwaai,"links, rechts, beide, achteruit",,,x,,x,,,x,,,,,,WU.4B.3,WU.4B.3
 W003,Kruispas,"linksom, rechtom",,,x,,x,,,x,,,,,,WU.4B.4,WU.4B.4
 W004,Zijwaarts met armen zwaai,"Gezicht naar binnen, gezicht naar buiten",,,x,,x,,,x,,,,,,WU.4B.5,WU.4B.5
-W005,Knienen-Teen,Door de knieen en op tenen (wandelend),,,x,,x,,,x,,,,,,WU.4B.6,WU.4B.6
+W005,Knienen-Teen,Door de knieen en op tenen (wandelend),,,x,,x,,,x,,,,,,WU.4B.6,WU.4B.9
 W006,Korte vernelling (rustige opbouw),Korte verschelling 10m (of 5 sec op fluitsignaal). Versnelling op rustig worden uitgevoerd,,,x,,x,,,x,,,,,,WU.4B.7,WU.4B.7
+W007,Grond aanraken (met spring),"Op aangeven de grond aantikken, links en recht.
+Grond aantikken met beide handen en dan springen",,,,,,,,,,,,,,WU.4B.8,WU.4B.8
 ,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,
-K001,Rekken/strekken algemeen,De diverse spiergroepen.,,,,x,,,,x,,,,,,WU.KR.11,CS.KR.10
+K001,Rekken/strekken algemeen,De diverse spiergroepen.,,,,x,,,,x,,,,,,WU.KR.11,
 K002,Zwaaibeweging been op de plaats,Evenwicht houden. Daarna stilhangen lichaam naar voren 1 been achter.maak ipv zwaaiende beweging draaiende beweging,,,,x,,x,,x,x,,,,,CS.KR.12,CS.KR.11
 k026,Draaibeweging been op de plaats,Een standbeen ander draaien. Daarna andersom,,,,x,,x,JchS1SGwW90?start=0&end=10,,x,,,,,CS.KR.36,CS.KR.12
 K005,Tripplings op de plaats met kniehef,"Tripplings op de plaats met kniehef, kniehef paar sec. vasthouden.",,,,x,,,,,x,,,,,CS.KR.15,CS.KR.13
 K006,"Dribbelen op plaats, Sprongbeweging","Dribbelen op plaats, Sprongbeweging",,,,x,,,,,x,,,,,CS.KR.16,CS.KR.14
 K008,Kniehef overgaand naar stilstand,"Kniehef op de plaats daarna overgaan variant met stilstand (1 knie omhoog 90 graden en paar sec. vasthouden, wisselen van been)",,,,x,,,,,x,,,,,CS.KR.18,
-K009,Sprongbeweging naar ligstand buik,"Spring eerst, daar met handen naar de grond en strek je benen. Kom je benen weer en kom overeind en spring evt knieen omhoog.",,,,x,,,,,x,,,,,CS.KR.19,
+K009,Sprongbeweging naar ligstand buik,"Spring eerst, daar met handen naar de grond en strek je benen. Kom je benen weer en kom overeind en spring evt knieen omhoog.",,,,x,,,,,x,,,,,CS.KR.19,CS.KR.16
 K010,Naar push en weer terug naar staand,"Buig je rug, benen gestrekt. Breng je armen naar de grond iets voor je voeten en beweeg ze een voor een naar voren tot je rug recht is en een push up kan doen.
-Na 1 push up weer terug naar de oorsponkelijke stan",,,,x,,,,,x,,,,,CS.KR.20,
-K003,Uitvalspas,"Links, rechts om en om",,,x,x,,,,x,x,,,,,CS.KR.13,CS.KR.18
+Na 1 push up weer terug naar de oorsponkelijke stan",,,,x,,,,,x,,,,,CS.KR.20,CS.KR.17
+K003,Uitvalspas,"Links, rechts om en om",,,x,x,,,,x,x,,,,,CS.KR.13,
 K004,Squats,"Squats, rug recht, strek je armen als je door de knieen zakt",,,,x,,,,,x,,,,,CS.KR.14,CS.KR.19
 K011,Buikspier – grijp,"Ga op de rug liggen. Voeten omhoog, gekruisd. Knie maakt een hoek van 90 .
 Maak een grijpende beweging met je arm alsof je iets wil pakken. Kom telkens weer terug in de basishouding
-Keuze uit wel of geen hele rug op de grond. ",,,,x,,x,r7YxuEueF58?start=22&end=30,,x,,,,,CS.KR.21,CS.KR.20
+Keuze uit wel of geen hele rug op de grond. ",,,,x,,x,r7YxuEueF58?start=22&end=30,,x,,,,,CS.KR.21,
 K012,Buikspier – schommel,Ga op de rug liggen. Benen en armen gestrekt. Voeten iets van de grond en maak een schommelende beweging heen en weer,,,,x,,,,,x,,,,,CS.KR.22,
-K013,Push up houding met armen gestrekt.,Ga op je buik liggen. Push up naar armen gestrekt. Alleen bovenlichaam komt omhoog.,,,,x,,,,,x,,,,,CS.KR.23,CS.KR.22
+K013,Push up houding met armen gestrekt.,Ga op je buik liggen. Push up naar armen gestrekt. Alleen bovenlichaam komt omhoog.,,,,x,,,,,x,,,,,CS.KR.23,
 K014,Vliegtuigsprong 1,"Vanuit buiklig armen en benen omhoog tillen en vasthouden. Kijk naar beneden.
-Varieer door armen en benen afwisselend op en neer bewegen",,,,x,,x,jnS8UT6_Uws?start=137&end=152,,x,,,,,CS.KR.24,CS.KR.23
-K015,Vliegtuigsprong 2,Trek vanuit buikligstand je benen en armen omhoog. Armen hoek van 90 graden houden en ellbogen schuin naar achteren bewegen,,,,x,,x,,,x,,,,,CS.KR.25,CS.KR.24
+Varieer door armen en benen afwisselend op en neer bewegen",,,,x,,x,jnS8UT6_Uws?start=137&end=152,,x,,,,,CS.KR.24,
+K015,Vliegtuigsprong 2,Trek vanuit buikligstand je benen en armen omhoog. Armen hoek van 90 graden houden en ellbogen schuin naar achteren bewegen,,,,x,,x,,,x,,,,,CS.KR.25,
 K016,Brug vanuit zit,"Vanuit zitstand til je heup omhoog zodat je op je voeten en handen rust. Strek je heup op 1 lijn met je schouders en benen. Hoofd iets naar achteren buigen.
 
-Variant: strek, in de brugstand, 1 been horizantaal gelijk met je knieen",,,,x,,x,,,x,,,,,CS.KR.26,CS.KR.25
+Variant: strek, in de brugstand, 1 been horizantaal gelijk met je knieen",,,,x,,x,,,x,,,,,CS.KR.26,
 K017,Knielen en rugstrek,"Knielen. Rug gestrekt. Leun naar voren,  handen vlak bij je hoofd en druk je billen naar achteren.
 
-E.v.t. zover leune totdat je voeten van de grond komen.",,,,x,,x,,,x,,,,,CS.KR.27,CS.KR.26
-K018,"Leun op elleboog en hak, strek je heup",vanuit zitstand leun op je elleboog en til je heup op (gestrekt lichaam). Hoofd iets naar achteren,,,,x,,x,jnS8UT6_Uws?start=202&end=230,,x,,,,,CS.KR.28,CS.KR.27
-K019,Heuplift van ligstand op ellebogen,Rust op je schouders. Armen naar achteren 90 graden. Duw je heup omhoog.,,,,x,,x,,,x,,,,,CS.KR.29,CS.KR.28
+E.v.t. zover leune totdat je voeten van de grond komen.",,,,x,,x,,,x,,,,,CS.KR.27,
+K018,"Leun op elleboog en hak, strek je heup",vanuit zitstand leun op je elleboog en til je heup op (gestrekt lichaam). Hoofd iets naar achteren,,,,x,,x,jnS8UT6_Uws?start=202&end=230,,x,,,,,CS.KR.28,
+K019,Heuplift van ligstand op ellebogen,Rust op je schouders. Armen naar achteren 90 graden. Duw je heup omhoog.,,,,x,,x,,,x,,,,,CS.KR.29,
 K020,Buikspier vanuit ligstand,,,,,x,,x,,,x,,,,,CS.KR.30,
 K021,Buikspier vanuit ligstand met bene omhoog,Op je ruggen liggend. Hoofd met je handen ondersteund van de grond. Dus je schouder en billen van de grond. Boven/onderbeen maken een hoek van iets meer dan 90 graden,,,,x,,x,,,x,,,,,CS.KR.31,
 k022,Plank,"Plank. Eventueel met variant benen lift en armen lift (een voor een).
-Kan ook beide kruislings",,,,x,,x,jnS8UT6_Uws?start=354&end=380,,x,,,,,CS.KR.32,CS.KR.31
+Kan ook beide kruislings",,,,x,,x,jnS8UT6_Uws?start=354&end=380,,x,,,,,CS.KR.32,
 k024,Brug met armen/benen strek,"Op knieen en handen (brug). Lift linkerbeen/rechterarm. Daar andersom.
-Kijk naar beneden",,,,x,,x,,,x,,,,,CS.KR.34,CS.KR.33
-k023,Brug – holle rug – bolle rug,"Op knieen en handen brug vormen. Holle rug maken, bolle rug.",,,,x,,,,,x,,,,,CS.KR.33,CS.KR.32
+Kijk naar beneden",,,,x,,x,,,x,,,,,CS.KR.34,
+k023,Brug – holle rug – bolle rug,"Op knieen en handen brug vormen. Holle rug maken, bolle rug.",,,,x,,,,,x,,,,,CS.KR.33,
 k025,Zijwaartse plank,"Zijwaards lichaam recht leunend op elleboog en zijkant voet. Breng het vrije been omhoog (gestrekt).
-Andere been mag ook niet gestrekt: dan leunend op onderbeen/knie",,,,x,,x,,,x,,,,,CS.KR.35,CS.KR.34
+Andere been mag ook niet gestrekt: dan leunend op onderbeen/knie",,,,x,,x,,,x,,,,,CS.KR.35,
 k027,Single leg squats,Soort uitvalspas waarbij 1 persoon de voet van een ander vasthoud op middelhoogte,x,,,x,,x,mAiAvupFT6g?start=152&end=166,,x,,,,,CS.KR.37,
 k028,Spagaat met draai,"Vanuit spagaat stand draai maken, grond aantikken en terugdraaien.",,,,x,,x,JchS1SGwW90?start=13&end=22,,x,,,,,CS.KR.38,
 ,,,,,,,,,,,,,,,,,
@@ -58,20 +59,21 @@ L002,Hakken-bil,"let op knie inzet. armen niet op achterwerk, maar naast lichaam
 L003,Lage Skipping,"lage Kniehef, landen op voorvoet, hoge frequentie, armen meebewegen.
 Lopen alsof de ondergrond gloeiend heet is.",,,x,,,x,mAiAvupFT6g?start=71&end=100,,,x,,,,LS.VK.202,LS.VK.203
 L004,Hoge skipping (kniehef),"hoge Kniehef, landen op voorvoet",,,x,,,x,mAiAvupFT6g?start=40&end=67,,,x,,,,LS.VK.203,LS.VK.204
-L005,Lage skipping met overgang naar versnelling,Bij versnelling steeds grotere pas en lichaam moet rechtop komen,,,x,,,,,,,x,,,,LS.VK.204,LS.VK.205
-L006,Gewone versnelling,Kleine pasje naar groot,,,x,,,,mAiAvupFT6g?start=200&end=230,,,x,,,,LS.VK.205,LS.VK.206
+L005,Lage skipping met overgang naar versnelling,Bij versnelling steeds grotere pas en lichaam moet rechtop komen,,,x,,,,,,,x,,,,LS.VK.204,LS.VK.220
+L006,Gewone versnelling,Kleine pasje naar groot,,,x,,,,mAiAvupFT6g?start=200&end=230,,,x,,,,LS.VK.205,
 L007,Skipping met knie naar maximale hoogte,Huppelpas met knie naar maximale hoogte,,,x,,,x,mAiAvupFT6g?start=183&end=196,,,x,,,,LS.VK.206,LS.VK.207
 L008,Kaats sprong,,,,x,,,,,,,x,,,,LS.VK.207,LS.VK.208
-L009,Korte Pendelpas,Pendelpas met benen gekromd,,,x,,,x,d0QZoavQqW0?start=91&end=134,,,x,,,,LS.VK.208,LS.VK.209
-L009b,Lange Pendelpas,Pendelpas met benen gestrekt,,,x,,,x,d0QZoavQqW0?start=140&end=198,,,x,,,,LS.VK.209,LS.VK.210
+L017,Hinkelen – 1 been afzet met voorvoet,Hinkel waarbij 1 been met de voorvoet afzet. Kort grondcontact. Links daarna rechts,,,x,,,,,,,x,,,,LS.VK.208,LS.VK.209
+L009,Korte Pendelpas,Pendelpas met benen gekromd,,,x,,,x,d0QZoavQqW0?start=91&end=134,,,x,,,,LS.VK.209,
+L009b,Lange Pendelpas,Pendelpas met benen gestrekt,,,x,,,x,d0QZoavQqW0?start=140&end=198,,,x,,,,LS.VK.210,LS.VK.210
 L010,Uitvalspas,"Maakt een schoppende beweging schuin naar voren en landt door je knieen. Zo diep mogelijk zakken. Hou je bovenlichaam recht. Knie loodrecht boven je hiel. 
-Eenmalig met tussenstapjes of direct achter elkaar",,,x,,,x,mAiAvupFT6g?start=102&end=125,,,x,,,,LS.VK.210,
-L011,"Looppas 2x linkerbeen, 2x rechts",Voorvoet landen en afzetten,,,x,,,,,,,x,,,,LS.VK.211,
-L012,Loopsprong,,,,x,,,,,,,x,,,,LS.VK.212,LS.VK.213
-L013,Goose steps,"Lopen met knieen recht, gestrekte benen. Iets leunen naar achteren",,,x,,,x,mAiAvupFT6g?start=170&end=180,,,x,,,,LS.VK.213,LS.VK.214
-L014,Backwards running,,,,x,,,,,,,x,,,,LS.VK.214,
-L015,Brug vanuit zit,Vanuit zitstand til je heup omhoog zodat je op je voeten en handen rust. Strek je heup op 1 lijn met je schouders en benen. Hoofd iets naar achteren buigen. Beweeg jezelf naar voren.,,,x,,,x,,,,x,,,,LS.VK.215,
-L016,Elastiek,"Kort, langer, langst",x,,,,,,,,,x,,,,LS.VK.216,
+Eenmalig met tussenstapjes of direct achter elkaar",,,x,,,x,mAiAvupFT6g?start=102&end=125,,,x,,,,LS.VK.211,
+L011,"Looppas 2x linkerbeen, 2x rechts",Voorvoet landen en afzetten,,,x,,,,,,,x,,,,LS.VK.212,LS.VK.213
+L012,Loopsprong,,,,x,,,,,,,x,,,,LS.VK.213,LS.VK.214
+L013,Goose steps,"Lopen met knieen recht, gestrekte benen. Iets leunen naar achteren",,,x,,,x,mAiAvupFT6g?start=170&end=180,,,x,,,,LS.VK.214,LS.VK.215
+L014,Backwards running,,,,x,,,,,,,x,,,,LS.VK.215,
+L015,Brug vanuit zit,Vanuit zitstand til je heup omhoog zodat je op je voeten en handen rust. Strek je heup op 1 lijn met je schouders en benen. Hoofd iets naar achteren buigen. Beweeg jezelf naar voren.,,,x,,,x,,,,x,,,,LS.VK.216,
+L016,Elastiek,"Kort, langer, langst",x,,,,,,,,,x,,,,LS.VK.217,
 ,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,
@@ -100,7 +102,7 @@ H008,200 – 500 -1000,"6x200 (200p)
 1x 1000m – uitlopen",,,,,x,,,,,,,x,,HP.4B.407,
 H009,200 – 500,"8x200 (p200) – 4x500 (p300))
 200 in 5km tempo
-500 in 10km tempo – laatste 100 versnellen",,,,,x,,,,,,,x,,HP.4B.408,HP.4B.408
+500 in 10km tempo – laatste 100 versnellen",,,,,x,,,,,,,x,,HP.4B.408,
 H010,"Keuze: 200, 400 of 1000-tjes","Keuze:
 16x200 (p200)
 10x400 (p300)
@@ -180,3 +182,7 @@ SP= 300m
 H64,2 series 300m,"7x300m T=+10km P=200m
 SP=300m
 7x300m T=-10km P=200m",,,,,x,,,,,,,x,,HP.4B.514,
+H65,6x400 - 12x200 – 1x1000 (op tijd),"6x400 (laatste 100 vers) - p=300<br>
+12x200 – p=200<br>
+400-sp<br>
+1x1000 op tijd",,,,,x,,,,,,,x,,HP.4B.515,HP.4B.515

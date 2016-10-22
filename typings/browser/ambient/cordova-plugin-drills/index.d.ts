@@ -57,6 +57,7 @@ interface Group {
 
 interface Drill {
   id: string;
+  drillIdx: number;
   title: string;
   description: string;
   imgUrl: string;

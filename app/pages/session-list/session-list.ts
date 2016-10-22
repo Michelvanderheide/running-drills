@@ -3,6 +3,7 @@ import {DrillListPage} from '../drill-list/drill-list';
 import { DrillData } from "../../providers/drill-data";
 
 
+
 @Page({
   templateUrl: 'build/pages/session-list/session-list.html'
 })
@@ -21,7 +22,7 @@ export class SessionListPage {
 
     if (drillData.isConnected) {
       console.log("Is connected")
-      drillData.getTrainingSessions().then(trainingSessions => {
+      drillData.getTrainingSessions().subscribe(trainingSessions => {
         this.trainingSessions = trainingSessions;
       });
     } else{
@@ -33,6 +34,7 @@ export class SessionListPage {
   goToDrillList(trainingSession) {
     console.log("goToDrillList");
     console.debug(trainingSession);
+    this.drillData.setCurrentTrainingSession(trainingSession);
     this.nav.push(DrillListPage, {trainingSession});
   }
 

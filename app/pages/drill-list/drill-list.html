@@ -1,22 +1,38 @@
 <ion-navbar *navbar>
-  <button menuToggle>
-    <ion-icon name="menu"></ion-icon>
-  </button>
-  <ion-title>Drills for session {{trainingSession.description}}</ion-title>
-  <button menuToggle="tagsMenu">
-    <icon menu></icon>
-  </button>
+<button menuToggle>
+<ion-icon name="menu"></ion-icon>
+</button>
+<ion-title>Drills for session {{trainingSession.description}}</ion-title>
+<ion-buttons end>
+<button (click)="toggleShowSummary()" ion-button icon-only right>
+<ion-icon *ngIf="drillData.settings.showSummary" name="list-box" ></ion-icon>
+<ion-icon *ngIf="!drillData.settings.showSummary" name="list" ></ion-icon>
+</button>  
+</ion-buttons>
 </ion-navbar>
 
 <ion-content class="outer-content drill-list">
-  <ion-list>
+  <ion-list *ngIf="!drillData.settings.showSummary">
 
-  <ion-item-group *ngFor="let group of groups" >
+  <ion-item-group  *ngFor="let group of groups" >
     <ion-item-divider light>{{group.groupName}}</ion-item-divider>  
-    <ion-item *ngFor="let drill of group.drills; #groupidx = index" (click)="goToDrillDetails(drill)">
+    <ion-item *ngFor="let drill of group.drills; let groupidx = index" (click)="goToDrillDetails(drill)">
       <h2>{{drill.title}}</h2>
         <p>{{drill.description}}</p>
     </ion-item>
   </ion-item-group>    
+  
   </ion-list>
+  <ion-list *ngIf="drillData.settings.showSummary">
+
+  <ion-item-group *ngFor="let group of groups" >
+    <ion-item-divider light>{{group.groupName}}</ion-item-divider>  
+
+    	<ul>
+    		<li *ngFor="let drill of group.drills">{{drill.title}}</li>
+    	</ul>
+
+  </ion-item-group>    
+  
+  </ion-list>  
 </ion-content>

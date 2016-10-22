@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { AppSettings } from './app-settings';
-import {Network, Connection} from 'ionic-native';
+import {Network} from 'ionic-native';
 import 'rxjs/add/operator/map';
 
 
@@ -21,26 +21,30 @@ drill
 @Injectable()
 export class DrillData {
 	private drills: Drill[];
-	private drill: Drill;
+	public drill: Drill;
 	private trainingSessions: TrainingSession[];
-	private trainingSession: TrainingSession;
+	public trainingSession: TrainingSession;
 	private sessionData: any;
 	private http: Http;
 	private errorMessage: string;
 	private drillFilters: any[];
 	public isConnected: boolean;
+	public settings: any;
 
 	static get parameters(){
 		return [[Http]];
 	}	
 	constructor(http: Http) {
 		this.isConnected = true;
-		if (Network.connection == Connection.NONE) {
+		if (Network.connection == "none") {
 			this.isConnected = false;
 		}
 		this.http = http;
     	this.errorMessage = '';
+
+    	this.initSettings();
     	this.initDrillFilters();
+
 	}
 
 	private handleError (error: any) {
@@ -56,7 +60,7 @@ export class DrillData {
 
 	getTrainingSessions() {
 
-		return this.http.get(AppSettings.BASE_API_URL + "/trainingsessions", this.getRequestOptions()).toPromise().then(res => {
+		return this.http.get(AppSettings.BASE_API_URL + "/trainingsessions", this.getRequestOptions()).map(res => {
 		    let result = res.json();
 			if (result.status === false) {
 				this.errorMessage = result.message;
@@ -66,7 +70,7 @@ export class DrillData {
 				localStorage.setItem("trainingSessions", JSON.stringify(this.trainingSessions));
 				return this.trainingSessions;
 			}		    
-		}).catch(this.handleError);
+		});
 
 	}
 
@@ -78,6 +82,16 @@ export class DrillData {
 		}
 		console.debug("getCachedSessions",localTrainingsSession);
 		return this.trainingSessions;
+	}
+
+	initSettings() {
+		let localSettings = localStorage.getItem("settings");
+		if (localSettings ==  null) {
+			this.settings = { showSummary: false };
+			localStorage.setItem("settings", JSON.stringify(this.settings));
+		} else {
+			this.settings = JSON.parse(localSettings);
+		}		
 	}
 
 	initDrillFilters() {
@@ -110,6 +124,17 @@ export class DrillData {
 	public toggleDrillFilter(idx) {
     	this.drillFilters[idx].value = (!this.drillFilters[idx].value);
     	localStorage.setItem("drillFilters", JSON.stringify(this.drillFilters));
+ 	}
+	public toggleSetting(name) {
+    	this.settings[name] = (!this.settings[name]);
+    	localStorage.setItem("settings", JSON.stringify(this.settings));
+ 	} 	
+
+ 	public setCurrentTrainingSession(trainingSession: TrainingSession) {
+ 		this.trainingSession = trainingSession;
+ 	}
+ 	public setCurrentTrainingDrill(drill: Drill) {
+ 		this.drill = drill;
  	}
 
 	private getRequestOptions() {

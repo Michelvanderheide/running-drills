@@ -5,7 +5,6 @@ import {DrillData} from './providers/drill-data';
 import {TabsPage} from './pages/tabs/tabs';
 import {SessionListPage} from './pages/session-list/session-list';
 import { AppSettings } from './providers/app-settings';
-import * as jQuery from 'jquery';
 
 
 @App({
@@ -103,6 +102,10 @@ let connectSubscription = Network.onConnect().subscribe(() => {
 
   setToggleFilter(idx) {
     this.drillData.toggleDrillFilter(idx);
+  }
+
+  toggleSetting(name) {
+    this.drillData.toggleSetting(name);
   }
 
 }
