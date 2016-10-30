@@ -4,14 +4,10 @@
 <ion-content padding class="drill-detail">
 	<ion-slides  (swiperight)="swipeEvent(-1)" (swipeleft)="swipeEvent(1)" [options]="slideOptions">
 		<ion-slide *ngFor="let drill of drills">
-			<h2>{{drill.title}}</h2>
+			<h3>{{drill.title}}</h3>
 			<p [innerHTML]="drill.description"></p>
-			<ion-slides *ngIf="drill.imgUrls.length" pager>
-				<ion-slide *ngFor="let imageUrl of drill.imgUrls" [attr.data-index]="i">
-					<img [src]="imageUrl">
-				</ion-slide>
-				<button *ngIf="drill.videoUrl" (click)="goToYoutube(drill)" ion-button outline>Youtube</button>
-			</ion-slides>			
+			<button *ngIf="drill.videoUrl" (click)="goToYoutube(drill)" ion-button outline block>Youtube</button>
+			<img [src]="drill.imgUrls[0]" *ngIf="drill.imgUrls.length">
 		</ion-slide>
 	</ion-slides>
 </ion-content>

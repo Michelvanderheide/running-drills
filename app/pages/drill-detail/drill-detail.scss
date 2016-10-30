@@ -3,9 +3,17 @@
   color: #60646B;
   text-align: left;
 }
+.drill-detail img {
+	width: 100%;
+}
 
 ion-slides {
-	height:auto;	
+	height:100%;	
+}
+
+.swiper-slide {
+	display:flex;		
+    align-items:stretch;
 }
 
 .swiper-slide img {
@@ -29,8 +37,7 @@ ion-slides {
 	height: 100%;
 }
 
-/*
-.slides-0  .slide-zoom{
-	height:100%;
+  .slide-zoom{
+	text-align:left;
+	max-height: 100%;
 }
-*/

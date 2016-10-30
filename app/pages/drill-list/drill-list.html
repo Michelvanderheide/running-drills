@@ -2,7 +2,7 @@
 <button menuToggle>
 <ion-icon name="menu"></ion-icon>
 </button>
-<ion-title>Drills for session {{trainingSession.description}}</ion-title>
+<ion-title>{{trainingSession.description}}</ion-title>
 <ion-buttons end>
 <button (click)="toggleShowSummary()" ion-button icon-only right>
 <ion-icon *ngIf="drillData.settings.showSummary" name="list-box" ></ion-icon>
