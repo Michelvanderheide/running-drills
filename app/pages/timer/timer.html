@@ -1,0 +1,69 @@
+<style>
+.active {
+	background-color: blue;
+}
+.timer-button {
+	font-size: 8rem;
+	height: 1.6em	;
+}
+
+</style>
+
+<ion-navbar *navbar>
+	<button menuToggle>
+	<ion-icon name="menu"></ion-icon>
+	</button>
+	<ion-title>Intervals</ion-title>
+</ion-navbar>
+
+<ion-content outer-content class="timer">
+
+<ion-card *ngIf="timer">
+<ion-card-header>
+	<button *ngIf="timeInSeconds && timeInSeconds > 0" large block clear class="timer-button">{{timer.displayTime}}</button>
+	<button *ngIf="!timeInSeconds || timeInSeconds == 0" large block clear class="timer-button">Timer set up incorrectly</button>
+</ion-card-header>
+</ion-card>
+
+<button large primary (click)="pauseTimer()" item-right *ngIf="timer.runTimer && timer.hasStarted && !timer.hasFinished" full>
+	<ion-icon name="pause"></ion-icon>
+	Pauze
+</button>
+<button large primary (click)="delayTimer(10)" item-right *ngIf="timer.runTimer && timer.hasStarted && !timer.hasFinished" outline full>
+	<ion-icon name="plus"></ion-icon>
+	+10
+</button>
+<button large primary (click)="resumeTimer()" item-right *ngIf="!timer.runTimer && timer.hasStarted && !timer.hasFinished" full>
+	<ion-icon name="play"></ion-icon>
+	Hervatten
+</button>
+<button large primary (click)="startTimer(0)" item-right *ngIf="!timer.hasStarted" full>
+	<ion-icon name="play"></ion-icon>
+	Start
+</button>
+<button large (click)="initTimer()" item-left *ngIf="!timer.runTimer && (timer.hasStarted || timer.hasFinished) || timer.hasFinished" outline full>
+	<ion-icon name="refresh"></ion-icon>
+	Reset
+</button>
+
+
+<ion-list class="timer">
+	<ion-item *ngFor="let interval of intervals; let intIdx = index" (click)="setIntervalIdx(intIdx)">
+		<div *ngIf="interval.styleActive == 0" (click)="startTimer(intIdx)">
+		  <div *ngIf="interval.distance" style="float:left;width:40%"> {{interval.distance}} meter</div>
+		  <p>{{interval.time}} sec. vlot</p>
+		  <p>{{interval.timeRest}} sec. pauze</p>
+		</div>
+		<div style="background:#9cf79c"*ngIf="interval.styleActive == 1" (click)="startTimer(intIdx)">
+		  <div *ngIf="interval.distance" style="float:left;width:40%"> {{interval.distance}} meter</div>
+		  <p>{{interval.time}} sec. vlot</p>
+		  <p>{{interval.timeRest}} sec. pauze</p>
+		</div>
+		<div style="background:#ffc966" *ngIf="interval.styleActive == 2" (click)="startTimer(intIdx)">
+		  <div *ngIf="interval.distance" style="float:left;width:40%"> {{interval.distance}} meter</div>
+		  <p>{{interval.time}} sec. vlot</p>
+		  <p>{{interval.timeRest}} sec. pauze</p>
+		</div>
+	</ion-item>
+</ion-list>
+</ion-content>

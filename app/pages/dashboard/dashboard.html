@@ -1,0 +1,22 @@
+<ion-navbar *navbar>
+	<button menuToggle>
+	<ion-icon name="menu"></ion-icon>
+	</button>
+	<ion-title>Intervaltijden</ion-title>
+</ion-navbar>
+<ion-content>
+  <ion-list-header>
+    <ion-row>
+      <ion-col width-30>Afstand</ion-col>
+      <ion-col width-30>5 km</ion-col>
+      <ion-col width-30>10 km</ion-col>
+      <ion-col width-30>21.1 km</ion-col>
+    </ion-row>
+  </ion-list-header>
+    <ion-row *ngFor="let item of drillData.timesPerDistance">
+      <ion-col width-30>{{item.distance}}</ion-col>
+      <ion-col width-30>{{item.timeFive}}</ion-col>
+      <ion-col width-30>{{item.timeTen}}</ion-col>
+      <ion-col width-30>{{item.timeHalf}}</ion-col>
+    </ion-row>
+</ion-content>
