@@ -39,7 +39,7 @@ class StoreTableMap extends TableMap
     /**
      * The default database name for this class
      */
-    const DATABASE_NAME = 'garantieapp';
+    const DATABASE_NAME = 'runningdrills';
 
     /**
      * The table name for this class

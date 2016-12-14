@@ -1,6 +1,7 @@
 import {NavController, NavParams, Page} from 'ionic-angular';
 import {DrillYoutubePage} from '../drill-youtube/drill-youtube';
 import { DrillData } from "../../providers/drill-data";
+import {TimerPage} from '../timer/timer';
 
 @Page({
   templateUrl: 'build/pages/drill-detail/drill-detail.html'
@@ -28,6 +29,7 @@ export class DrillDetailPage {
     this.drill.description;
     this.idx = this.drill.drillIdx-1;
     this.drills = this.drillData.trainingSession.drills.slice(this.idx, this.idx+1);
+    console.debug("drills"+this.idx+":",this.drills);
     this.slideOptions = { direction: "horizontal"};
     console.debug(this.slideOptions);
   }
@@ -36,6 +38,10 @@ export class DrillDetailPage {
   }
   goToYoutube(drill):void {
     this.nav.push(DrillYoutubePage, {drill});
+  }
+
+  goToTiming() {
+     this.nav.push(TimerPage); 
   }
   
   swipeEvent(offset:number) {

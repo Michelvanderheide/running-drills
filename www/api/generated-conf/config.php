@@ -1,12 +1,12 @@
 <?php
 $serviceContainer = \Propel\Runtime\Propel::getServiceContainer();
 $serviceContainer->checkVersion('2.0.0-dev');
-$serviceContainer->setAdapterClass('garantieapp', 'pgsql');
+$serviceContainer->setAdapterClass('runningdrills', 'mysql');
 $manager = new \Propel\Runtime\Connection\ConnectionManagerSingle();
 $manager->setConfiguration(array (
   'classname' => 'Propel\\Runtime\\Connection\\ConnectionWrapper',
-  'dsn' => 'pgsql:host=localhost;dbname=garantieapp_prod',
-  'user' => 'garantieapp',
+  'dsn' => 'mysql:host=localhost;dbname=runningdrills',
+  'user' => 'runningdrills',
   'password' => 'Cho1jeex',
   'model_paths' =>
   array (
@@ -14,15 +14,15 @@ $manager->setConfiguration(array (
     1 => 'vendor',
   ),
 ));
-$manager->setName('garantieapp');
-$serviceContainer->setConnectionManager('garantieapp', $manager);
-$serviceContainer->setDefaultDatasource('garantieapp');
+$manager->setName('runningdrills');
+$serviceContainer->setConnectionManager('runningdrills', $manager);
+$serviceContainer->setDefaultDatasource('runningdrills');
 $serviceContainer->setLoggerConfiguration('defaultLogger', array (
   'type' => 'stream',
-  'path' => '/var/www/html/garantie-app/logs/propel.log',
+  'path' => '/var/www/html/runningdrills/logs/propel.log',
   'level' => 300,
 ));
-$serviceContainer->setLoggerConfiguration('garantieapp', array (
+$serviceContainer->setLoggerConfiguration('runningdrills', array (
   'type' => 'stream',
-  'path' => '/var/www/html/garantie-app/logs/propel.log',
+  'path' => '/var/www/html/runningdrills/logs/propel.log',
 ));

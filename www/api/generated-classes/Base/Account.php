@@ -2,20 +2,15 @@
 
 namespace Base;
 
-use \Account as ChildAccount;
-use \AccountDossierMapping as ChildAccountDossierMapping;
-use \AccountDossierMappingQuery as ChildAccountDossierMappingQuery;
 use \AccountQuery as ChildAccountQuery;
 use \Exception;
 use \PDO;
-use Map\AccountDossierMappingTableMap;
 use Map\AccountTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\Collection;
-use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\BadMethodCallException;
 use Propel\Runtime\Exception\LogicException;
@@ -100,34 +95,6 @@ abstract class Account implements ActiveRecordInterface
     protected $password;
 
     /**
-     * The value for the address field.
-     *
-     * @var        string
-     */
-    protected $address;
-
-    /**
-     * The value for the zipcode field.
-     *
-     * @var        string
-     */
-    protected $zipcode;
-
-    /**
-     * The value for the city field.
-     *
-     * @var        string
-     */
-    protected $city;
-
-    /**
-     * The value for the phone field.
-     *
-     * @var        string
-     */
-    protected $phone;
-
-    /**
      * The value for the removed field.
      *
      * Note: this column has a database default value of: false
@@ -136,24 +103,12 @@ abstract class Account implements ActiveRecordInterface
     protected $removed;
 
     /**
-     * @var        ObjectCollection|ChildAccountDossierMapping[] Collection to store aggregation of ChildAccountDossierMapping objects.
-     */
-    protected $collAccountDossierMappings;
-    protected $collAccountDossierMappingsPartial;
-
-    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
      * @var boolean
      */
     protected $alreadyInSave = false;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildAccountDossierMapping[]
-     */
-    protected $accountDossierMappingsScheduledForDeletion = null;
 
     /**
      * Applies default values to this object.
@@ -444,46 +399,6 @@ abstract class Account implements ActiveRecordInterface
     }
 
     /**
-     * Get the [address] column value.
-     *
-     * @return string
-     */
-    public function getAddress()
-    {
-        return $this->address;
-    }
-
-    /**
-     * Get the [zipcode] column value.
-     *
-     * @return string
-     */
-    public function getZipcode()
-    {
-        return $this->zipcode;
-    }
-
-    /**
-     * Get the [city] column value.
-     *
-     * @return string
-     */
-    public function getCity()
-    {
-        return $this->city;
-    }
-
-    /**
-     * Get the [phone] column value.
-     *
-     * @return string
-     */
-    public function getPhone()
-    {
-        return $this->phone;
-    }
-
-    /**
      * Get the [removed] column value.
      *
      * @return boolean
@@ -604,86 +519,6 @@ abstract class Account implements ActiveRecordInterface
     } // setPassword()
 
     /**
-     * Set the value of [address] column.
-     *
-     * @param string $v new value
-     * @return $this|\Account The current object (for fluent API support)
-     */
-    public function setAddress($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->address !== $v) {
-            $this->address = $v;
-            $this->modifiedColumns[AccountTableMap::COL_ADDRESS] = true;
-        }
-
-        return $this;
-    } // setAddress()
-
-    /**
-     * Set the value of [zipcode] column.
-     *
-     * @param string $v new value
-     * @return $this|\Account The current object (for fluent API support)
-     */
-    public function setZipcode($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->zipcode !== $v) {
-            $this->zipcode = $v;
-            $this->modifiedColumns[AccountTableMap::COL_ZIPCODE] = true;
-        }
-
-        return $this;
-    } // setZipcode()
-
-    /**
-     * Set the value of [city] column.
-     *
-     * @param string $v new value
-     * @return $this|\Account The current object (for fluent API support)
-     */
-    public function setCity($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->city !== $v) {
-            $this->city = $v;
-            $this->modifiedColumns[AccountTableMap::COL_CITY] = true;
-        }
-
-        return $this;
-    } // setCity()
-
-    /**
-     * Set the value of [phone] column.
-     *
-     * @param string $v new value
-     * @return $this|\Account The current object (for fluent API support)
-     */
-    public function setPhone($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->phone !== $v) {
-            $this->phone = $v;
-            $this->modifiedColumns[AccountTableMap::COL_PHONE] = true;
-        }
-
-        return $this;
-    } // setPhone()
-
-    /**
      * Sets the value of the [removed] column.
      * Non-boolean arguments are converted using the following rules:
      *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
@@ -766,19 +601,7 @@ abstract class Account implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : AccountTableMap::translateFieldName('Password', TableMap::TYPE_PHPNAME, $indexType)];
             $this->password = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : AccountTableMap::translateFieldName('Address', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->address = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : AccountTableMap::translateFieldName('Zipcode', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->zipcode = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : AccountTableMap::translateFieldName('City', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->city = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : AccountTableMap::translateFieldName('Phone', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->phone = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : AccountTableMap::translateFieldName('Removed', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : AccountTableMap::translateFieldName('Removed', TableMap::TYPE_PHPNAME, $indexType)];
             $this->removed = (null !== $col) ? (boolean) $col : null;
             $this->resetModified();
 
@@ -788,7 +611,7 @@ abstract class Account implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 10; // 10 = AccountTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 6; // 6 = AccountTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Account'), 0, $e);
@@ -848,8 +671,6 @@ abstract class Account implements ActiveRecordInterface
         $this->hydrate($row, 0, true, $dataFetcher->getIndexType()); // rehydrate
 
         if ($deep) {  // also de-associate any related objects?
-
-            $this->collAccountDossierMappings = null;
 
         } // if (deep)
     }
@@ -961,23 +782,6 @@ abstract class Account implements ActiveRecordInterface
                 $this->resetModified();
             }
 
-            if ($this->accountDossierMappingsScheduledForDeletion !== null) {
-                if (!$this->accountDossierMappingsScheduledForDeletion->isEmpty()) {
-                    \AccountDossierMappingQuery::create()
-                        ->filterByPrimaryKeys($this->accountDossierMappingsScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->accountDossierMappingsScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collAccountDossierMappings !== null) {
-                foreach ($this->collAccountDossierMappings as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
             $this->alreadyInSave = false;
 
         }
@@ -1002,15 +806,6 @@ abstract class Account implements ActiveRecordInterface
         if (null !== $this->account_pk) {
             throw new PropelException('Cannot insert a value for auto-increment primary key (' . AccountTableMap::COL_ACCOUNT_PK . ')');
         }
-        if (null === $this->account_pk) {
-            try {
-                $dataFetcher = $con->query("SELECT nextval('account_account_pk_seq')");
-                $this->account_pk = (int) $dataFetcher->fetchColumn();
-            } catch (Exception $e) {
-                throw new PropelException('Unable to get sequence id.', 0, $e);
-            }
-        }
-
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(AccountTableMap::COL_ACCOUNT_PK)) {
@@ -1027,18 +822,6 @@ abstract class Account implements ActiveRecordInterface
         }
         if ($this->isColumnModified(AccountTableMap::COL_PASSWORD)) {
             $modifiedColumns[':p' . $index++]  = 'password';
-        }
-        if ($this->isColumnModified(AccountTableMap::COL_ADDRESS)) {
-            $modifiedColumns[':p' . $index++]  = 'address';
-        }
-        if ($this->isColumnModified(AccountTableMap::COL_ZIPCODE)) {
-            $modifiedColumns[':p' . $index++]  = 'zipcode';
-        }
-        if ($this->isColumnModified(AccountTableMap::COL_CITY)) {
-            $modifiedColumns[':p' . $index++]  = 'city';
-        }
-        if ($this->isColumnModified(AccountTableMap::COL_PHONE)) {
-            $modifiedColumns[':p' . $index++]  = 'phone';
         }
         if ($this->isColumnModified(AccountTableMap::COL_REMOVED)) {
             $modifiedColumns[':p' . $index++]  = 'removed';
@@ -1069,20 +852,8 @@ abstract class Account implements ActiveRecordInterface
                     case 'password':
                         $stmt->bindValue($identifier, $this->password, PDO::PARAM_STR);
                         break;
-                    case 'address':
-                        $stmt->bindValue($identifier, $this->address, PDO::PARAM_STR);
-                        break;
-                    case 'zipcode':
-                        $stmt->bindValue($identifier, $this->zipcode, PDO::PARAM_STR);
-                        break;
-                    case 'city':
-                        $stmt->bindValue($identifier, $this->city, PDO::PARAM_STR);
-                        break;
-                    case 'phone':
-                        $stmt->bindValue($identifier, $this->phone, PDO::PARAM_STR);
-                        break;
                     case 'removed':
-                        $stmt->bindValue($identifier, $this->removed, PDO::PARAM_BOOL);
+                        $stmt->bindValue($identifier, (int) $this->removed, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -1091,6 +862,13 @@ abstract class Account implements ActiveRecordInterface
             Propel::log($e->getMessage(), Propel::LOG_ERR);
             throw new PropelException(sprintf('Unable to execute INSERT statement [%s]', $sql), 0, $e);
         }
+
+        try {
+            $pk = $con->lastInsertId();
+        } catch (Exception $e) {
+            throw new PropelException('Unable to get autoincrement id.', 0, $e);
+        }
+        $this->setAccountPk($pk);
 
         $this->setNew(false);
     }
@@ -1155,18 +933,6 @@ abstract class Account implements ActiveRecordInterface
                 return $this->getPassword();
                 break;
             case 5:
-                return $this->getAddress();
-                break;
-            case 6:
-                return $this->getZipcode();
-                break;
-            case 7:
-                return $this->getCity();
-                break;
-            case 8:
-                return $this->getPhone();
-                break;
-            case 9:
                 return $this->getRemoved();
                 break;
             default:
@@ -1186,11 +952,10 @@ abstract class Account implements ActiveRecordInterface
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
      * @param     array $alreadyDumpedObjects List of objects to skip to avoid recursion
-     * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array an associative array containing the field names (as keys) and field values
      */
-    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
+    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array())
     {
 
         if (isset($alreadyDumpedObjects['Account'][$this->hashCode()])) {
@@ -1204,34 +969,13 @@ abstract class Account implements ActiveRecordInterface
             $keys[2] => $this->getName(),
             $keys[3] => $this->getEmail(),
             $keys[4] => $this->getPassword(),
-            $keys[5] => $this->getAddress(),
-            $keys[6] => $this->getZipcode(),
-            $keys[7] => $this->getCity(),
-            $keys[8] => $this->getPhone(),
-            $keys[9] => $this->getRemoved(),
+            $keys[5] => $this->getRemoved(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
         }
 
-        if ($includeForeignObjects) {
-            if (null !== $this->collAccountDossierMappings) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'accountDossierMappings';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'account_dossier_mappings';
-                        break;
-                    default:
-                        $key = 'AccountDossierMappings';
-                }
-
-                $result[$key] = $this->collAccountDossierMappings->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
-        }
 
         return $result;
     }
@@ -1281,18 +1025,6 @@ abstract class Account implements ActiveRecordInterface
                 $this->setPassword($value);
                 break;
             case 5:
-                $this->setAddress($value);
-                break;
-            case 6:
-                $this->setZipcode($value);
-                break;
-            case 7:
-                $this->setCity($value);
-                break;
-            case 8:
-                $this->setPhone($value);
-                break;
-            case 9:
                 $this->setRemoved($value);
                 break;
         } // switch()
@@ -1337,19 +1069,7 @@ abstract class Account implements ActiveRecordInterface
             $this->setPassword($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setAddress($arr[$keys[5]]);
-        }
-        if (array_key_exists($keys[6], $arr)) {
-            $this->setZipcode($arr[$keys[6]]);
-        }
-        if (array_key_exists($keys[7], $arr)) {
-            $this->setCity($arr[$keys[7]]);
-        }
-        if (array_key_exists($keys[8], $arr)) {
-            $this->setPhone($arr[$keys[8]]);
-        }
-        if (array_key_exists($keys[9], $arr)) {
-            $this->setRemoved($arr[$keys[9]]);
+            $this->setRemoved($arr[$keys[5]]);
         }
     }
 
@@ -1406,18 +1126,6 @@ abstract class Account implements ActiveRecordInterface
         }
         if ($this->isColumnModified(AccountTableMap::COL_PASSWORD)) {
             $criteria->add(AccountTableMap::COL_PASSWORD, $this->password);
-        }
-        if ($this->isColumnModified(AccountTableMap::COL_ADDRESS)) {
-            $criteria->add(AccountTableMap::COL_ADDRESS, $this->address);
-        }
-        if ($this->isColumnModified(AccountTableMap::COL_ZIPCODE)) {
-            $criteria->add(AccountTableMap::COL_ZIPCODE, $this->zipcode);
-        }
-        if ($this->isColumnModified(AccountTableMap::COL_CITY)) {
-            $criteria->add(AccountTableMap::COL_CITY, $this->city);
-        }
-        if ($this->isColumnModified(AccountTableMap::COL_PHONE)) {
-            $criteria->add(AccountTableMap::COL_PHONE, $this->phone);
         }
         if ($this->isColumnModified(AccountTableMap::COL_REMOVED)) {
             $criteria->add(AccountTableMap::COL_REMOVED, $this->removed);
@@ -1512,25 +1220,7 @@ abstract class Account implements ActiveRecordInterface
         $copyObj->setName($this->getName());
         $copyObj->setEmail($this->getEmail());
         $copyObj->setPassword($this->getPassword());
-        $copyObj->setAddress($this->getAddress());
-        $copyObj->setZipcode($this->getZipcode());
-        $copyObj->setCity($this->getCity());
-        $copyObj->setPhone($this->getPhone());
         $copyObj->setRemoved($this->getRemoved());
-
-        if ($deepCopy) {
-            // important: temporarily setNew(false) because this affects the behavior of
-            // the getter/setter methods for fkey referrer objects.
-            $copyObj->setNew(false);
-
-            foreach ($this->getAccountDossierMappings() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addAccountDossierMapping($relObj->copy($deepCopy));
-                }
-            }
-
-        } // if ($deepCopy)
-
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setAccountPk(NULL); // this is a auto-increment column, so set to default value
@@ -1559,272 +1249,6 @@ abstract class Account implements ActiveRecordInterface
         return $copyObj;
     }
 
-
-    /**
-     * Initializes a collection based on the name of a relation.
-     * Avoids crafting an 'init[$relationName]s' method name
-     * that wouldn't work when StandardEnglishPluralizer is used.
-     *
-     * @param      string $relationName The name of the relation to initialize
-     * @return void
-     */
-    public function initRelation($relationName)
-    {
-        if ('AccountDossierMapping' == $relationName) {
-            return $this->initAccountDossierMappings();
-        }
-    }
-
-    /**
-     * Clears out the collAccountDossierMappings collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return void
-     * @see        addAccountDossierMappings()
-     */
-    public function clearAccountDossierMappings()
-    {
-        $this->collAccountDossierMappings = null; // important to set this to NULL since that means it is uninitialized
-    }
-
-    /**
-     * Reset is the collAccountDossierMappings collection loaded partially.
-     */
-    public function resetPartialAccountDossierMappings($v = true)
-    {
-        $this->collAccountDossierMappingsPartial = $v;
-    }
-
-    /**
-     * Initializes the collAccountDossierMappings collection.
-     *
-     * By default this just sets the collAccountDossierMappings collection to an empty array (like clearcollAccountDossierMappings());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initAccountDossierMappings($overrideExisting = true)
-    {
-        if (null !== $this->collAccountDossierMappings && !$overrideExisting) {
-            return;
-        }
-
-        $collectionClassName = AccountDossierMappingTableMap::getTableMap()->getCollectionClassName();
-
-        $this->collAccountDossierMappings = new $collectionClassName;
-        $this->collAccountDossierMappings->setModel('\AccountDossierMapping');
-    }
-
-    /**
-     * Gets an array of ChildAccountDossierMapping objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildAccount is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildAccountDossierMapping[] List of ChildAccountDossierMapping objects
-     * @throws PropelException
-     */
-    public function getAccountDossierMappings(Criteria $criteria = null, ConnectionInterface $con = null)
-    {
-        $partial = $this->collAccountDossierMappingsPartial && !$this->isNew();
-        if (null === $this->collAccountDossierMappings || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collAccountDossierMappings) {
-                // return empty collection
-                $this->initAccountDossierMappings();
-            } else {
-                $collAccountDossierMappings = ChildAccountDossierMappingQuery::create(null, $criteria)
-                    ->filterByAccount($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collAccountDossierMappingsPartial && count($collAccountDossierMappings)) {
-                        $this->initAccountDossierMappings(false);
-
-                        foreach ($collAccountDossierMappings as $obj) {
-                            if (false == $this->collAccountDossierMappings->contains($obj)) {
-                                $this->collAccountDossierMappings->append($obj);
-                            }
-                        }
-
-                        $this->collAccountDossierMappingsPartial = true;
-                    }
-
-                    return $collAccountDossierMappings;
-                }
-
-                if ($partial && $this->collAccountDossierMappings) {
-                    foreach ($this->collAccountDossierMappings as $obj) {
-                        if ($obj->isNew()) {
-                            $collAccountDossierMappings[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collAccountDossierMappings = $collAccountDossierMappings;
-                $this->collAccountDossierMappingsPartial = false;
-            }
-        }
-
-        return $this->collAccountDossierMappings;
-    }
-
-    /**
-     * Sets a collection of ChildAccountDossierMapping objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param      Collection $accountDossierMappings A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return $this|ChildAccount The current object (for fluent API support)
-     */
-    public function setAccountDossierMappings(Collection $accountDossierMappings, ConnectionInterface $con = null)
-    {
-        /** @var ChildAccountDossierMapping[] $accountDossierMappingsToDelete */
-        $accountDossierMappingsToDelete = $this->getAccountDossierMappings(new Criteria(), $con)->diff($accountDossierMappings);
-
-
-        $this->accountDossierMappingsScheduledForDeletion = $accountDossierMappingsToDelete;
-
-        foreach ($accountDossierMappingsToDelete as $accountDossierMappingRemoved) {
-            $accountDossierMappingRemoved->setAccount(null);
-        }
-
-        $this->collAccountDossierMappings = null;
-        foreach ($accountDossierMappings as $accountDossierMapping) {
-            $this->addAccountDossierMapping($accountDossierMapping);
-        }
-
-        $this->collAccountDossierMappings = $accountDossierMappings;
-        $this->collAccountDossierMappingsPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related AccountDossierMapping objects.
-     *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related AccountDossierMapping objects.
-     * @throws PropelException
-     */
-    public function countAccountDossierMappings(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
-    {
-        $partial = $this->collAccountDossierMappingsPartial && !$this->isNew();
-        if (null === $this->collAccountDossierMappings || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collAccountDossierMappings) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getAccountDossierMappings());
-            }
-
-            $query = ChildAccountDossierMappingQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByAccount($this)
-                ->count($con);
-        }
-
-        return count($this->collAccountDossierMappings);
-    }
-
-    /**
-     * Method called to associate a ChildAccountDossierMapping object to this object
-     * through the ChildAccountDossierMapping foreign key attribute.
-     *
-     * @param  ChildAccountDossierMapping $l ChildAccountDossierMapping
-     * @return $this|\Account The current object (for fluent API support)
-     */
-    public function addAccountDossierMapping(ChildAccountDossierMapping $l)
-    {
-        if ($this->collAccountDossierMappings === null) {
-            $this->initAccountDossierMappings();
-            $this->collAccountDossierMappingsPartial = true;
-        }
-
-        if (!$this->collAccountDossierMappings->contains($l)) {
-            $this->doAddAccountDossierMapping($l);
-
-            if ($this->accountDossierMappingsScheduledForDeletion and $this->accountDossierMappingsScheduledForDeletion->contains($l)) {
-                $this->accountDossierMappingsScheduledForDeletion->remove($this->accountDossierMappingsScheduledForDeletion->search($l));
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ChildAccountDossierMapping $accountDossierMapping The ChildAccountDossierMapping object to add.
-     */
-    protected function doAddAccountDossierMapping(ChildAccountDossierMapping $accountDossierMapping)
-    {
-        $this->collAccountDossierMappings[]= $accountDossierMapping;
-        $accountDossierMapping->setAccount($this);
-    }
-
-    /**
-     * @param  ChildAccountDossierMapping $accountDossierMapping The ChildAccountDossierMapping object to remove.
-     * @return $this|ChildAccount The current object (for fluent API support)
-     */
-    public function removeAccountDossierMapping(ChildAccountDossierMapping $accountDossierMapping)
-    {
-        if ($this->getAccountDossierMappings()->contains($accountDossierMapping)) {
-            $pos = $this->collAccountDossierMappings->search($accountDossierMapping);
-            $this->collAccountDossierMappings->remove($pos);
-            if (null === $this->accountDossierMappingsScheduledForDeletion) {
-                $this->accountDossierMappingsScheduledForDeletion = clone $this->collAccountDossierMappings;
-                $this->accountDossierMappingsScheduledForDeletion->clear();
-            }
-            $this->accountDossierMappingsScheduledForDeletion[]= clone $accountDossierMapping;
-            $accountDossierMapping->setAccount(null);
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Account is new, it will return
-     * an empty collection; or if this Account has previously
-     * been saved, it will retrieve related AccountDossierMappings from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Account.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildAccountDossierMapping[] List of ChildAccountDossierMapping objects
-     */
-    public function getAccountDossierMappingsJoinDossier(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildAccountDossierMappingQuery::create(null, $criteria);
-        $query->joinWith('Dossier', $joinBehavior);
-
-        return $this->getAccountDossierMappings($query, $con);
-    }
-
     /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
@@ -1837,10 +1261,6 @@ abstract class Account implements ActiveRecordInterface
         $this->name = null;
         $this->email = null;
         $this->password = null;
-        $this->address = null;
-        $this->zipcode = null;
-        $this->city = null;
-        $this->phone = null;
         $this->removed = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
@@ -1861,14 +1281,8 @@ abstract class Account implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
-            if ($this->collAccountDossierMappings) {
-                foreach ($this->collAccountDossierMappings as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
         } // if ($deep)
 
-        $this->collAccountDossierMappings = null;
     }
 
     /**

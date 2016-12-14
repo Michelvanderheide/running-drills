@@ -1,25 +1,57 @@
 {
-  "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
-    "noEmitOnError": false,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true
-  },
-  "filesGlob": [
-    "**/*.ts",
-    "!node_modules/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "typings/main",
-    "typings/main.d.ts"
-  ],
-  "compileOnSave": false,
-  "atom": {
-    "rewriteTsconfig": false
-  },
-  "ArcticTypescript": {
-    "node_path": "/usr/local/bin/node"
-  }
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "noEmitOnError": false,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true
+    },
+    "filesGlob": [
+        "**/*.ts",
+        "!node_modules/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "typings/main",
+        "typings/main.d.ts"
+    ],
+    "compileOnSave": false,
+    "atom": {
+        "rewriteTsconfig": false
+    },
+    "ArcticTypescript": {
+        "node_path": "/usr/local/bin/node"
+    },
+    "parserOptions": {
+        "sourceType": "module"
+    },
+    "files": [
+        "app/app.ts",
+        "app/pages/account/account.ts",
+        "app/pages/detail-tabs/detail-tabs.ts",
+        "app/pages/drill-detail/drill-detail.ts",
+        "app/pages/drill-list/drill-list.ts",
+        "app/pages/drill-youtube/drill-youtube.ts",
+        "app/pages/login/login.ts",
+        "app/pages/session-list/session-list.ts",
+        "app/pages/signup/signup.ts",
+        "app/pages/tabs/tabs.ts",
+        "app/providers/app-settings.ts",
+        "app/providers/drill-data.ts",
+        "app/providers/user-data.ts",
+        "platforms/android/assets/www/api/vendor/symfony/translation/Tests/fixtures/resources.ts",
+        "platforms/android/build/intermediates/assets/debug/www/api/vendor/symfony/translation/Tests/fixtures/resources.ts",
+        "typings/angularjs/angular.d.ts",
+        "typings/browser.d.ts",
+        "typings/browser/ambient/cordova-plugin-drills/index.d.ts",
+        "typings/browser/ambient/es6-shim/es6-shim.d.ts",
+        "typings/globals/jquery/index.d.ts",
+        "typings/index.d.ts",
+        "typings/jquery/jquery.d.ts",
+        "typings/main.d.ts",
+        "typings/main/ambient/cordova-plugin-drills/index.d.ts",
+        "typings/main/ambient/es6-shim/es6-shim.d.ts",
+        "typings/tsd.d.ts",
+        "www/api/vendor/symfony/translation/Tests/fixtures/resources.ts"
+    ]
 }

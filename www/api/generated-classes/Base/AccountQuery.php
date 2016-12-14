@@ -10,7 +10,6 @@ use Map\AccountTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
-use Propel\Runtime\ActiveQuery\ModelJoin;
 use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
@@ -25,10 +24,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAccountQuery orderByName($order = Criteria::ASC) Order by the name column
  * @method     ChildAccountQuery orderByEmail($order = Criteria::ASC) Order by the email column
  * @method     ChildAccountQuery orderByPassword($order = Criteria::ASC) Order by the password column
- * @method     ChildAccountQuery orderByAddress($order = Criteria::ASC) Order by the address column
- * @method     ChildAccountQuery orderByZipcode($order = Criteria::ASC) Order by the zipcode column
- * @method     ChildAccountQuery orderByCity($order = Criteria::ASC) Order by the city column
- * @method     ChildAccountQuery orderByPhone($order = Criteria::ASC) Order by the phone column
  * @method     ChildAccountQuery orderByRemoved($order = Criteria::ASC) Order by the removed column
  *
  * @method     ChildAccountQuery groupByAccountPk() Group by the account_pk column
@@ -36,10 +31,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAccountQuery groupByName() Group by the name column
  * @method     ChildAccountQuery groupByEmail() Group by the email column
  * @method     ChildAccountQuery groupByPassword() Group by the password column
- * @method     ChildAccountQuery groupByAddress() Group by the address column
- * @method     ChildAccountQuery groupByZipcode() Group by the zipcode column
- * @method     ChildAccountQuery groupByCity() Group by the city column
- * @method     ChildAccountQuery groupByPhone() Group by the phone column
  * @method     ChildAccountQuery groupByRemoved() Group by the removed column
  *
  * @method     ChildAccountQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -50,18 +41,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAccountQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
  * @method     ChildAccountQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
  *
- * @method     ChildAccountQuery leftJoinAccountDossierMapping($relationAlias = null) Adds a LEFT JOIN clause to the query using the AccountDossierMapping relation
- * @method     ChildAccountQuery rightJoinAccountDossierMapping($relationAlias = null) Adds a RIGHT JOIN clause to the query using the AccountDossierMapping relation
- * @method     ChildAccountQuery innerJoinAccountDossierMapping($relationAlias = null) Adds a INNER JOIN clause to the query using the AccountDossierMapping relation
- *
- * @method     ChildAccountQuery joinWithAccountDossierMapping($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the AccountDossierMapping relation
- *
- * @method     ChildAccountQuery leftJoinWithAccountDossierMapping() Adds a LEFT JOIN clause and with to the query using the AccountDossierMapping relation
- * @method     ChildAccountQuery rightJoinWithAccountDossierMapping() Adds a RIGHT JOIN clause and with to the query using the AccountDossierMapping relation
- * @method     ChildAccountQuery innerJoinWithAccountDossierMapping() Adds a INNER JOIN clause and with to the query using the AccountDossierMapping relation
- *
- * @method     \AccountDossierMappingQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
- *
  * @method     ChildAccount findOne(ConnectionInterface $con = null) Return the first ChildAccount matching the query
  * @method     ChildAccount findOneOrCreate(ConnectionInterface $con = null) Return the first ChildAccount matching the query, or a new ChildAccount object populated from the query conditions when no match is found
  *
@@ -70,10 +49,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAccount findOneByName(string $name) Return the first ChildAccount filtered by the name column
  * @method     ChildAccount findOneByEmail(string $email) Return the first ChildAccount filtered by the email column
  * @method     ChildAccount findOneByPassword(string $password) Return the first ChildAccount filtered by the password column
- * @method     ChildAccount findOneByAddress(string $address) Return the first ChildAccount filtered by the address column
- * @method     ChildAccount findOneByZipcode(string $zipcode) Return the first ChildAccount filtered by the zipcode column
- * @method     ChildAccount findOneByCity(string $city) Return the first ChildAccount filtered by the city column
- * @method     ChildAccount findOneByPhone(string $phone) Return the first ChildAccount filtered by the phone column
  * @method     ChildAccount findOneByRemoved(boolean $removed) Return the first ChildAccount filtered by the removed column *
 
  * @method     ChildAccount requirePk($key, ConnectionInterface $con = null) Return the ChildAccount by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -84,10 +59,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAccount requireOneByName(string $name) Return the first ChildAccount filtered by the name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildAccount requireOneByEmail(string $email) Return the first ChildAccount filtered by the email column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildAccount requireOneByPassword(string $password) Return the first ChildAccount filtered by the password column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildAccount requireOneByAddress(string $address) Return the first ChildAccount filtered by the address column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildAccount requireOneByZipcode(string $zipcode) Return the first ChildAccount filtered by the zipcode column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildAccount requireOneByCity(string $city) Return the first ChildAccount filtered by the city column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildAccount requireOneByPhone(string $phone) Return the first ChildAccount filtered by the phone column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildAccount requireOneByRemoved(boolean $removed) Return the first ChildAccount filtered by the removed column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildAccount[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildAccount objects based on current ModelCriteria
@@ -96,10 +67,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAccount[]|ObjectCollection findByName(string $name) Return ChildAccount objects filtered by the name column
  * @method     ChildAccount[]|ObjectCollection findByEmail(string $email) Return ChildAccount objects filtered by the email column
  * @method     ChildAccount[]|ObjectCollection findByPassword(string $password) Return ChildAccount objects filtered by the password column
- * @method     ChildAccount[]|ObjectCollection findByAddress(string $address) Return ChildAccount objects filtered by the address column
- * @method     ChildAccount[]|ObjectCollection findByZipcode(string $zipcode) Return ChildAccount objects filtered by the zipcode column
- * @method     ChildAccount[]|ObjectCollection findByCity(string $city) Return ChildAccount objects filtered by the city column
- * @method     ChildAccount[]|ObjectCollection findByPhone(string $phone) Return ChildAccount objects filtered by the phone column
  * @method     ChildAccount[]|ObjectCollection findByRemoved(boolean $removed) Return ChildAccount objects filtered by the removed column
  * @method     ChildAccount[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
@@ -115,7 +82,7 @@ abstract class AccountQuery extends ModelCriteria
      * @param     string $modelName The phpName of a model, e.g. 'Book'
      * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'garantieapp', $modelName = '\\Account', $modelAlias = null)
+    public function __construct($dbName = 'runningdrills', $modelName = '\\Account', $modelAlias = null)
     {
         parent::__construct($dbName, $modelName, $modelAlias);
     }
@@ -199,7 +166,7 @@ abstract class AccountQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT account_pk, guid, name, email, password, address, zipcode, city, phone, removed FROM account WHERE account_pk = :p0';
+        $sql = 'SELECT account_pk, guid, name, email, password, removed FROM account WHERE account_pk = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -431,106 +398,6 @@ abstract class AccountQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the address column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByAddress('fooValue');   // WHERE address = 'fooValue'
-     * $query->filterByAddress('%fooValue%', Criteria::LIKE); // WHERE address LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $address The value to use as filter.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildAccountQuery The current query, for fluid interface
-     */
-    public function filterByAddress($address = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($address)) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(AccountTableMap::COL_ADDRESS, $address, $comparison);
-    }
-
-    /**
-     * Filter the query on the zipcode column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByZipcode('fooValue');   // WHERE zipcode = 'fooValue'
-     * $query->filterByZipcode('%fooValue%', Criteria::LIKE); // WHERE zipcode LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $zipcode The value to use as filter.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildAccountQuery The current query, for fluid interface
-     */
-    public function filterByZipcode($zipcode = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($zipcode)) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(AccountTableMap::COL_ZIPCODE, $zipcode, $comparison);
-    }
-
-    /**
-     * Filter the query on the city column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByCity('fooValue');   // WHERE city = 'fooValue'
-     * $query->filterByCity('%fooValue%', Criteria::LIKE); // WHERE city LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $city The value to use as filter.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildAccountQuery The current query, for fluid interface
-     */
-    public function filterByCity($city = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($city)) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(AccountTableMap::COL_CITY, $city, $comparison);
-    }
-
-    /**
-     * Filter the query on the phone column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByPhone('fooValue');   // WHERE phone = 'fooValue'
-     * $query->filterByPhone('%fooValue%', Criteria::LIKE); // WHERE phone LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $phone The value to use as filter.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildAccountQuery The current query, for fluid interface
-     */
-    public function filterByPhone($phone = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($phone)) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(AccountTableMap::COL_PHONE, $phone, $comparison);
-    }
-
-    /**
      * Filter the query on the removed column
      *
      * Example usage:
@@ -555,79 +422,6 @@ abstract class AccountQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(AccountTableMap::COL_REMOVED, $removed, $comparison);
-    }
-
-    /**
-     * Filter the query by a related \AccountDossierMapping object
-     *
-     * @param \AccountDossierMapping|ObjectCollection $accountDossierMapping the related object to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ChildAccountQuery The current query, for fluid interface
-     */
-    public function filterByAccountDossierMapping($accountDossierMapping, $comparison = null)
-    {
-        if ($accountDossierMapping instanceof \AccountDossierMapping) {
-            return $this
-                ->addUsingAlias(AccountTableMap::COL_ACCOUNT_PK, $accountDossierMapping->getAccountFk(), $comparison);
-        } elseif ($accountDossierMapping instanceof ObjectCollection) {
-            return $this
-                ->useAccountDossierMappingQuery()
-                ->filterByPrimaryKeys($accountDossierMapping->getPrimaryKeys())
-                ->endUse();
-        } else {
-            throw new PropelException('filterByAccountDossierMapping() only accepts arguments of type \AccountDossierMapping or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the AccountDossierMapping relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this|ChildAccountQuery The current query, for fluid interface
-     */
-    public function joinAccountDossierMapping($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('AccountDossierMapping');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'AccountDossierMapping');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the AccountDossierMapping relation AccountDossierMapping object
-     *
-     * @see useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return \AccountDossierMappingQuery A secondary query class using the current class as primary query
-     */
-    public function useAccountDossierMappingQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        return $this
-            ->joinAccountDossierMapping($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'AccountDossierMapping', '\AccountDossierMappingQuery');
     }
 
     /**

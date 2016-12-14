@@ -1,5 +1,6 @@
 import {Page, NavParams} from 'ionic-angular';
-import {DrillListPage} from '../drill-list/drill-list';
+import {DashboardPage} from '../dashboard/dashboard';
+import {SessionListPage} from '../session-list/session-list';
 
 
 @Page({
@@ -9,7 +10,6 @@ export class TabsPage {
   tab1Root: any;
   tab2Root: any;
   tab3Root: any;
-  tab4Root: any;
   mySelectedIndex: number;
 
   static get parameters() {
@@ -20,9 +20,7 @@ export class TabsPage {
     this.mySelectedIndex = navParams.data.tabIndex || 0;
 
     // set the root pages for each tab
-    this.tab1Root = DrillListPage;
-    this.tab2Root = DrillListPage;
-    this.tab3Root = DrillListPage;
-    this.tab4Root = DrillListPage;
+    this.tab1Root = SessionListPage;
+    this.tab2Root = DashboardPage;
   }
 }

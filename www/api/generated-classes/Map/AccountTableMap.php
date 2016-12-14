@@ -39,7 +39,7 @@ class AccountTableMap extends TableMap
     /**
      * The default database name for this class
      */
-    const DATABASE_NAME = 'garantieapp';
+    const DATABASE_NAME = 'runningdrills';
 
     /**
      * The table name for this class
@@ -59,7 +59,7 @@ class AccountTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 10;
+    const NUM_COLUMNS = 6;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class AccountTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 10;
+    const NUM_HYDRATE_COLUMNS = 6;
 
     /**
      * the column name for the account_pk field
@@ -97,26 +97,6 @@ class AccountTableMap extends TableMap
     const COL_PASSWORD = 'account.password';
 
     /**
-     * the column name for the address field
-     */
-    const COL_ADDRESS = 'account.address';
-
-    /**
-     * the column name for the zipcode field
-     */
-    const COL_ZIPCODE = 'account.zipcode';
-
-    /**
-     * the column name for the city field
-     */
-    const COL_CITY = 'account.city';
-
-    /**
-     * the column name for the phone field
-     */
-    const COL_PHONE = 'account.phone';
-
-    /**
      * the column name for the removed field
      */
     const COL_REMOVED = 'account.removed';
@@ -133,11 +113,11 @@ class AccountTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('AccountPk', 'Guid', 'Name', 'Email', 'Password', 'Address', 'Zipcode', 'City', 'Phone', 'Removed', ),
-        self::TYPE_CAMELNAME     => array('accountPk', 'guid', 'name', 'email', 'password', 'address', 'zipcode', 'city', 'phone', 'removed', ),
-        self::TYPE_COLNAME       => array(AccountTableMap::COL_ACCOUNT_PK, AccountTableMap::COL_GUID, AccountTableMap::COL_NAME, AccountTableMap::COL_EMAIL, AccountTableMap::COL_PASSWORD, AccountTableMap::COL_ADDRESS, AccountTableMap::COL_ZIPCODE, AccountTableMap::COL_CITY, AccountTableMap::COL_PHONE, AccountTableMap::COL_REMOVED, ),
-        self::TYPE_FIELDNAME     => array('account_pk', 'guid', 'name', 'email', 'password', 'address', 'zipcode', 'city', 'phone', 'removed', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
+        self::TYPE_PHPNAME       => array('AccountPk', 'Guid', 'Name', 'Email', 'Password', 'Removed', ),
+        self::TYPE_CAMELNAME     => array('accountPk', 'guid', 'name', 'email', 'password', 'removed', ),
+        self::TYPE_COLNAME       => array(AccountTableMap::COL_ACCOUNT_PK, AccountTableMap::COL_GUID, AccountTableMap::COL_NAME, AccountTableMap::COL_EMAIL, AccountTableMap::COL_PASSWORD, AccountTableMap::COL_REMOVED, ),
+        self::TYPE_FIELDNAME     => array('account_pk', 'guid', 'name', 'email', 'password', 'removed', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
     );
 
     /**
@@ -147,11 +127,11 @@ class AccountTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('AccountPk' => 0, 'Guid' => 1, 'Name' => 2, 'Email' => 3, 'Password' => 4, 'Address' => 5, 'Zipcode' => 6, 'City' => 7, 'Phone' => 8, 'Removed' => 9, ),
-        self::TYPE_CAMELNAME     => array('accountPk' => 0, 'guid' => 1, 'name' => 2, 'email' => 3, 'password' => 4, 'address' => 5, 'zipcode' => 6, 'city' => 7, 'phone' => 8, 'removed' => 9, ),
-        self::TYPE_COLNAME       => array(AccountTableMap::COL_ACCOUNT_PK => 0, AccountTableMap::COL_GUID => 1, AccountTableMap::COL_NAME => 2, AccountTableMap::COL_EMAIL => 3, AccountTableMap::COL_PASSWORD => 4, AccountTableMap::COL_ADDRESS => 5, AccountTableMap::COL_ZIPCODE => 6, AccountTableMap::COL_CITY => 7, AccountTableMap::COL_PHONE => 8, AccountTableMap::COL_REMOVED => 9, ),
-        self::TYPE_FIELDNAME     => array('account_pk' => 0, 'guid' => 1, 'name' => 2, 'email' => 3, 'password' => 4, 'address' => 5, 'zipcode' => 6, 'city' => 7, 'phone' => 8, 'removed' => 9, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
+        self::TYPE_PHPNAME       => array('AccountPk' => 0, 'Guid' => 1, 'Name' => 2, 'Email' => 3, 'Password' => 4, 'Removed' => 5, ),
+        self::TYPE_CAMELNAME     => array('accountPk' => 0, 'guid' => 1, 'name' => 2, 'email' => 3, 'password' => 4, 'removed' => 5, ),
+        self::TYPE_COLNAME       => array(AccountTableMap::COL_ACCOUNT_PK => 0, AccountTableMap::COL_GUID => 1, AccountTableMap::COL_NAME => 2, AccountTableMap::COL_EMAIL => 3, AccountTableMap::COL_PASSWORD => 4, AccountTableMap::COL_REMOVED => 5, ),
+        self::TYPE_FIELDNAME     => array('account_pk' => 0, 'guid' => 1, 'name' => 2, 'email' => 3, 'password' => 4, 'removed' => 5, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
     );
 
     /**
@@ -170,18 +150,13 @@ class AccountTableMap extends TableMap
         $this->setClassName('\\Account');
         $this->setPackage('');
         $this->setUseIdGenerator(true);
-        $this->setPrimaryKeyMethodInfo('account_account_pk_seq');
         // columns
         $this->addPrimaryKey('account_pk', 'AccountPk', 'INTEGER', true, null, null);
-        $this->addColumn('guid', 'Guid', 'VARCHAR', false, null, null);
-        $this->addColumn('name', 'Name', 'VARCHAR', false, null, null);
-        $this->addColumn('email', 'Email', 'VARCHAR', false, null, null);
-        $this->addColumn('password', 'Password', 'VARCHAR', false, null, null);
-        $this->addColumn('address', 'Address', 'VARCHAR', false, null, null);
-        $this->addColumn('zipcode', 'Zipcode', 'VARCHAR', false, null, null);
-        $this->addColumn('city', 'City', 'VARCHAR', false, null, null);
-        $this->addColumn('phone', 'Phone', 'VARCHAR', false, null, null);
-        $this->addColumn('removed', 'Removed', 'BOOLEAN', true, null, false);
+        $this->addColumn('guid', 'Guid', 'VARCHAR', false, 255, null);
+        $this->addColumn('name', 'Name', 'VARCHAR', false, 255, null);
+        $this->addColumn('email', 'Email', 'VARCHAR', false, 255, null);
+        $this->addColumn('password', 'Password', 'VARCHAR', false, 255, null);
+        $this->addColumn('removed', 'Removed', 'BOOLEAN', true, 1, false);
     } // initialize()
 
     /**
@@ -189,23 +164,7 @@ class AccountTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('AccountDossierMapping', '\\AccountDossierMapping', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':account_fk',
-    1 => ':account_pk',
-  ),
-), 'CASCADE', null, 'AccountDossierMappings', false);
     } // buildRelations()
-    /**
-     * Method to invalidate the instance pool of all tables related to account     * by a foreign key with ON DELETE CASCADE
-     */
-    public static function clearRelatedInstancePool()
-    {
-        // Invalidate objects in related instance pools,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        AccountDossierMappingTableMap::clearInstancePool();
-    }
 
     /**
      * Retrieves a string version of the primary key from the DB resultset row that can be used to uniquely identify a row in this table.
@@ -353,10 +312,6 @@ class AccountTableMap extends TableMap
             $criteria->addSelectColumn(AccountTableMap::COL_NAME);
             $criteria->addSelectColumn(AccountTableMap::COL_EMAIL);
             $criteria->addSelectColumn(AccountTableMap::COL_PASSWORD);
-            $criteria->addSelectColumn(AccountTableMap::COL_ADDRESS);
-            $criteria->addSelectColumn(AccountTableMap::COL_ZIPCODE);
-            $criteria->addSelectColumn(AccountTableMap::COL_CITY);
-            $criteria->addSelectColumn(AccountTableMap::COL_PHONE);
             $criteria->addSelectColumn(AccountTableMap::COL_REMOVED);
         } else {
             $criteria->addSelectColumn($alias . '.account_pk');
@@ -364,10 +319,6 @@ class AccountTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.name');
             $criteria->addSelectColumn($alias . '.email');
             $criteria->addSelectColumn($alias . '.password');
-            $criteria->addSelectColumn($alias . '.address');
-            $criteria->addSelectColumn($alias . '.zipcode');
-            $criteria->addSelectColumn($alias . '.city');
-            $criteria->addSelectColumn($alias . '.phone');
             $criteria->addSelectColumn($alias . '.removed');
         }
     }

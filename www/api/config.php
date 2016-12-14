@@ -3,6 +3,7 @@
 
 define('COL_ID', 'ID');
 define('COL_TITLE', 'Korte omschrijving');
+define('COL_INTERVALS', 'Intervals');
 define('COL_OMSCHRIJVING', 'Extra info');
 define('COL_KRING', 'Kring');
 define('COL_BAAN', '400m Baan');
@@ -11,6 +12,7 @@ define('COL_CORE_STABILITY', 'Core stability');
 define('COL_LOOPSCHOLING', 'Loopscholing');
 define('COL_TUSSENPROGRAMMA', 'Tussenprogramma');
 define('COL_HOOFDPROGRAMMA', 'Hoofdprogramma');
+define('COL_COOLING_DOWN', 'Cooling down');
 define('COL_YOUTUBE_ID', 'Youtube Id');
 define('COL_ALT_DESCRIPTION', 'Alt. Omschrijving');
 
@@ -26,6 +28,7 @@ $apiConfig['titles']['4B'] = '400m Baan';
 $apiConfig['titles']['SB'] = 'Sprint Baan';
 $apiConfig['titles']['LS'] = 'Loopscholing';
 $apiConfig['titles']['HP'] = 'Hoofdprogramma';
+$apiConfig['titles']['CD'] = 'Cooling down';
 $apiConfig['titles']['TP'] = 'Tussenprogramma';
 
 
@@ -39,7 +42,7 @@ $apiConfig['basedir'] = str_replace('www\api','', str_replace ('www/api','', __D
 // URL
 if ($apiConfig['env'] == "dev") {
 	$apiConfig['baseUrl'] = "http://www.avgoor.nl";
-	//$apiConfig['baseUrl'] = "http://garantieapp.local";
+	//$apiConfig['baseUrl'] = "http://runningdrills.local";
 	$apiConfig['imagedir'] = $apiConfig['basedir'] . 'www/images/';
 	$apiConfig['imageUrl'] = $apiConfig['baseUrl'] . '/wp-content/images/drills/images/';
 } else {
@@ -54,8 +57,15 @@ $apiConfig['assetsPath'] = $apiConfig['basedir'] .'/assets/';
 
 
 $apiConfig['csvfile'] = $apiConfig['assetsPath'].'trainingsvormen.csv';
+$apiConfig['csvsessionsfile'] = $apiConfig['assetsPath'].'sessies.csv';
 
 
 $apiConfig['demoToken'] = '1234';
+
+$apiConfig['userGroups']['mpm'] = 'MPM - Hengelo';
+$apiConfig['userGroups']['kettinglopers'] = 'Kettinglopers';
+$apiConfig['userGroups']['avgoor'] = 'AV Goor';
+
+
 
 //print_r($apiConfig);

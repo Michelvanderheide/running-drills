@@ -1,6 +1,6 @@
 
 <!-- logged out menu -->
-<ion-menu id="loggedOutMenu" [content]="content">
+<ion-menu id="loggedOutMenu" [content]="content" (ionClose)="menuClosed()">
 
   <ion-toolbar>
     <ion-title>Menu</ion-title>
@@ -8,11 +8,38 @@
 
   <ion-content class="outer-content">
 
-
+    <ion-list>
+       <ion-list-header>
+        Loopgroepen
+      </ion-list-header>
+      <ion-item *ngFor="let runningGroup of userData.runningGroups; let i = index">
+        <ion-label>{{runningGroup.title}}</ion-label>
+        <ion-toggle [checked]="runningGroup.value" (click)="toggleRunningGroup(i)"></ion-toggle>      
+      </ion-item> 
+    </ion-list>
+<form>
+	<ion-list>
+      <ion-list-header>
+        Mijn tijden
+      </ion-list-header>
+      <ion-item>
+      	  <ion-label>5K</ion-label>
+    	  <ion-input size="5" (change)='setDistanceTime(5)' type="text" placeholder="mm:ss" [(ngModel)]="drillData.settings.fiveTime"></ion-input>    
+      </ion-item>
+      <ion-item>
+      	  <ion-label>10K</ion-label>
+    	  <ion-input size="8" (change)='setDistanceTime(10)' type="text" placeholder="hh:mm:ss" [(ngModel)]="drillData.settings.tenTime"></ion-input>    
+      </ion-item> 
+      <ion-item>
+      	  <ion-label>21.1K</ion-label>
+    	  <ion-input size="8" (change)='setDistanceTime(21)' type="text" placeholder="hh:mm:ss" [(ngModel)]="drillData.settings.halfTime"></ion-input>    
+      </ion-item>
+    </ion-list>   
+</form>
 
     <ion-list>
        <ion-list-header>
-        Settings
+        Instellingen
       </ion-list-header>
       <ion-item>
         <ion-label>Summary list view</ion-label>

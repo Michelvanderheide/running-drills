@@ -102,6 +102,7 @@ class DrillHandler {
 		$this -> logger -> addInfo("Starting DrillHandler...");
 
 		$this -> readCsvData();
+		$this -> readCsvSessionData();
 
 	}
 
@@ -163,6 +164,103 @@ class DrillHandler {
 		return $result;
 	}
 
+	private function readCsvSessionData() {
+		global $apiConfig;
+
+		$delimiter = ',';
+		//exit($filename);
+
+		$data = array();
+		foreach($apiConfig['userGroups'] as $groupFolderName => $userGroupName) {
+			$filename = $apiConfig['assetsPath'].$groupFolderName.'/sessies.csv';
+			//	exit($filename);
+			if(!file_exists($filename) || !is_readable($filename))
+				continue;
+
+			$header = NULL;
+			if (($handle = fopen($filename, 'r')) !== FALSE) {
+				while (($row = fgetcsv($handle, 1000, $delimiter)) !== FALSE) {
+					if(!$header)
+						$header = $row;
+					else
+						$groupData[$groupFolderName][] = array_combine($header, $row);
+				}
+				fclose($handle);
+			}
+		}
+		//$this -> logger -> addInfo("readCsvSessionData:".print_r($data,true));
+		//$this -> logger -> addInfo("readCsvSessionData csv:".print_r(array_keys($data[0]),true));
+
+//print_r($groupData);exit;
+		//$this -> trainingSessions  = array();
+		foreach ($groupData as $userGroupName => $data) {
+
+			foreach($data as $drillIdx => $row) {
+				foreach($row as $k => $v) {
+					if (strstr($k, 'TS1-')) {
+						$k = str_replace('TS1-', '', $k);
+						if ($v) {
+		
+							if (!isset($groupIdx[$k])) {
+								$groupIdx[$k] =  -1;
+								//print_r($groupIdx);
+							}
+							$this -> trainingSessions[$k]['id'] = $k;
+							$this -> trainingSessions[$k]['description'] = $k;
+							$this -> trainingSessions[$k]['userGroupName'] = $userGroupName;
+
+
+
+
+							if (strlen($v) <= 5) {
+								if (isset($this -> drills[$v])) {
+									$drillId = $v;
+
+									if (is_array($this -> trainingSessions[$k]['groups'][$groupIdx[$k]]['drills'])) {
+										$groupDrillIdx = count($this -> trainingSessions[$k]['groups'][$groupIdx[$k]]['drills']);
+									} else {
+										$groupDrillIdx = 0;
+									}
+									
+									$this -> trainingSessions[$k]['groups'][$groupIdx[$k]]['drills'][$groupDrillIdx] = $this -> drills[$v];
+									$this -> trainingSessions[$k]['drills'][] = $this -> drills[$v];
+									$this -> trainingSessions[$k]['groups'][$groupIdx[$k]]['drills'][$groupDrillIdx]['drillIdx'] = count($this -> trainingSessions[$k]['drills']);
+
+									if (isset($this -> drills[$v]['intervals'])) {
+										//exit("hier");	
+										$this -> trainingSessions[$k]['intervals']  = $this -> drills[$v]['intervals'];	
+									}									
+								}
+							} else {
+								$groupIdx[$k]++;
+								$this -> trainingSessions[$k]['groups'][$groupIdx[$k]]['groupName'] = $v;
+								
+							
+							}
+						}
+
+		//				$trainingSession['groups'][$idx]['groupName'] = $drill['group'];
+		//				$trainingSession['groups'][$idx]['drills'][] = $drill;				
+					} else if (strstr($k, 'TS2-')) {
+
+						$k = str_replace('TS2-', '', $k);
+						if ($v) {
+							$this -> trainingSessions[$k]['groups'][$groupIdx[$k]]['drills'][$groupDrillIdx]['description'] = $v;
+
+							$tmpDrillIdx = $this -> trainingSessions[$k]['groups'][$groupIdx[$k]]['drills'][$groupDrillIdx]['drillIdx']-1;
+							$this -> trainingSessions[$k]['drills'][$tmpDrillIdx]['description'] = $v;
+							$this -> trainingSessions[$k]['groups'][$groupIdx[$k]]['drills'][$groupDrillIdx]['isAltDescription'] = true;
+						}
+					}
+
+				}
+				//$this -> drills[$drillId]
+				//$this -> trainingSessions[$k]
+			}
+		}
+		//print_r($this -> trainingSessions);exit;
+	}	
+
 	private function readCsvData() {
 		global $apiConfig;
 
@@ -216,7 +314,9 @@ define(COL_HOOFDPROGRAMMA,
 			
 			$drill['title'] = $row[COL_TITLE];
 			$drill['description'] = $row[COL_OMSCHRIJVING];
-
+			if (strstr($row[COL_INTERVALS], ',')) {
+				$drill['intervals'] = $row[COL_INTERVALS];
+			}
 			$drill['isKring'] = strtolower($row[COL_KRING]) === 'x';
 			$drill['isBaan'] = strtolower($row[COL_BAAN]) === 'x';
 			$drill['isWarmingUp'] = strtolower($row[COL_WARMING_UP]) === 'x';
@@ -224,6 +324,7 @@ define(COL_HOOFDPROGRAMMA,
 			$drill['isLoopschroling'] = strtolower($row[COL_LOOPSCHOLING]) === 'x';
 			$drill['isTussenprogramma'] = strtolower($row[COL_TUSSENPROGRAMMA]) === 'x';
 			$drill['isHoofdprogramma'] = strtolower($row[COL_HOOFDPROGRAMMA]) === 'x';
+			$drill['isCoolingDown'] = strtolower($row[COL_COOLING_DOWN]) === 'x';
 			$drill['isAltDescription'] = false;
 
 
@@ -271,10 +372,9 @@ $this -> logger -> addInfo("readCsvData row:".print_r($row,true));
 								$drill['isAltDescription'] = true;
 							}			
 
-
-
 							$trainingSessions[$k]['id'] = $k;
 							$trainingSessions[$k]['description'] = $k;
+							$trainingSessions[$k]['userGroupName'] = 'alle';
 							$trainingSessions[$k]['drills'][$idx] = $drill;
 							$trainingSessions[$k]['drills'][$idx]['drillIdx'] = count($trainingSessions[$k]['drills']);
 						}
@@ -287,6 +387,7 @@ $this -> logger -> addInfo("readCsvData row:".print_r($row,true));
 
 		}
 
+//print_r($trainingSessions);exit;
 		foreach($trainingSessions as $k => $trainingSession) {
 			$drills = $trainingSession['drills'];
 			ksort($drills);
@@ -295,20 +396,22 @@ $this -> logger -> addInfo("readCsvData row:".print_r($row,true));
 			$groupName = '';
 			$idx = -1;
 			foreach($trainingSession['drills'] as $drill) {
+
+//print_r($drill);
 				$this -> logger -> addInfo("Loop(".$drill['group']."):".$groupName);
 				if ($groupName !== $drill['group']) {
 					$this -> logger -> addInfo("change groupname(".$drill['group']."):".$groupName);
 					$groupName = $drill['group'];
 					$idx++;
 				}
+
 				$trainingSession['groups'][$idx]['groupName'] = $drill['group'];
 				$trainingSession['groups'][$idx]['drills'][] = $drill;
 			}
 			$this -> logger -> addInfo("trainingSession:".print_r($trainingSession,true));
 			$this -> trainingSessions[$k] = $trainingSession;
 		}
-
-
+		//exit;
 		
 		return true;
 	}

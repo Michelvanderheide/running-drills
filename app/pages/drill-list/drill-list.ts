@@ -27,13 +27,13 @@ export class DrillListPage {
 		this.groups = [];
 		this.isSummary = true;
 		this.trainingSession.groups.forEach(group => {
-			console.log("sessionGroup():",group.groupName);
+			console.debug("sessionGroup():",group.groupName);
 			this.drillData.getDrillFilters().forEach(drillFilter => {
 				//console.debug("drillFilter:",drillFilter.title);
 				if (drillFilter.value == true && group.groupName.search(drillFilter.title) >= 0) {
 
-					console.debug("groups:"+this.groups);
-					console.debug("group:"+this.groups);
+					console.debug("groups:",this.groups);
+					console.debug("group:",this.groups);
 
 					let found = false;
 					this.groups.forEach(function(mygroup) {

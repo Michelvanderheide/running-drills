@@ -85,7 +85,7 @@ abstract class ProductCommentQuery extends ModelCriteria
      * @param     string $modelName The phpName of a model, e.g. 'Book'
      * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'garantieapp', $modelName = '\\ProductComment', $modelAlias = null)
+    public function __construct($dbName = 'runningdrills', $modelName = '\\ProductComment', $modelAlias = null)
     {
         parent::__construct($dbName, $modelName, $modelAlias);
     }

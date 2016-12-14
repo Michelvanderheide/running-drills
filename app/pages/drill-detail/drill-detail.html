@@ -6,8 +6,14 @@
 		<ion-slide *ngFor="let drill of drills">
 			<h3>{{drill.title}}</h3>
 			<p [innerHTML]="drill.description"></p>
+			<button *ngIf="drillData.trainingSession.intervals" large (click)="goToTiming()" outline full>
+			<ion-icon name="timing"></ion-icon>
+			Timing
+			</button>
+
 			<button *ngIf="drill.videoUrl" (click)="goToYoutube(drill)" ion-button outline block>Youtube</button>
 			<img [src]="drill.imgUrls[0]" *ngIf="drill.imgUrls.length">
 		</ion-slide>
 	</ion-slides>
+
 </ion-content>

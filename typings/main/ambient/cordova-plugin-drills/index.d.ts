@@ -45,6 +45,9 @@ interface RunningDrillsPlugin {
 interface TrainingSession {
   id: string;
   description: string;
+  userGroupName: string;
+  show: boolean;
+  intervals: string;
   drills: Drill[];
   groups: Group[];
 }
@@ -65,7 +68,11 @@ interface Drill {
   orderBy: number;
 }
 
-
+interface RunningGroup {
+  name: string;
+  title: string;
+  value: boolean;
+}
 /*
 $drills[4] = array(  
   id => 4,

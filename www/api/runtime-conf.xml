@@ -7,11 +7,11 @@
     <level>7</level>
   </log>
   <propel>
-    <datasources default="garantieapp">
-      <datasource id="garantieapp">
+    <datasources default="runningdrills">
+      <datasource id="runningdrills">
         <adapter>postgres</adapter>
         <connection>
-          <dsn>postgres:host=localhost;dbname=garantieapp_dev</dsn>
+          <dsn>postgres:host=localhost;dbname=runningdrills</dsn>
           <user>postgres</user>
           <password></password>
         </connection>

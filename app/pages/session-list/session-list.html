@@ -2,14 +2,16 @@
   <button menuToggle>
     <ion-icon name="menu"></ion-icon>
   </button>
-  <ion-title>Sessions</ion-title>
+  <ion-title>Sessies</ion-title>
 </ion-navbar>
 
 <ion-content class="outer-content session-list">
   <ion-list>
-    <ion-item *ngFor="let trainingSession of trainingSessions" (click)="goToDrillList(trainingSession)">
+ <div *ngFor="let trainingSession of trainingSessions">
+    <ion-item *ngIf="trainingSession.show" (click)="goToDrillList(trainingSession)">
       <h2>{{trainingSession.description}}</h2>
     </ion-item>
+</div>
   </ion-list>
 </ion-content>
 

@@ -3,31 +3,31 @@
     <propel>
         <database>
             <connections>
-                <connection id="garantieapp">
-                    <adapter>pgsql</adapter>
+                <connection id="runningdrills">
+                    <adapter>mysql</adapter>
                     <classname>Propel\Runtime\Connection\ConnectionWrapper</classname>
-                    <dsn>pgsql:host=localhost;dbname=garantieapp_prod</dsn>
-                    <user>garantieapp</user>
+                    <dsn>mysql:host=localhost;dbname=runningdrills</dsn>
+                    <user>runningdrills</user>
                     <password>Cho1jeex</password>
                 </connection>
             </connections>
         </database>
         <runtime>
-            <defaultConnection>garantieapp</defaultConnection>
-            <connection>garantieapp</connection>
+            <defaultConnection>runningdrills</defaultConnection>
+            <connection>runningdrills</connection>
             <log name="defaultLogger">
                 <type>stream</type>
-                <path>/var/www/html/garantie-app/logs/propel.log</path>
+                <path>/var/www/html/runningdrills/logs/propel.log</path>
                 <level>300</level>
             </log>
-            <log name="garantieapp">
+            <log name="runningdrills">
                 <type>stream</type>
-                <path>/var/www/html/garantie-app/logs/propel.log</path>
+                <path>/var/www/html/runningdrills/logs/propel.log</path>
             </log>            
         </runtime>
         <generator>
-            <defaultConnection>garantieapp</defaultConnection>
-            <connection>garantieapp</connection>
+            <defaultConnection>runningdrills</defaultConnection>
+            <connection>runningdrills</connection>
         </generator>
     </propel>
 </config>

@@ -2,14 +2,16 @@ import {ViewChild} from '@angular/core';
 import {App, Events, Platform, MenuController, NavController} from 'ionic-angular';
 import {StatusBar, Splashscreen, Network} from 'ionic-native';
 import {DrillData} from './providers/drill-data';
+import {UserData} from './providers/user-data';
 import {TabsPage} from './pages/tabs/tabs';
 import {SessionListPage} from './pages/session-list/session-list';
+import {LoginPage} from './pages/login/login';
 import { AppSettings } from './providers/app-settings';
 
 
 @App({
   templateUrl: 'build/app.html',
-  providers: [DrillData],
+  providers: [DrillData, UserData],
   // Set any config for your app here, see the docs for
   // more ways to configure your app:
   // http://ionicframework.com/docs/v2/api/config/Config/
@@ -30,16 +32,18 @@ export class RunningDrillsApp {
   appPages: any[];
   root: any;
   drillData: DrillData;
+  userData: UserData;
   static get parameters() {
     return [
-      [Events], [DrillData], [Platform], [MenuController]
+      [Events], [DrillData], [UserData], [Platform], [MenuController]
     ]
   }
 
-  constructor(events: Events, drillData:DrillData, platform: Platform, menu: MenuController) {
+  constructor(events: Events, drillData:DrillData, userData:UserData, platform: Platform, menu: MenuController) {
     this.events = events;
     this.menu = menu;
     this.drillData = drillData;
+    this.userData = userData;
 
       console.log("location...."+ window.location.hostname);
       if (window.location.hostname.search("local") > -1) {
@@ -57,7 +61,7 @@ let connectSubscription = Network.onConnect().subscribe(() => {
   console.log('network connected!'); 
   // We just got a connection but we need to wait briefly
    // before we determine the connection type.  Might need to wait 
-  // prior to doing any api requests as well.
+  // prior to doing any api requests as well.  
   setTimeout(() => {
     this.drillData.isConnected = true;
     if (Network.connection === 'wifi') {
@@ -76,13 +80,20 @@ let connectSubscription = Network.onConnect().subscribe(() => {
     });
 
     // We plan to add auth to only show the login page if not logged in
-    this.root = SessionListPage;
+    this.root = TabsPage;
+
+
+    this.userData.hasLoggedIn
+    // decide which menu items should be hidden by current login status stored in local storage
+    if (!this.userData.hasLoggedIn()) {
+       //this.root = LoginPage;
+    }
 
     // create an list of pages that can be navigated to from the left menu
     // the left menu only works after login
     // the login page disables the left menu
     this.appPages = [
-      { title: 'Sessions', component: SessionListPage, icon: 'session-list' },
+      { title: 'Tabs', component: TabsPage, icon: 'tabs' }
     ];
     
 
@@ -104,8 +115,19 @@ let connectSubscription = Network.onConnect().subscribe(() => {
     this.drillData.toggleDrillFilter(idx);
   }
 
+  toggleRunningGroup(idx) {
+    this.userData.toggleRunningGroup(idx);
+    this.drillData.filterOnUserGroups();
+  }
+
   toggleSetting(name) {
     this.drillData.toggleSetting(name);
   }
 
+  setDistanceTime(dist) {
+    this.drillData.storeSettings();
+    this.drillData.calcTimesPerDistance();
+
+
+  }
 }
