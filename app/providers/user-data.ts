@@ -11,6 +11,7 @@ export class UserData {
   HAS_LOGGED_IN = 'hasLoggedIn';
   private http: Http;
   private userToken: String;
+  private initialized: boolean;
 
   static get parameters(){
     return [[Events],[Http]];
@@ -21,6 +22,7 @@ export class UserData {
   }
 
   initRunningGroups() {
+    this.initialized = localStorage.getItem("initialized") != null;
     let localRunningGroups = localStorage.getItem("runningGroups");
     if (localRunningGroups ==  null) {
       this.runningGroups = [ 
@@ -33,6 +35,14 @@ export class UserData {
     } else {
       this.runningGroups = JSON.parse(localRunningGroups);
     }
+  }
+
+  public isInitialized() {
+    return this.initialized;
+  }
+
+  public setInitialized() {
+    localStorage.setItem("initialized", "true");
   }
 
   public toggleRunningGroup(idx) {

@@ -6,6 +6,7 @@ import {UserData} from './providers/user-data';
 import {TabsPage} from './pages/tabs/tabs';
 import {SessionListPage} from './pages/session-list/session-list';
 import {LoginPage} from './pages/login/login';
+import {SettingsPage} from './pages/settings/settings';
 import { AppSettings } from './providers/app-settings';
 
 
@@ -50,6 +51,8 @@ export class RunningDrillsApp {
         AppSettings.setDevEnvironment();
       }
 
+      AppSettings.isNative = platform.is('cordova');
+
 // watch network for a disconnect
 let disconnectSubscription = Network.onDisconnect().subscribe(() => {
   console.log('network was disconnected :-(');
@@ -72,7 +75,7 @@ let connectSubscription = Network.onConnect().subscribe(() => {
 });
 
 
-
+  
     // Call any initial plugins when ready
     platform.ready().then(() => {
       StatusBar.styleDefault();
@@ -88,6 +91,10 @@ let connectSubscription = Network.onConnect().subscribe(() => {
     if (!this.userData.hasLoggedIn()) {
        //this.root = LoginPage;
     }
+
+    console.log("check");
+
+
 
     // create an list of pages that can be navigated to from the left menu
     // the left menu only works after login

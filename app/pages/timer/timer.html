@@ -20,7 +20,7 @@
 
 <ion-card *ngIf="timer">
 <ion-card-header>
-	<button *ngIf="timeInSeconds && timeInSeconds > 0" large block clear class="timer-button">{{timer.displayTime}}</button>
+	<button (click)="resumeTimer()" *ngIf="timeInSeconds && timeInSeconds > 0" large block clear class="timer-button">{{timer.displayTime}}</button>
 	<button *ngIf="!timeInSeconds || timeInSeconds == 0" large block clear class="timer-button">Timer set up incorrectly</button>
 </ion-card-header>
 </ion-card>
@@ -48,22 +48,19 @@
 
 
 <ion-list class="timer">
-	<ion-item *ngFor="let interval of intervals; let intIdx = index" (click)="setIntervalIdx(intIdx)">
-		<div *ngIf="interval.styleActive == 0" (click)="startTimer(intIdx)">
+	<div *ngFor="let interval of intervals; let intIdx = index" (click)="setIntervalIdx(intIdx)">
+		<ion-item *ngIf="interval.styleActive == 0" (click)="startTimer(intIdx)">
 		  <div *ngIf="interval.distance" style="float:left;width:40%"> {{interval.distance}} meter</div>
-		  <p>{{interval.time}} sec. vlot</p>
-		  <p>{{interval.timeRest}} sec. pauze</p>
-		</div>
-		<div style="background:#9cf79c"*ngIf="interval.styleActive == 1" (click)="startTimer(intIdx)">
+		  <h2>{{interval.displayTime}} vlot  -  {{interval.displayTimeRest}} pauze</h2>
+		</ion-item>
+		<ion-item style="background:#9cf79c"*ngIf="interval.styleActive == 1" (click)="startTimer(intIdx)">
 		  <div *ngIf="interval.distance" style="float:left;width:40%"> {{interval.distance}} meter</div>
-		  <p>{{interval.time}} sec. vlot</p>
-		  <p>{{interval.timeRest}} sec. pauze</p>
-		</div>
-		<div style="background:#ffc966" *ngIf="interval.styleActive == 2" (click)="startTimer(intIdx)">
+		  <h2>{{interval.displayTime}} vlot  -  {{interval.displayTimeRest}} pauze</h2>
+		</ion-item>
+		<ion-item style="background:#ffc966" *ngIf="interval.styleActive == 2" (click)="startTimer(intIdx)">
 		  <div *ngIf="interval.distance" style="float:left;width:40%"> {{interval.distance}} meter</div>
-		  <p>{{interval.time}} sec. vlot</p>
-		  <p>{{interval.timeRest}} sec. pauze</p>
-		</div>
-	</ion-item>
+		  <h2>{{interval.displayTime}} vlot  -  {{interval.displayTimeRest}} pauze</h2>
+		</ion-item>
+	</div>
 </ion-list>
 </ion-content>

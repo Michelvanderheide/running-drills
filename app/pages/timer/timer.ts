@@ -1,6 +1,8 @@
 import {CountdownTimer} from './countdownTimer';
 import { DrillData } from "../../providers/drill-data";
 import {NavController, NavParams, Page} from 'ionic-angular'; 
+import {NativeAudio} from 'ionic-native';
+import { AppSettings } from '../../providers//app-settings';
  
 @Page({
 	templateUrl: 'build/pages/timer/timer.html'
@@ -15,10 +17,15 @@ export class TimerPage {
 	private drillData : DrillData;
 	private timer: CountdownTimer;
 	private timeInSeconds:number;
+	private countdownTime:number = 0;
 	 
 	constructor(drillData : DrillData) {
 		this.drillData = drillData;
 		this.initIntervals(drillData.trainingSession.intervals);
+		NativeAudio.preloadSimple('countdown', 'build/audio/countdown-5.mp3').then(function() {}, function() {});
+		if (AppSettings.isNative) {
+			this.countdownTime = 5;
+		}
 	}
 
 	initIntervals (strIntervals) {
@@ -41,7 +48,9 @@ export class TimerPage {
 				distance: 0,
 				time: 0,
 				timeRest: 0,
-				styleActive: 0
+				styleActive: 0,
+				displayTime: '00:00',
+				displayTimeRest: '00:00'
 			};		
 
 			// determine subitems
@@ -83,7 +92,11 @@ console.log("e:" + speedRef+":"+strItemP+":"+strItemV);
 					item.time  = parseInt(strItemV.replace('s', ''));
 				}
 			}
-console.debug("item:",item);			
+
+console.debug("item:",item);
+			item.displayTimeRest = this.getSecondsAsDigitalClock(item.timeRest);
+			item.displayTime = this.getSecondsAsDigitalClock(item.time);
+
 			this.intervals.push(item);
 			
 			
@@ -125,7 +138,47 @@ console.debug("item:",item);
 console.debug('clock:',this.timer);		
 	}
 	 
-	startTimer(idx:number) {
+	startCountdown() {
+		console.log("startCountdown");
+		if (this.countdownTime > 0) {
+			NativeAudio.play('countdown', function () {
+				console.log('uniqueId1 is done playing');
+			});
+		}		
+	}
+
+/*
+	startTimerCountdown(idx:number) {
+		this.intervalIdx = idx;
+		if (this.countdownTime > 0) {
+			NativeAudio.play('countdown', function () {
+				console.log('uniqueId1 is done playing');
+				//this.startTimer(this.intervalIdx);
+			});
+		} else {
+			this.startTimer(this.intervalIdx);
+		}
+	}
+
+	startTimerRestCountdown() {
+		if (this.countdownTime > 0) {
+			NativeAudio.play('countdown', function () {
+				console.log('uniqueId1 is done playing');
+				this.timer.hasRest = true;
+				this.intervals[this.intervalIdx].styleActive = 2;
+				this.timer.secondsRemaining = this.intervals[this.intervalIdx].timeRest;
+				this.timerTick();
+			});
+		} else {
+			this.timer.hasRest = true;
+			this.intervals[this.intervalIdx].styleActive = 2;
+			this.timer.secondsRemaining = this.intervals[this.intervalIdx].timeRest;
+			this.timerTick();
+		}			
+	}
+*/
+
+	startTimer(idx) {
 		clearTimeout(this.timeOut);
 		this.intervals[this.intervalIdx].styleActive = 0;
 		this.intervalIdx = idx;
@@ -133,9 +186,9 @@ console.debug('clock:',this.timer);
 		this.timer.runTimer = true;
 		this.intervals[this.intervalIdx].styleActive = 1;
 		this.timer.secondsRemaining = this.intervals[this.intervalIdx].time;
-		this.timerTick();
+		this.timerTick();	 
 	}
-	 
+
 	pauseTimer(item) {
 		this.timer.runTimer = false;
 	}
@@ -143,6 +196,19 @@ console.debug('clock:',this.timer);
 	resumeTimer(item) {
 		this.timer.runTimer = true;
 		this.timerTick();
+	}
+
+	resumeOrPauseTimer() {
+		if (!this.timer.hasStarted) {
+			this.startTimer(0);
+		} else {
+			if (this.timer.runTimer) {
+				this.timer.runTimer = false;
+			} else {
+				this.timer.runTimer = true;
+				this.timerTick();
+			}
+		}
 	}
 
 	delayTimer(timeSecs: number) {
@@ -168,7 +234,11 @@ console.debug('clock:',this.timer);
 			if (!this.timer.runTimer) { return; }
 			this.timer.secondsRemaining--;
 			this.timer.displayTime = this.getSecondsAsDigitalClock(this.timer.secondsRemaining);
-			if (this.timer.secondsRemaining > 0) {
+			if ((this.timer.secondsRemaining)> 0) {
+				
+				if ((this.timer.secondsRemaining  - this.countdownTime) == 0) {
+					setTimeout(this.startCountdown());
+				}
 				this.timerTick();
 			}
 			else {
@@ -176,21 +246,27 @@ console.debug('clock:',this.timer);
 					console.log("hasRest 1");
 					this.intervals[this.intervalIdx].styleActive = 0;
 					if (this.hasMoreIntervals()) {
+						//this.startCountdown();
+						
 						this.intervalIdx++;
 						this.intervals[this.intervalIdx].styleActive = 1;
 						this.timer.secondsRemaining = this.intervals[this.intervalIdx].timeRest;
 						this.timer.hasRest = false;
 						this.timerTick();
+						
 					} else {
 						console.log("finished");
 						this.timer.hasFinished = true;
 					}
 				} else {
 					console.log("hasNo Rest");
+					//this.startTimerCountdown();	
+					
 					this.timer.hasRest = true;
 					this.intervals[this.intervalIdx].styleActive = 2;
 					this.timer.secondsRemaining = this.intervals[this.intervalIdx].timeRest;
 					this.timerTick();
+					
 				}
 	
 			}

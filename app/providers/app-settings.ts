@@ -8,6 +8,8 @@ export class AppSettings {
 	public static BASE_URL: string = 'http://www.avgoor.nl';
 	public static BASE_API_URL: string = 'http://www.avgoor.nl/api';
 
+	public static isNative:boolean = false;
+
 	
 }
 
