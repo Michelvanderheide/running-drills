@@ -2,18 +2,22 @@
 	<ion-title>Details</ion-title>
 </ion-navbar>
 <ion-content padding class="drill-detail">
-	<ion-slides  (swiperight)="swipeEvent(-1)" (swipeleft)="swipeEvent(1)" [options]="slideOptions">
-		<ion-slide *ngFor="let drill of drills">
-			<h3>{{drill.title}}</h3>
-			<p [innerHTML]="drill.description"></p>
-			<button *ngIf="drill.isHoofdprogramma" large (click)="goToTiming()" outline full>
-			<ion-icon name="timing"></ion-icon>
-			Timing
-			</button>
-
-			<button *ngIf="drill.videoUrl" (click)="goToYoutube(drill)" ion-button outline block>Youtube</button>
-			<img (click)="goToYoutube(drill)" [src]="drill.imgUrls[0]" *ngIf="drill.imgUrls.length">
+	<h3>{{drillData.drill.title}}</h3>
+	<p [innerHTML]="drillData.drill.descriptionHtml"></p>
+	
+	<ion-slides style="height:auto" *ngIf="drillData.drill.imgUrls.length>0">
+		<ion-slide *ngFor="let imgUrl of drillData.drill.imgUrls">
+			<img [src]="drillData.drill.imgUrl">
 		</ion-slide>
 	</ion-slides>
+  <ion-fab top edge>
+    <ion-fab-list>
+      <button *ngIf="hasPrev" (click)="gotoPrevDrill()" ion-fab><ion-icon name="arrow-back"></ion-icon>Vorige</button>
+      <button *ngIf="drillData.drill.videoUrl || drillData.drill.hasVideo" (click)="goToYoutube(drillData.drill)" ion-fab><ion-icon name="logo-youtube"></ion-icon></button>
+      <button *ngIf="drillData.drill.isHoofdprogramma && drillData.trainingSession.intervals" (click)="goToTiming()" ion-fab>
+      		<ion-icon name="timer"></ion-icon></button>
+      <button *ngIf="hasNext" (click)="gotoNextDrill()" ion-fab right>Volgende<ion-icon name="arrow-forward"></ion-icon></button>
+    </ion-fab-list>
+  </ion-fab>
 
 </ion-content>

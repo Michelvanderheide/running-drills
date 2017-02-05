@@ -46,7 +46,7 @@ export class RunningDrillsApp {
     this.drillData = drillData;
     this.userData = userData;
 
-      console.log("location...."+ window.location.hostname);
+      //console.log("location...."+ window.location.hostname);
       if (window.location.hostname.search("local") > -1) {
         AppSettings.setDevEnvironment();
       }
@@ -55,20 +55,20 @@ export class RunningDrillsApp {
 
 // watch network for a disconnect
 let disconnectSubscription = Network.onDisconnect().subscribe(() => {
-  console.log('network was disconnected :-(');
+  //console.log('network was disconnected :-(');
   this.drillData.isConnected = false;
 });
 
 // watch network for a connection
 let connectSubscription = Network.onConnect().subscribe(() => {
-  console.log('network connected!'); 
+  //console.log('network connected!'); 
   // We just got a connection but we need to wait briefly
    // before we determine the connection type.  Might need to wait 
   // prior to doing any api requests as well.  
   setTimeout(() => {
     this.drillData.isConnected = true;
     if (Network.connection === 'wifi') {
-      console.log('we got a wifi connection, woohoo!');
+      //console.log('we got a wifi connection, woohoo!');
 
     }
   }, 3000);
@@ -91,9 +91,6 @@ let connectSubscription = Network.onConnect().subscribe(() => {
     if (!this.userData.hasLoggedIn()) {
        //this.root = LoginPage;
     }
-
-    console.log("check");
-
 
 
     // create an list of pages that can be navigated to from the left menu
@@ -132,9 +129,18 @@ let connectSubscription = Network.onConnect().subscribe(() => {
   }
 
   setDistanceTime(dist) {
+    if (dist == 5) {
+      this.drillData.settings.fiveTime = this.drillData.parseTime(this.drillData.settings.fiveTime);
+      console.debug("dist:"+this.drillData.settings.fiveTime);
+    } else if (dist == 10) {
+      this.drillData.settings.tenTime = this.drillData.parseTime(this.drillData.settings.tenTime);
+      console.debug("dist:"+this.drillData.settings.tenTime);
+    } else if (dist == 21) {
+      this.drillData.settings.halfTime = this.drillData.parseTime(this.drillData.settings.halfTime);
+      console.debug("dist:"+this.drillData.settings.halfTime);
+    }
+    console.debug("dist("+dist+"):"+this.drillData.settings);
     this.drillData.storeSettings();
     this.drillData.calcTimesPerDistance();
-
-
-  }
+  }  
 }

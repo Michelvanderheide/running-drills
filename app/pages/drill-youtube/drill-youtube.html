@@ -6,9 +6,13 @@
 		<div class="row">
 			<div class="col">
 				<div class="video-container">
-					<iframe [src]="drill.videoUrl" frameborder="0" allowfullscreen></iframe>
+					<iframe name="drillvideo" id="drillvideo" [src]="drill.videoUrl" frameborder="0" allowfullscreen></iframe>
 				</div>
 			</div>
 		</div>
 	</a>
+
+	<video *ngIf="drill.hasVideo" controls class="video_content">
+	    <source [src]="drill.videoUrl" type='video/mp4' />
+	</video>
 </ion-content>

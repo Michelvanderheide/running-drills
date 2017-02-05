@@ -1,0 +1,48 @@
+<ion-navbar *navbar>
+  <button menuToggle>
+  <ion-icon name="menu"></ion-icon>
+  </button>
+  <ion-title>Instellingen</ion-title>
+</ion-navbar>
+<ion-content>
+<form>
+      <ion-list>
+        <ion-list-header>
+          <h2>Uw loopgroep(en)</h2>
+        </ion-list-header>
+          <ion-item *ngFor="let runningGroup of userData.runningGroups; let i = index">
+            <ion-label>{{runningGroup.title}}</ion-label>
+            <ion-toggle [checked]="runningGroup.value" (click)="toggleRunningGroup(i)"></ion-toggle>      
+          </ion-item> 
+
+        <ion-list-header>
+          <h2>Uw 5 of 10 km tijd</h2>
+        </ion-list-header>
+
+      <ion-item>
+        <ion-label *ngIf="drillData.settings.setTenTime">10 km tijd</ion-label>
+        <ion-label *ngIf="!drillData.settings.setTenTime">5 km tijd</ion-label>
+        <ion-toggle [checked]="drillData.settings.setTenTime" (click)="toggleFiveTenTime()"></ion-toggle>      
+      </ion-item> 
+      <ion-item>
+        <ion-select [(ngModel)]="selectedTime" (change)="changeTimes()">
+        <ion-option *ngFor="let dropDownInterval of dropDownIntervals"  [value]="dropDownInterval">{{dropDownInterval}}</ion-option>
+
+      </ion-select> 
+      </ion-item>     
+        <!--ion-item>
+          <ion-label stacked><h1>Uw 5 km tijd</h1></ion-label>
+          <ion-input size="5" (change)=setDistanceTime(5) type="text" placeholder="mm:ss" [(ngModel)]="drillData.settings.fiveTime"></ion-input>    
+        </ion-item>
+        <ion-item>
+          <ion-label stacked><h1>Uw 10 km tijd</h1></ion-label>
+          <ion-input size="8" (change)=setDistanceTime(10) type="text" placeholder="hh:mm:ss" [(ngModel)]="drillData.settings.tenTime"></ion-input>    
+        </ion-item> 
+        <ion-item>
+          <ion-label stacked><h1>Uw 21.1 km tijd</h1></ion-label>
+          <ion-input size="8" (change)=setDistanceTime(21) type="text" placeholder="hh:mm:ss" [(ngModel)]="drillData.settings.halfTime"></ion-input>    
+        </ion-item-->
+      </ion-list> 
+      <button (click)="done()" ion-button full>Klaar</button> 
+</form>
+</ion-content>

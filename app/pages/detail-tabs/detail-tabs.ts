@@ -18,8 +18,8 @@ export class DetailTabsPage {
   constructor(navParams) {
     this.mySelectedIndex = navParams.data.tabIndex || 0;
     this.drill = navParams.get("drill");
-    console.log("Drill:");
-    console.debug(this.drill);
+    //console.log("Drill:");
+    //console.debug(this.drill);
     // set the root pages for each tab
     this.tab1Root = DrillDetailPage;
     this.tab2Root = DrillYoutubePage;

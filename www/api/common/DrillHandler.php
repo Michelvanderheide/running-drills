@@ -1,5 +1,114 @@
 <?php
 
+
+/**
+ * CSV file parser
+ * Currently the string matching doesn't work
+ * if the output encoding is not ASCII or UTF-8
+ */
+class CsvFileParser
+{
+    var $delimiter;         // Field delimiter
+    var $enclosure;         // Field enclosure character
+    var $inputEncoding;     // Input character encoding
+    var $outputEncoding;    // Output character encoding
+    var $data;              // CSV data as 2D array
+
+    /**
+     * Constructor
+     */
+    function CsvFileParser()
+    {
+        $this->delimiter = ",";
+        $this->enclosure = '"';
+        $this->inputEncoding = "ISO-8859-1";
+        $this->outputEncoding = "ISO-8859-1";
+        $this->data = array();
+    }
+
+    /**
+     * Parse CSV from file
+     * @param   content     The CSV filename
+     * @param   hasBOM      Using BOM or not
+     * @return Success or not
+     */
+    function ParseFromFile( $filename, $hasBOM = false )
+    {
+        if ( !is_readable($filename) )
+        {
+            return false;
+        }
+        return $this->ParseFromString( file_get_contents($filename), $hasBOM );
+    }
+
+    /**
+     * Parse CSV from string
+     * @param   content     The CSV string
+     * @param   hasBOM      Using BOM or not
+     * @return Success or not
+     */
+    function ParseFromString( $content, $hasBOM = false )
+    {
+        $content = iconv($this->inputEncoding, $this->outputEncoding, $content );
+        $content = str_replace( "\r\n", "\n", $content );
+        $content = str_replace( "\r", "\n", $content );
+        if ( $hasBOM )                                // Remove the BOM (first 3 bytes)
+        {
+            $content = substr( $content, 3 );
+        }
+        if ( $content[strlen($content)-1] != "\n" )   // Make sure it always end with a newline
+        {
+            $content .= "\n";
+        }
+
+        // Parse the content character by character
+        $row = array( "" );
+        $idx = 0;
+        $quoted = false;
+        for ( $i = 0; $i < strlen($content); $i++ )
+        {
+            $ch = $content[$i];
+            if ( $ch == $this->enclosure )
+            {
+                $quoted = !$quoted;
+            }
+
+            // End of line
+            if ( $ch == "\n" && !$quoted )
+            {
+                // Remove enclosure delimiters
+                for ( $k = 0; $k < count($row); $k++ )
+                {
+                    if ( $row[$k] != "" && $row[$k][0] == $this->enclosure )
+                    {
+                        $row[$k] = substr( $row[$k], 1, strlen($row[$k]) - 2 );
+                    }
+                    $row[$k] = str_replace( str_repeat($this->enclosure, 2), $this->enclosure, $row[$k] );
+                }
+
+                // Append row into table
+                $this->data[] = $row;
+                $row = array( "" );
+                $idx = 0;
+            }
+
+            // End of field
+            else if ( $ch == $this->delimiter && !$quoted )
+            {
+                $row[++$idx] = "";
+            }
+
+            // Inside the field
+            else
+            {
+                $row[$idx] .= $ch;
+            }
+        }
+
+        return true;
+    }
+}
+
 use Propel\Runtime\ActiveQuery\Criteria;
 
 
@@ -95,17 +204,32 @@ class DrillHandler {
 	 */
 	public function __construct() {	
 		global $apiConfig;
+// /print_r($apiConfig);exit;
 
 		$this -> errorMessage = "";
 		$this -> logger = new Logger('DrillHandler');
 		$this -> logger -> pushHandler(new StreamHandler( $apiConfig['logpath'].'/RunningDrills.log', Logger::INFO));
 		$this -> logger -> addInfo("Starting DrillHandler...");
 
-		$this -> readCsvData();
-		$this -> readCsvSessionData();
-
+		//$this -> readCsvData();
+		//$this -> readCsvSessionData();
+		$this -> getSessionDrills();
 	}
 
+
+	/**
+	 * get a list of products in a dossier
+	 * @param filter: array the dossierFK
+	 * @param includestore boolean with or whithou the store name (??)
+	 
+	 * @return array
+	 */
+	public function getTrainingSessions() {
+		global  $apiConfig;
+		$result = array();
+		$this -> logger -> addInfo("getTrainingSessions:".print_r($this -> trainingSessions,true));
+		return $this -> trainingSessions;
+	}
 
 
 	public function setErrorMessage($prefix=false, $message) {
@@ -129,12 +253,260 @@ class DrillHandler {
 	 
 	 * @return array
 	 */
-	public function getTrainingSessions() {
+	public function getSessionDrills($filter=array()) {
 		global  $apiConfig;
 		$result = array();
-		$this -> logger -> addInfo("getTrainingSessions:".print_r($this -> trainingSessions,true));
-		return $this -> trainingSessions;
+		$this -> logger -> addInfo("getSessionDrills:".print_r($this -> trainingSessions,true));
+
+		extract($filter);
+
+		$query = DrillQuery::create();
+
+		if (isset($SessionPk)) {
+			$query->filterBySessionPk($SessionPk);
+		}
+		$query -> join('Drill.Category');
+		$query -> Join('Drill.SessionDrill');
+		$query -> join('SessionDrill.Session');
+		$query -> join('Drill.Category');
+		$query -> join('Session.SessionRungroup');
+		$query -> join('SessionRungroup.Rungroup');
+		$query -> withColumn('Session.SessionPk', 'SessionPk');
+		$query -> withColumn('Session.SessionName', 'SessionName');
+		$query -> withColumn('Session.SessionDescription', 'SessionDescription');
+		$query -> withColumn('Session.SessionDescriptionHtml', 'SessionDescriptionHtml');
+		$query -> withColumn('Session.SessionDate', 'SessionDate');
+		$query -> withColumn('Rungroup.RungroupPk', 'RungroupPk');
+		$query -> withColumn('Rungroup.RungroupName', 'RungroupName');
+		$query -> withColumn('Category.CategoryPk', 'CategoryPk');
+		$query -> withColumn('Category.CategoryName', 'CategoryName');
+		$query -> withColumn('SessionDrill.SessionDrillPk', 'SessionDrillPk');
+		$query -> withColumn('SessionDrill.SortOrder', 'SortOrder');
+		$query -> withColumn('Drill.Id', 'DrillId');
+		$query -> withColumn('Drill.DrillTitle', 'DrillTitle');
+		$query -> withColumn('Drill.DrillDescription', 'DrillDescription');
+		$query -> withColumn('Drill.DrillDescriptionHtml', 'DrillDescriptionHtml');
+		$query -> withColumn('Drill.DrillDescriptionHtml', 'DrillDescriptionHtml');
+		$query -> withColumn('Drill.DrillIntervals', 'DrillIntervals');
+		$query -> withColumn('Drill.DrillImage', 'DrillImage');
+		$query -> withColumn('Drill.DrillVideo', 'DrillVideo');
+		$query -> orderBySessionPk();
+		$query -> orderBySortOrder();
+		$query -> distinct();
+
+		$sessionDrills = $query -> find() -> toArray(); //-> toString();
+		$arrResult = array();
+		$idx = 0;
+
+
+		$categoryName = false;
+		$sessionName = false;
+		$categoryIdx = -1;
+		$sessionIdx = -1;
+		$groups = array();
+		foreach ($sessionDrills as $i => $values) {
+			if ($sessionName !== $values['SessionName']) {
+				$categoryIdx = -1;
+				$sessionIdx++;
+				$sessionName = $values['SessionName'];
+				$arrResult[$sessionIdx]['description'] = $values['SessionDescription'];
+				$arrResult[$sessionIdx]['descriptionHtml'] = $values['SessionDescriptionHtml'];
+				$arrResult[$sessionIdx]['drills'] = array();
+				$arrResult[$sessionIdx]['groups'] = array();
+				$arrResult[$sessionIdx]['id'] = $values['SessionPk'];
+				//$arrResult[$sessionIdx]['show'] = true;
+				$arrResult[$sessionIdx]['userGroupName'] = $values['RungroupName'];
+			}
+			if ($categoryName !== $values['CategoryName']) {
+				$categoryIdx++;
+				$categoryName = $values['CategoryName'];
+			}
+
+			$drillIdx = count($arrResult[$sessionIdx]['drills']);
+			$drill['description'] = $values['DrillDescription'];
+			$drill['descriptionHtml'] = $values['DrillDescriptionHtml'];
+			$drill['drillIdx'] = $drillIdx+1;
+			$drill['group'] = $values['CategoryName'];
+			$drill['id'] = $values['DrillId'];
+
+			$drill['imgUrl'] = '';
+			$filename = strtolower($drill['id'].'.png');
+
+			$this -> logger -> addInfo("imageUrl-path:".$apiConfig['imageUrl'] . $filename);
+			$i = 1;
+			$filename = strtolower($drill['id'].'-'.$i.'.png');
+
+			$drill['imgUrls'] = array();
+			$this -> logger -> addInfo("Check if File exists:".$apiConfig['imagedir'].$filename);
+			$drill['imgUrl'] = ""; //$apiConfig['imageUrl'].'kettinglopers.png';
+			while (file_exists($apiConfig['imagedir'].$filename)) {
+				$this -> logger -> addInfo("File exists!");
+				$drill['imgUrls'][] = $drill['imgUrl'] = $apiConfig['imageUrl'].$filename;
+				$i++;
+				$filename = strtolower($drill['id'].'-'.$i.'.png');
+			}
+
+			$drill['videoUrl'] = '';
+			$drill['hasVideo'] = false;
+			if ($values['DrillVideo']) {
+				$drill['videoUrl'] = $values['DrillVideo'];
+				$drill['hasVideo'] = true;
+			}
+
+			$drill['tags'] = '';
+
+			$arrResult[$sessionIdx]['drills'][$drillIdx] = $drill;
+			$arrResult[$sessionIdx]['groups'][$categoryIdx]['drills'][] = $drill;
+			$arrResult[$sessionIdx]['groups'][$categoryIdx]['groupName'] = $categoryName;
+		}
+		$this -> trainingSessions = $arrResult;
+		//print_r($arrResult);exit;
+
+/*
+
+    [0] => Array
+        (
+            [DrillPk] => 1
+            [Guid] => 
+            [Id] => W001
+            [CategoryFk] => 1
+            [DrillTitle] => Inlopen
+            [DrillDescription] => Zelfstand inlopen
+            [DrillDescriptionHtml] => Zelfstand inlopen
+            [DrillIntervals] => 
+            [DrillImage] => 
+            [DrillVideo] => 
+            [SessionPk] => 1
+            [SessionName] => Maandag avondtraining
+            [SessionDescription] => 
+            [SessionDate] => 2017-01-30
+            [RungroupPk] => 1
+            [RungroupName] => AV Goor - loopgroep
+            [CategoryPk] => 1
+            [CategoryName] => Warming up
+            [SessionDrillPk] => 2
+            [DrillId] => W001
+        )
+print_r($sessionDrills->toArray());exit;		
+		while (!$sessionDrills -> isEmpty()) {
+			$sessionDrill = $sessionDrills -> pop();
+			$this -> logger -> addInfo('getSessionDrill:'.print_r($sessionDrill,true));
+			$arrResult[$idx] = $sessionDrill -> toArray();
+			$idx++;
+		}
+*/
+		//ksort ($sessionDrills)
+
+		return true;
 	}
+
+	public function importSessionDrills($filter=array()) {
+		global  $apiConfig;
+
+		$parser = new CsvFileParser();
+		$csv = $parser -> ParseFromFile('/var/www/html/running-drills-api/www/api/export.csv');
+		//print_r($parser -> data);exit;
+		//$csv = array_map('str_getcsv', file('/var/www/html/running-drills-api/www/api/export.csv'));
+
+		//$parser -> data = array_pop($parser -> data);
+		foreach($parser -> data as $i => $items) {
+			if ($i == 0)
+				continue; // skip header
+
+			if ($items[0]) {
+
+				$drill = new Drill();
+				$drill -> setId($items[0]);
+
+				$c = strtoupper(substr($items[0],0,1));
+				//var_dump($c);
+				switch ($c) {
+					case 'W':
+						$cat = 1;
+						break;
+					case 'C':
+						$cat = 2;
+						break;
+					case 'L':
+						$cat = 3;
+						break;
+					case 'K':
+						$cat = 4;
+						break;
+					case 'C':
+						$cat = 5;
+						break;
+					case 'A':
+						continue 2;
+				}
+				$drill -> setCategoryFk($cat);
+
+
+				// title
+				if ($items[1]) {
+					$drill -> setDrillTitle($items[1]);
+
+				}
+					
+				// desciption
+				if ($items[3]) {
+
+					$drill -> setDrillDescription($items[3]);
+					$drill -> setDrillDescriptionHtml($this -> toHTML($items[3]));
+				}
+				
+	
+				// video/youtube
+				if (@isset($items[6]) && $items[6]) {
+					$drill -> setDrillVideo("https://www.youtube.com/embed/".$items[6]);
+				}
+				try {
+
+					if (!$drill -> save()) {
+						exit ("save failed");
+					}
+				} catch (Exception $e) {
+					print($e);
+					exit("Error");
+				}
+			}
+			
+		}
+
+/*
+    [0] => Array
+        (
+            [0] => ID
+            [1] => Korte omschrijving
+            [2] => Intervals
+            [3] => Extra info
+            [4] => Video
+            [5] => Img
+            [6] => Youtube Id
+
+
+    [3] => Array
+        (
+            [0] => W002
+            [1] => Armen zwaai
+            [2] => 
+            [3] => links, rechts, beide, achteruit
+            [4] => 
+            [5] => 
+            [6] => 
+            [7] =  
+
+            [0] => k027
+            [1] => Single leg squats
+            [2] => 
+            [3] => Soort uitvalspas waarbij 1 persoon de voet van een ander vasthoud op middelhoogte
+            [4] => 
+            [5] => x
+            [6] => mAiAvupFT6g?start=152&end=166
+ */		
+	}	
+
+
 
 	/**
 	 * get a list of products in a dossier
@@ -144,20 +516,6 @@ class DrillHandler {
 	 * @return array
 	 */
 	public function getSessionGroups($sessionId) {
-		global  $apiConfig;
-		$result = array();
-
-		return $result;
-	}
-
-	/**
-	 * get a list of products in a dossier
-	 * @param filter: array the dossierFK
-	 * @param includestore boolean with or whithou the store name (??)
-	 
-	 * @return array
-	 */
-	public function getSessionDrills($sessionId) {
 		global  $apiConfig;
 		$result = array();
 
@@ -199,6 +557,8 @@ class DrillHandler {
 				foreach($row as $k => $v) {
 					if (strstr($k, 'TS1-')) {
 						$k = str_replace('TS1-', '', $k);
+
+//print_r("\n--->K:".$k);						
 						if ($v) {
 		
 							if (!isset($groupIdx[$k])) {
@@ -207,9 +567,8 @@ class DrillHandler {
 							}
 							$this -> trainingSessions[$k]['id'] = $k;
 							$this -> trainingSessions[$k]['description'] = $k;
+							$this -> trainingSessions[$k]['descriptionHtml'] = $this -> toHTML($k);
 							$this -> trainingSessions[$k]['userGroupName'] = $userGroupName;
-
-
 
 
 							if (strlen($v) <= 5) {
@@ -232,6 +591,7 @@ class DrillHandler {
 									}									
 								}
 							} else {
+//print("k:".$k);								
 								$groupIdx[$k]++;
 								$this -> trainingSessions[$k]['groups'][$groupIdx[$k]]['groupName'] = $v;
 								
@@ -246,9 +606,11 @@ class DrillHandler {
 						$k = str_replace('TS2-', '', $k);
 						if ($v) {
 							$this -> trainingSessions[$k]['groups'][$groupIdx[$k]]['drills'][$groupDrillIdx]['description'] = $v;
+							$this -> trainingSessions[$k]['groups'][$groupIdx[$k]]['drills'][$groupDrillIdx]['descriptionHtml'] = $this -> toHTML($v);
 
 							$tmpDrillIdx = $this -> trainingSessions[$k]['groups'][$groupIdx[$k]]['drills'][$groupDrillIdx]['drillIdx']-1;
 							$this -> trainingSessions[$k]['drills'][$tmpDrillIdx]['description'] = $v;
+							$this -> trainingSessions[$k]['drills'][$tmpDrillIdx]['descriptionHtml'] = $this -> toHTML($v);
 							$this -> trainingSessions[$k]['groups'][$groupIdx[$k]]['drills'][$groupDrillIdx]['isAltDescription'] = true;
 						}
 					}
@@ -314,6 +676,7 @@ define(COL_HOOFDPROGRAMMA,
 			
 			$drill['title'] = $row[COL_TITLE];
 			$drill['description'] = $row[COL_OMSCHRIJVING];
+			$drill['descriptionHtml'] = $this -> toHTML($row[COL_OMSCHRIJVING]);
 			if (strstr($row[COL_INTERVALS], ',')) {
 				$drill['intervals'] = $row[COL_INTERVALS];
 			}
@@ -326,6 +689,7 @@ define(COL_HOOFDPROGRAMMA,
 			$drill['isHoofdprogramma'] = strtolower($row[COL_HOOFDPROGRAMMA]) === 'x';
 			$drill['isCoolingDown'] = strtolower($row[COL_COOLING_DOWN]) === 'x';
 			$drill['isAltDescription'] = false;
+			$drill['hasVideo'] = false;
 
 
 			foreach($row as $k => $v) {
@@ -354,26 +718,31 @@ $this -> logger -> addInfo("readCsvData row:".print_r($row,true));
 							$filename = strtolower($drillId.'-'.$i.'.png');
 							$drill['imgUrls'] = array();
 							$this -> logger -> addInfo("Check if File exists:".$apiConfig['imagedir'].$filename);
+							$drill['imgUrl'] = ""; //$apiConfig['imageUrl'].'kettinglopers.png';
 							while (file_exists($apiConfig['imagedir'].$filename)) {
 								$this -> logger -> addInfo("File exists!");
-								$drill['imgUrls'][] = $apiConfig['imageUrl'].$filename;
+								$drill['imgUrls'][] = $drill['imgUrl'] = $apiConfig['imageUrl'].$filename;
 								$i++;
 								$filename = strtolower($drillId.'-'.$i.'.png');
-							}
+								}
 
 							$drill['videoUrl'] = false;
 							if ($row[COL_YOUTUBE_ID]) {
 								$drill['videoUrl'] = 'https://www.youtube.com/embed/'.$row[COL_YOUTUBE_ID].'&rel=0&autoplay=1';
+							}
+							if ($row[COL_VIDEO]) {
+								$drill['hasVideo'] = true;
 							}
 							//$drill['videoUrl'] = 'https://www.youtube.com/embed/jnS8UT6_Uws?rel=0'; //'http://www.youtube.com/embed/shGhZzJ7o-g?rel=0'
 
 							if (strtolower($row[COL_ALT_DESCRIPTION]) === 'x' && count($arr)>3) {
 								$drill['description'] = implode(".", array_slice($arr, 3));
 								$drill['isAltDescription'] = true;
-							}			
+							}
 
 							$trainingSessions[$k]['id'] = $k;
 							$trainingSessions[$k]['description'] = $k;
+							$trainingSessions[$k]['descriptionHtml'] = $this -> toHTML($k);
 							$trainingSessions[$k]['userGroupName'] = 'alle';
 							$trainingSessions[$k]['drills'][$idx] = $drill;
 							$trainingSessions[$k]['drills'][$idx]['drillIdx'] = count($trainingSessions[$k]['drills']);
@@ -411,9 +780,14 @@ $this -> logger -> addInfo("readCsvData row:".print_r($row,true));
 			$this -> logger -> addInfo("trainingSession:".print_r($trainingSession,true));
 			$this -> trainingSessions[$k] = $trainingSession;
 		}
-		//exit;
+		//print_r($this -> trainingSessions); exit;
 		
 		return true;
+	}
+
+	private function toHTML($text) {
+		$result = nl2br($text);
+		return $result;
 	}
 
 	private function _readCsvData() {

@@ -25,12 +25,12 @@ export class SessionListPage {
     this.trainingSessions = [];
 
     if (!this.userData.isInitialized()) {
-      console.log("settings..");
+      //console.log("settings..");
       this.nav.push(SettingsPage);
     }
 
     if (drillData.isConnected) {
-      console.log("Is connected")
+      //console.log("Is connected")
       drillData.getTrainingSessions().subscribe(trainingSessions => {
         this.trainingSessions = trainingSessions;
       });
@@ -41,8 +41,8 @@ export class SessionListPage {
   }
 
   goToDrillList(trainingSession) {
-    console.log("goToDrillList");
-    console.debug(trainingSession);
+    //console.log("goToDrillList");
+    //console.debug(trainingSession);
     this.drillData.setCurrentTrainingSession(trainingSession);
     this.nav.push(DrillListPage, {trainingSession});
   }

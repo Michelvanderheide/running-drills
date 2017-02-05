@@ -1,3 +1,14 @@
+kettingloper (von4ooTau)
+
+postgres (von4ooTau) 
+
+Droplet Name: ubuntu-512mb-ams3-01
+IP Address: 178.62.192.163
+Username: root
+Password: 8f4def5428f643bf
+
+
+
 Trainingsvormen
 ---------------
 

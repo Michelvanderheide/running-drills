@@ -1,8 +1,9 @@
 import {CountdownTimer} from './countdownTimer';
 import { DrillData } from "../../providers/drill-data";
 import {NavController, NavParams, Page} from 'ionic-angular'; 
-import {NativeAudio} from 'ionic-native';
+import {NativeAudio, Geolocation, Geoposition} from 'ionic-native';
 import { AppSettings } from '../../providers//app-settings';
+import { NgZone } from '@angular/core';
  
 @Page({
 	templateUrl: 'build/pages/timer/timer.html'
@@ -14,18 +15,31 @@ export class TimerPage {
 	private intervalIdx:number = 0;
 	private stActive:string = 'background:blue';
 	private timeOut: any;
+	private countdownTimeout: any;
 	private drillData : DrillData;
 	private timer: CountdownTimer;
 	private timeInSeconds:number;
 	private countdownTime:number = 0;
+	private intervalDistance = 0;
+	private totalIntervalDistance = 0;
+	private prevLatLong = { lat:0, lon:0 };
+	private watch:any;
+	private intervalResult: string;
 	 
 	constructor(drillData : DrillData) {
 		this.drillData = drillData;
 		this.initIntervals(drillData.trainingSession.intervals);
 		NativeAudio.preloadSimple('countdown', 'build/audio/countdown-5.mp3').then(function() {}, function() {});
+		this.countdownTime = 5;
 		if (AppSettings.isNative) {
 			this.countdownTime = 5;
 		}
+	}
+
+	ngOnDestroy () {
+		console.log("leave...");
+		clearTimeout(this.timeOut);
+
 	}
 
 	initIntervals (strIntervals) {
@@ -68,6 +82,10 @@ console.log("strItem:"+strItem);
 					strItemV = strItem.replace('v', '');
 				} else if (strItem.search('e') !== -1) {
 					speedRef = strItem.replace('e', '');
+				} else if (strItem.search('i') !== -1) {
+					speedRef = strItem.toLowerCase();
+				} else if (strItem.search('x') !== -1) {
+					speedRef = strItem.toLowerCase();
 				}
 			}
 
@@ -97,7 +115,10 @@ console.debug("item:",item);
 			item.displayTimeRest = this.getSecondsAsDigitalClock(item.timeRest);
 			item.displayTime = this.getSecondsAsDigitalClock(item.time);
 
-			this.intervals.push(item);
+			if (item.time > 0) {
+				this.intervals.push(item);
+			}
+
 			
 			
 		}
@@ -133,6 +154,8 @@ console.debug("item:",item);
 			secondsRemaining: this.timeInSeconds,
 			hasRest: false
 		};
+
+		this.trackDistance();
 	 
 		this.timer.displayTime = this.getSecondsAsDigitalClock(this.timer.secondsRemaining);
 console.debug('clock:',this.timer);		
@@ -147,45 +170,66 @@ console.debug('clock:',this.timer);
 		}		
 	}
 
-/*
-	startTimerCountdown(idx:number) {
-		this.intervalIdx = idx;
-		if (this.countdownTime > 0) {
-			NativeAudio.play('countdown', function () {
-				console.log('uniqueId1 is done playing');
-				//this.startTimer(this.intervalIdx);
-			});
-		} else {
-			this.startTimer(this.intervalIdx);
-		}
+	trackDistance() {
+
+		let options = {
+				enableHighAccuracy: true
+		};
+
+		console.log("getPosition");
+		this.watch = Geolocation.watchPosition(options).subscribe(pos => {
+			console.debug(":",pos);
+			let position = <Geoposition> pos;
+			console.log('lat: ' + position.coords.latitude + ', lon: ' + position.coords.longitude);
+			let lat:number = position.coords.latitude;
+			let lon:number = position.coords.longitude;
+			//let lon2:number = position.coords.longitude+0.2;
+			//lat: 52.2374485, lon: 6.586051899999999
+			console.debug("prevLatLong",this.prevLatLong);
+			if (this.prevLatLong.lat > 0 && this.prevLatLong.lon > 0) {
+				let distance = this.getDistanceFromLatLonInKm(this.prevLatLong.lat,this.prevLatLong.lon,lat,lon);
+				this.intervalDistance += distance;
+				if (this.timer.runTimer && !this.timer.hasRest) {
+					this.totalIntervalDistance += distance;
+				}
+			}
+			this.prevLatLong = {lat: lat, lon:lon};
+
+		});
 	}
 
-	startTimerRestCountdown() {
-		if (this.countdownTime > 0) {
-			NativeAudio.play('countdown', function () {
-				console.log('uniqueId1 is done playing');
-				this.timer.hasRest = true;
-				this.intervals[this.intervalIdx].styleActive = 2;
-				this.timer.secondsRemaining = this.intervals[this.intervalIdx].timeRest;
-				this.timerTick();
-			});
-		} else {
-			this.timer.hasRest = true;
-			this.intervals[this.intervalIdx].styleActive = 2;
-			this.timer.secondsRemaining = this.intervals[this.intervalIdx].timeRest;
-			this.timerTick();
-		}			
+	getDistanceFromLatLonInKm(lat1:number,lon1,lat2,lon2) {
+		let R = 6371; // Radius of the earth in km
+		let dLat = this.deg2rad(lat2-lat1);  // deg2rad below
+		let dLon = this.deg2rad(lon2-lon1); 
+		let a = 
+		Math.sin(dLat/2) * Math.sin(dLat/2) +
+		Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) * 
+		Math.sin(dLon/2) * Math.sin(dLon/2)
+		; 
+		let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+		let d:number = R * c; // Distance in km
+		d = Math.round(d * 1000);
+		console.log("dist:"+d);
+		return d;
 	}
-*/
+
+	deg2rad(deg) {
+	  return deg * (Math.PI/180)
+	}
 
 	startTimer(idx) {
+		
 		clearTimeout(this.timeOut);
+		this.intervalDistance = 0;
+		this.prevLatLong = {lat:0, lon:0};
 		this.intervals[this.intervalIdx].styleActive = 0;
 		this.intervalIdx = idx;
 		this.timer.hasStarted = true;
 		this.timer.runTimer = true;
 		this.intervals[this.intervalIdx].styleActive = 1;
 		this.timer.secondsRemaining = this.intervals[this.intervalIdx].time;
+		
 		this.timerTick();	 
 	}
 
@@ -199,6 +243,7 @@ console.debug('clock:',this.timer);
 	}
 
 	resumeOrPauseTimer() {
+		clearTimeout(this.timeOut);
 		if (!this.timer.hasStarted) {
 			this.startTimer(0);
 		} else {
@@ -230,6 +275,10 @@ console.debug('clock:',this.timer);
 
  
 	timerTick() {
+		//this.watch.unsubscribe();
+		if ((this.timer.secondsRemaining%4)==0)  {
+			this.trackDistance();
+		}
 		this.timeOut = setTimeout(() => {
 			if (!this.timer.runTimer) { return; }
 			this.timer.secondsRemaining--;
@@ -237,8 +286,10 @@ console.debug('clock:',this.timer);
 			if ((this.timer.secondsRemaining)> 0) {
 				
 				if ((this.timer.secondsRemaining  - this.countdownTime) == 0) {
-					setTimeout(this.startCountdown());
+					clearTimeout(this.countdownTimeout);
+					this.countdownTimeout = setTimeout(this.startCountdown());
 				}
+				
 				this.timerTick();
 			}
 			else {
@@ -246,8 +297,7 @@ console.debug('clock:',this.timer);
 					console.log("hasRest 1");
 					this.intervals[this.intervalIdx].styleActive = 0;
 					if (this.hasMoreIntervals()) {
-						//this.startCountdown();
-						
+						this.intervalDistance = 0;
 						this.intervalIdx++;
 						this.intervals[this.intervalIdx].styleActive = 1;
 						this.timer.secondsRemaining = this.intervals[this.intervalIdx].timeRest;
@@ -261,6 +311,23 @@ console.debug('clock:',this.timer);
 				} else {
 					console.log("hasNo Rest");
 					//this.startTimerCountdown();	
+
+					// evaluate time/distance
+					this.intervalResult = "";
+					if (this.intervals[this.intervalIdx].distance > 10 && this.intervalDistance > 40) {
+						let diff = this.intervalDistance - this.intervals[this.intervalIdx].distance;
+						let offset = (Math.abs(diff) / this.intervals[this.intervalIdx].distance) * 100;
+						if (offset < 80 && offset > 5) {
+							if (diff > 0) {
+								this.intervalResult = Math.round(diff) + " m te snel";
+							} if (diff < 0) {
+								this.intervalResult = Math.round(-1*diff) + " m te langzaam";
+							} else {
+								this.intervalResult = "Juiste snelheid";
+							}						
+						}
+
+					}
 					
 					this.timer.hasRest = true;
 					this.intervals[this.intervalIdx].styleActive = 2;

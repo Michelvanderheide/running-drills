@@ -1,6 +1,5 @@
 <?php
 
-
 // content type
 header ('Content-Type: application/json');
 
@@ -21,12 +20,14 @@ if (isset($_SERVER['HTTP_ORIGIN'])) {
 
 require_once 'vendor/autoload.php';
 require_once 'config.php';
+require_once 'generated-conf/config.php';
 require_once 'ocr/OcrHandler.php';
 require_once 'ocr/TextParser.php';
 require_once 'Middleware/AuthMiddleware.php';
 require_once 'common/common.php';
 require_once 'common/DrillHandler.php';
 require_once 'common/ApiHandler.php';
+
 
 $handler = new DrillHandler();
 $handler-> logger -> addInfo("server:".print_r($_SERVER,true));
@@ -71,6 +72,8 @@ $app->get('/trainingsessions', '\ApiHandler:getTrainingSessions');
 $app->get('/sessiondrills', '\ApiHandler:getSessionDrills');
 $app->get('/sessiongroups', '\ApiHandler:getSessionGroups');
 $app->get('/assets/{id}', '\ApiHandler:getAsset');
+
+$app->get('/import', '\ApiHandler:importSessionDrills');
 
 
 $app -> run();

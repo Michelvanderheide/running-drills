@@ -2,15 +2,20 @@
 
 namespace Base;
 
+use \Account as ChildAccount;
 use \AccountQuery as ChildAccountQuery;
+use \RungroupAccount as ChildRungroupAccount;
+use \RungroupAccountQuery as ChildRungroupAccountQuery;
 use \Exception;
 use \PDO;
 use Map\AccountTableMap;
+use Map\RungroupAccountTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\Collection;
+use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\BadMethodCallException;
 use Propel\Runtime\Exception\LogicException;
@@ -74,33 +79,39 @@ abstract class Account implements ActiveRecordInterface
     protected $guid;
 
     /**
-     * The value for the name field.
+     * The value for the account_name field.
      *
      * @var        string
      */
-    protected $name;
+    protected $account_name;
 
     /**
-     * The value for the email field.
+     * The value for the account_email field.
      *
      * @var        string
      */
-    protected $email;
+    protected $account_email;
 
     /**
-     * The value for the password field.
+     * The value for the account_password field.
      *
      * @var        string
      */
-    protected $password;
+    protected $account_password;
 
     /**
-     * The value for the removed field.
+     * The value for the is_removed field.
      *
      * Note: this column has a database default value of: false
      * @var        boolean
      */
-    protected $removed;
+    protected $is_removed;
+
+    /**
+     * @var        ObjectCollection|ChildRungroupAccount[] Collection to store aggregation of ChildRungroupAccount objects.
+     */
+    protected $collRungroupAccounts;
+    protected $collRungroupAccountsPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -111,6 +122,12 @@ abstract class Account implements ActiveRecordInterface
     protected $alreadyInSave = false;
 
     /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildRungroupAccount[]
+     */
+    protected $rungroupAccountsScheduledForDeletion = null;
+
+    /**
      * Applies default values to this object.
      * This method should be called from the object's constructor (or
      * equivalent initialization method).
@@ -118,7 +135,7 @@ abstract class Account implements ActiveRecordInterface
      */
     public function applyDefaultValues()
     {
-        $this->removed = false;
+        $this->is_removed = false;
     }
 
     /**
@@ -369,53 +386,53 @@ abstract class Account implements ActiveRecordInterface
     }
 
     /**
-     * Get the [name] column value.
+     * Get the [account_name] column value.
      *
      * @return string
      */
-    public function getName()
+    public function getAccountName()
     {
-        return $this->name;
+        return $this->account_name;
     }
 
     /**
-     * Get the [email] column value.
+     * Get the [account_email] column value.
      *
      * @return string
      */
-    public function getEmail()
+    public function getAccountEmail()
     {
-        return $this->email;
+        return $this->account_email;
     }
 
     /**
-     * Get the [password] column value.
+     * Get the [account_password] column value.
      *
      * @return string
      */
-    public function getPassword()
+    public function getAccountPassword()
     {
-        return $this->password;
+        return $this->account_password;
     }
 
     /**
-     * Get the [removed] column value.
+     * Get the [is_removed] column value.
      *
      * @return boolean
      */
-    public function getRemoved()
+    public function getIsRemoved()
     {
-        return $this->removed;
+        return $this->is_removed;
     }
 
     /**
-     * Get the [removed] column value.
+     * Get the [is_removed] column value.
      *
      * @return boolean
      */
     public function isRemoved()
     {
-        return $this->getRemoved();
+        return $this->getIsRemoved();
     }
 
     /**
@@ -459,67 +476,67 @@ abstract class Account implements ActiveRecordInterface
     } // setGuid()
 
     /**
-     * Set the value of [name] column.
+     * Set the value of [account_name] column.
      *
      * @param string $v new value
      * @return $this|\Account The current object (for fluent API support)
      */
-    public function setName($v)
+    public function setAccountName($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->name !== $v) {
-            $this->name = $v;
-            $this->modifiedColumns[AccountTableMap::COL_NAME] = true;
+        if ($this->account_name !== $v) {
+            $this->account_name = $v;
+            $this->modifiedColumns[AccountTableMap::COL_ACCOUNT_NAME] = true;
         }
 
         return $this;
-    } // setName()
+    } // setAccountName()
 
     /**
-     * Set the value of [email] column.
+     * Set the value of [account_email] column.
      *
      * @param string $v new value
      * @return $this|\Account The current object (for fluent API support)
      */
-    public function setEmail($v)
+    public function setAccountEmail($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->email !== $v) {
-            $this->email = $v;
-            $this->modifiedColumns[AccountTableMap::COL_EMAIL] = true;
+        if ($this->account_email !== $v) {
+            $this->account_email = $v;
+            $this->modifiedColumns[AccountTableMap::COL_ACCOUNT_EMAIL] = true;
         }
 
         return $this;
-    } // setEmail()
+    } // setAccountEmail()
 
     /**
-     * Set the value of [password] column.
+     * Set the value of [account_password] column.
      *
      * @param string $v new value
      * @return $this|\Account The current object (for fluent API support)
      */
-    public function setPassword($v)
+    public function setAccountPassword($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->password !== $v) {
-            $this->password = $v;
-            $this->modifiedColumns[AccountTableMap::COL_PASSWORD] = true;
+        if ($this->account_password !== $v) {
+            $this->account_password = $v;
+            $this->modifiedColumns[AccountTableMap::COL_ACCOUNT_PASSWORD] = true;
         }
 
         return $this;
-    } // setPassword()
+    } // setAccountPassword()
 
     /**
-     * Sets the value of the [removed] column.
+     * Sets the value of the [is_removed] column.
      * Non-boolean arguments are converted using the following rules:
      *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
      *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
@@ -528,7 +545,7 @@ abstract class Account implements ActiveRecordInterface
      * @param  boolean|integer|string $v The new value
      * @return $this|\Account The current object (for fluent API support)
      */
-    public function setRemoved($v)
+    public function setIsRemoved($v)
     {
         if ($v !== null) {
             if (is_string($v)) {
@@ -538,13 +555,13 @@ abstract class Account implements ActiveRecordInterface
             }
         }
 
-        if ($this->removed !== $v) {
-            $this->removed = $v;
-            $this->modifiedColumns[AccountTableMap::COL_REMOVED] = true;
+        if ($this->is_removed !== $v) {
+            $this->is_removed = $v;
+            $this->modifiedColumns[AccountTableMap::COL_IS_REMOVED] = true;
         }
 
         return $this;
-    } // setRemoved()
+    } // setIsRemoved()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -556,7 +573,7 @@ abstract class Account implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues()
     {
-            if ($this->removed !== false) {
+            if ($this->is_removed !== false) {
                 return false;
             }
 
@@ -592,17 +609,17 @@ abstract class Account implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : AccountTableMap::translateFieldName('Guid', TableMap::TYPE_PHPNAME, $indexType)];
             $this->guid = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : AccountTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->name = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : AccountTableMap::translateFieldName('AccountName', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->account_name = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : AccountTableMap::translateFieldName('Email', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->email = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : AccountTableMap::translateFieldName('AccountEmail', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->account_email = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : AccountTableMap::translateFieldName('Password', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->password = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : AccountTableMap::translateFieldName('AccountPassword', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->account_password = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : AccountTableMap::translateFieldName('Removed', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->removed = (null !== $col) ? (boolean) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : AccountTableMap::translateFieldName('IsRemoved', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->is_removed = (null !== $col) ? (boolean) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -672,6 +689,8 @@ abstract class Account implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->collRungroupAccounts = null;
+
         } // if (deep)
     }
 
@@ -723,6 +742,10 @@ abstract class Account implements ActiveRecordInterface
     {
         if ($this->isDeleted()) {
             throw new PropelException("You cannot save an object that has been deleted.");
+        }
+
+        if ($this->alreadyInSave) {
+            return 0;
         }
 
         if ($con === null) {
@@ -782,6 +805,23 @@ abstract class Account implements ActiveRecordInterface
                 $this->resetModified();
             }
 
+            if ($this->rungroupAccountsScheduledForDeletion !== null) {
+                if (!$this->rungroupAccountsScheduledForDeletion->isEmpty()) {
+                    \RungroupAccountQuery::create()
+                        ->filterByPrimaryKeys($this->rungroupAccountsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->rungroupAccountsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collRungroupAccounts !== null) {
+                foreach ($this->collRungroupAccounts as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
             $this->alreadyInSave = false;
 
         }
@@ -806,6 +846,15 @@ abstract class Account implements ActiveRecordInterface
         if (null !== $this->account_pk) {
             throw new PropelException('Cannot insert a value for auto-increment primary key (' . AccountTableMap::COL_ACCOUNT_PK . ')');
         }
+        if (null === $this->account_pk) {
+            try {
+                $dataFetcher = $con->query("SELECT nextval('account_account_pk_seq')");
+                $this->account_pk = (int) $dataFetcher->fetchColumn();
+            } catch (Exception $e) {
+                throw new PropelException('Unable to get sequence id.', 0, $e);
+            }
+        }
+
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(AccountTableMap::COL_ACCOUNT_PK)) {
@@ -814,17 +863,17 @@ abstract class Account implements ActiveRecordInterface
         if ($this->isColumnModified(AccountTableMap::COL_GUID)) {
             $modifiedColumns[':p' . $index++]  = 'guid';
         }
-        if ($this->isColumnModified(AccountTableMap::COL_NAME)) {
-            $modifiedColumns[':p' . $index++]  = 'name';
+        if ($this->isColumnModified(AccountTableMap::COL_ACCOUNT_NAME)) {
+            $modifiedColumns[':p' . $index++]  = 'account_name';
         }
-        if ($this->isColumnModified(AccountTableMap::COL_EMAIL)) {
-            $modifiedColumns[':p' . $index++]  = 'email';
+        if ($this->isColumnModified(AccountTableMap::COL_ACCOUNT_EMAIL)) {
+            $modifiedColumns[':p' . $index++]  = 'account_email';
         }
-        if ($this->isColumnModified(AccountTableMap::COL_PASSWORD)) {
-            $modifiedColumns[':p' . $index++]  = 'password';
+        if ($this->isColumnModified(AccountTableMap::COL_ACCOUNT_PASSWORD)) {
+            $modifiedColumns[':p' . $index++]  = 'account_password';
         }
-        if ($this->isColumnModified(AccountTableMap::COL_REMOVED)) {
-            $modifiedColumns[':p' . $index++]  = 'removed';
+        if ($this->isColumnModified(AccountTableMap::COL_IS_REMOVED)) {
+            $modifiedColumns[':p' . $index++]  = 'is_removed';
         }
 
         $sql = sprintf(
@@ -843,17 +892,17 @@ abstract class Account implements ActiveRecordInterface
                     case 'guid':
                         $stmt->bindValue($identifier, $this->guid, PDO::PARAM_STR);
                         break;
-                    case 'name':
-                        $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
+                    case 'account_name':
+                        $stmt->bindValue($identifier, $this->account_name, PDO::PARAM_STR);
                         break;
-                    case 'email':
-                        $stmt->bindValue($identifier, $this->email, PDO::PARAM_STR);
+                    case 'account_email':
+                        $stmt->bindValue($identifier, $this->account_email, PDO::PARAM_STR);
                         break;
-                    case 'password':
-                        $stmt->bindValue($identifier, $this->password, PDO::PARAM_STR);
+                    case 'account_password':
+                        $stmt->bindValue($identifier, $this->account_password, PDO::PARAM_STR);
                         break;
-                    case 'removed':
-                        $stmt->bindValue($identifier, (int) $this->removed, PDO::PARAM_INT);
+                    case 'is_removed':
+                        $stmt->bindValue($identifier, $this->is_removed, PDO::PARAM_BOOL);
                         break;
                 }
             }
@@ -862,13 +911,6 @@ abstract class Account implements ActiveRecordInterface
             Propel::log($e->getMessage(), Propel::LOG_ERR);
             throw new PropelException(sprintf('Unable to execute INSERT statement [%s]', $sql), 0, $e);
         }
-
-        try {
-            $pk = $con->lastInsertId();
-        } catch (Exception $e) {
-            throw new PropelException('Unable to get autoincrement id.', 0, $e);
-        }
-        $this->setAccountPk($pk);
 
         $this->setNew(false);
     }
@@ -924,16 +966,16 @@ abstract class Account implements ActiveRecordInterface
                 return $this->getGuid();
                 break;
             case 2:
-                return $this->getName();
+                return $this->getAccountName();
                 break;
             case 3:
-                return $this->getEmail();
+                return $this->getAccountEmail();
                 break;
             case 4:
-                return $this->getPassword();
+                return $this->getAccountPassword();
                 break;
             case 5:
-                return $this->getRemoved();
+                return $this->getIsRemoved();
                 break;
             default:
                 return null;
@@ -952,10 +994,11 @@ abstract class Account implements ActiveRecordInterface
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
      * @param     array $alreadyDumpedObjects List of objects to skip to avoid recursion
+     * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array an associative array containing the field names (as keys) and field values
      */
-    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array())
+    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
 
         if (isset($alreadyDumpedObjects['Account'][$this->hashCode()])) {
@@ -966,16 +1009,33 @@ abstract class Account implements ActiveRecordInterface
         $result = array(
             $keys[0] => $this->getAccountPk(),
             $keys[1] => $this->getGuid(),
-            $keys[2] => $this->getName(),
-            $keys[3] => $this->getEmail(),
-            $keys[4] => $this->getPassword(),
-            $keys[5] => $this->getRemoved(),
+            $keys[2] => $this->getAccountName(),
+            $keys[3] => $this->getAccountEmail(),
+            $keys[4] => $this->getAccountPassword(),
+            $keys[5] => $this->getIsRemoved(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
         }
 
+        if ($includeForeignObjects) {
+            if (null !== $this->collRungroupAccounts) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'rungroupAccounts';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'rungroup_accounts';
+                        break;
+                    default:
+                        $key = 'RungroupAccounts';
+                }
+
+                $result[$key] = $this->collRungroupAccounts->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+        }
 
         return $result;
     }
@@ -1016,16 +1076,16 @@ abstract class Account implements ActiveRecordInterface
                 $this->setGuid($value);
                 break;
             case 2:
-                $this->setName($value);
+                $this->setAccountName($value);
                 break;
             case 3:
-                $this->setEmail($value);
+                $this->setAccountEmail($value);
                 break;
             case 4:
-                $this->setPassword($value);
+                $this->setAccountPassword($value);
                 break;
             case 5:
-                $this->setRemoved($value);
+                $this->setIsRemoved($value);
                 break;
         } // switch()
 
@@ -1060,16 +1120,16 @@ abstract class Account implements ActiveRecordInterface
             $this->setGuid($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setName($arr[$keys[2]]);
+            $this->setAccountName($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setEmail($arr[$keys[3]]);
+            $this->setAccountEmail($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setPassword($arr[$keys[4]]);
+            $this->setAccountPassword($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setRemoved($arr[$keys[5]]);
+            $this->setIsRemoved($arr[$keys[5]]);
         }
     }
 
@@ -1118,17 +1178,17 @@ abstract class Account implements ActiveRecordInterface
         if ($this->isColumnModified(AccountTableMap::COL_GUID)) {
             $criteria->add(AccountTableMap::COL_GUID, $this->guid);
         }
-        if ($this->isColumnModified(AccountTableMap::COL_NAME)) {
-            $criteria->add(AccountTableMap::COL_NAME, $this->name);
+        if ($this->isColumnModified(AccountTableMap::COL_ACCOUNT_NAME)) {
+            $criteria->add(AccountTableMap::COL_ACCOUNT_NAME, $this->account_name);
         }
-        if ($this->isColumnModified(AccountTableMap::COL_EMAIL)) {
-            $criteria->add(AccountTableMap::COL_EMAIL, $this->email);
+        if ($this->isColumnModified(AccountTableMap::COL_ACCOUNT_EMAIL)) {
+            $criteria->add(AccountTableMap::COL_ACCOUNT_EMAIL, $this->account_email);
         }
-        if ($this->isColumnModified(AccountTableMap::COL_PASSWORD)) {
-            $criteria->add(AccountTableMap::COL_PASSWORD, $this->password);
+        if ($this->isColumnModified(AccountTableMap::COL_ACCOUNT_PASSWORD)) {
+            $criteria->add(AccountTableMap::COL_ACCOUNT_PASSWORD, $this->account_password);
         }
-        if ($this->isColumnModified(AccountTableMap::COL_REMOVED)) {
-            $criteria->add(AccountTableMap::COL_REMOVED, $this->removed);
+        if ($this->isColumnModified(AccountTableMap::COL_IS_REMOVED)) {
+            $criteria->add(AccountTableMap::COL_IS_REMOVED, $this->is_removed);
         }
 
         return $criteria;
@@ -1217,10 +1277,24 @@ abstract class Account implements ActiveRecordInterface
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
         $copyObj->setGuid($this->getGuid());
-        $copyObj->setName($this->getName());
-        $copyObj->setEmail($this->getEmail());
-        $copyObj->setPassword($this->getPassword());
-        $copyObj->setRemoved($this->getRemoved());
+        $copyObj->setAccountName($this->getAccountName());
+        $copyObj->setAccountEmail($this->getAccountEmail());
+        $copyObj->setAccountPassword($this->getAccountPassword());
+        $copyObj->setIsRemoved($this->getIsRemoved());
+
+        if ($deepCopy) {
+            // important: temporarily setNew(false) because this affects the behavior of
+            // the getter/setter methods for fkey referrer objects.
+            $copyObj->setNew(false);
+
+            foreach ($this->getRungroupAccounts() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addRungroupAccount($relObj->copy($deepCopy));
+                }
+            }
+
+        } // if ($deepCopy)
+
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setAccountPk(NULL); // this is a auto-increment column, so set to default value
@@ -1249,6 +1323,272 @@ abstract class Account implements ActiveRecordInterface
         return $copyObj;
     }
 
+
+    /**
+     * Initializes a collection based on the name of a relation.
+     * Avoids crafting an 'init[$relationName]s' method name
+     * that wouldn't work when StandardEnglishPluralizer is used.
+     *
+     * @param      string $relationName The name of the relation to initialize
+     * @return void
+     */
+    public function initRelation($relationName)
+    {
+        if ('RungroupAccount' == $relationName) {
+            return $this->initRungroupAccounts();
+        }
+    }
+
+    /**
+     * Clears out the collRungroupAccounts collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addRungroupAccounts()
+     */
+    public function clearRungroupAccounts()
+    {
+        $this->collRungroupAccounts = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collRungroupAccounts collection loaded partially.
+     */
+    public function resetPartialRungroupAccounts($v = true)
+    {
+        $this->collRungroupAccountsPartial = $v;
+    }
+
+    /**
+     * Initializes the collRungroupAccounts collection.
+     *
+     * By default this just sets the collRungroupAccounts collection to an empty array (like clearcollRungroupAccounts());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initRungroupAccounts($overrideExisting = true)
+    {
+        if (null !== $this->collRungroupAccounts && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = RungroupAccountTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collRungroupAccounts = new $collectionClassName;
+        $this->collRungroupAccounts->setModel('\RungroupAccount');
+    }
+
+    /**
+     * Gets an array of ChildRungroupAccount objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildAccount is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildRungroupAccount[] List of ChildRungroupAccount objects
+     * @throws PropelException
+     */
+    public function getRungroupAccounts(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collRungroupAccountsPartial && !$this->isNew();
+        if (null === $this->collRungroupAccounts || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collRungroupAccounts) {
+                // return empty collection
+                $this->initRungroupAccounts();
+            } else {
+                $collRungroupAccounts = ChildRungroupAccountQuery::create(null, $criteria)
+                    ->filterByAccount($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collRungroupAccountsPartial && count($collRungroupAccounts)) {
+                        $this->initRungroupAccounts(false);
+
+                        foreach ($collRungroupAccounts as $obj) {
+                            if (false == $this->collRungroupAccounts->contains($obj)) {
+                                $this->collRungroupAccounts->append($obj);
+                            }
+                        }
+
+                        $this->collRungroupAccountsPartial = true;
+                    }
+
+                    return $collRungroupAccounts;
+                }
+
+                if ($partial && $this->collRungroupAccounts) {
+                    foreach ($this->collRungroupAccounts as $obj) {
+                        if ($obj->isNew()) {
+                            $collRungroupAccounts[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collRungroupAccounts = $collRungroupAccounts;
+                $this->collRungroupAccountsPartial = false;
+            }
+        }
+
+        return $this->collRungroupAccounts;
+    }
+
+    /**
+     * Sets a collection of ChildRungroupAccount objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $rungroupAccounts A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildAccount The current object (for fluent API support)
+     */
+    public function setRungroupAccounts(Collection $rungroupAccounts, ConnectionInterface $con = null)
+    {
+        /** @var ChildRungroupAccount[] $rungroupAccountsToDelete */
+        $rungroupAccountsToDelete = $this->getRungroupAccounts(new Criteria(), $con)->diff($rungroupAccounts);
+
+
+        $this->rungroupAccountsScheduledForDeletion = $rungroupAccountsToDelete;
+
+        foreach ($rungroupAccountsToDelete as $rungroupAccountRemoved) {
+            $rungroupAccountRemoved->setAccount(null);
+        }
+
+        $this->collRungroupAccounts = null;
+        foreach ($rungroupAccounts as $rungroupAccount) {
+            $this->addRungroupAccount($rungroupAccount);
+        }
+
+        $this->collRungroupAccounts = $rungroupAccounts;
+        $this->collRungroupAccountsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related RungroupAccount objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related RungroupAccount objects.
+     * @throws PropelException
+     */
+    public function countRungroupAccounts(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collRungroupAccountsPartial && !$this->isNew();
+        if (null === $this->collRungroupAccounts || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collRungroupAccounts) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getRungroupAccounts());
+            }
+
+            $query = ChildRungroupAccountQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByAccount($this)
+                ->count($con);
+        }
+
+        return count($this->collRungroupAccounts);
+    }
+
+    /**
+     * Method called to associate a ChildRungroupAccount object to this object
+     * through the ChildRungroupAccount foreign key attribute.
+     *
+     * @param  ChildRungroupAccount $l ChildRungroupAccount
+     * @return $this|\Account The current object (for fluent API support)
+     */
+    public function addRungroupAccount(ChildRungroupAccount $l)
+    {
+        if ($this->collRungroupAccounts === null) {
+            $this->initRungroupAccounts();
+            $this->collRungroupAccountsPartial = true;
+        }
+
+        if (!$this->collRungroupAccounts->contains($l)) {
+            $this->doAddRungroupAccount($l);
+
+            if ($this->rungroupAccountsScheduledForDeletion and $this->rungroupAccountsScheduledForDeletion->contains($l)) {
+                $this->rungroupAccountsScheduledForDeletion->remove($this->rungroupAccountsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildRungroupAccount $rungroupAccount The ChildRungroupAccount object to add.
+     */
+    protected function doAddRungroupAccount(ChildRungroupAccount $rungroupAccount)
+    {
+        $this->collRungroupAccounts[]= $rungroupAccount;
+        $rungroupAccount->setAccount($this);
+    }
+
+    /**
+     * @param  ChildRungroupAccount $rungroupAccount The ChildRungroupAccount object to remove.
+     * @return $this|ChildAccount The current object (for fluent API support)
+     */
+    public function removeRungroupAccount(ChildRungroupAccount $rungroupAccount)
+    {
+        if ($this->getRungroupAccounts()->contains($rungroupAccount)) {
+            $pos = $this->collRungroupAccounts->search($rungroupAccount);
+            $this->collRungroupAccounts->remove($pos);
+            if (null === $this->rungroupAccountsScheduledForDeletion) {
+                $this->rungroupAccountsScheduledForDeletion = clone $this->collRungroupAccounts;
+                $this->rungroupAccountsScheduledForDeletion->clear();
+            }
+            $this->rungroupAccountsScheduledForDeletion[]= clone $rungroupAccount;
+            $rungroupAccount->setAccount(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Account is new, it will return
+     * an empty collection; or if this Account has previously
+     * been saved, it will retrieve related RungroupAccounts from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Account.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildRungroupAccount[] List of ChildRungroupAccount objects
+     */
+    public function getRungroupAccountsJoinRungroup(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildRungroupAccountQuery::create(null, $criteria);
+        $query->joinWith('Rungroup', $joinBehavior);
+
+        return $this->getRungroupAccounts($query, $con);
+    }
+
     /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
@@ -1258,10 +1598,10 @@ abstract class Account implements ActiveRecordInterface
     {
         $this->account_pk = null;
         $this->guid = null;
-        $this->name = null;
-        $this->email = null;
-        $this->password = null;
-        $this->removed = null;
+        $this->account_name = null;
+        $this->account_email = null;
+        $this->account_password = null;
+        $this->is_removed = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();
@@ -1281,8 +1621,14 @@ abstract class Account implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
+            if ($this->collRungroupAccounts) {
+                foreach ($this->collRungroupAccounts as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
+        $this->collRungroupAccounts = null;
     }
 
     /**

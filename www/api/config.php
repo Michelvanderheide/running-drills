@@ -15,12 +15,13 @@ define('COL_HOOFDPROGRAMMA', 'Hoofdprogramma');
 define('COL_COOLING_DOWN', 'Cooling down');
 define('COL_YOUTUBE_ID', 'Youtube Id');
 define('COL_ALT_DESCRIPTION', 'Alt. Omschrijving');
+define('COL_VIDEO', 'Video');
 
 $apiConfig = array();
 $apiConfig['titles']['IL'] = 'Inleiding';
 $apiConfig['titles']['AL'] = 'Algemeen';
 $apiConfig['titles']['WU'] = 'Warming Up';
-$apiConfig['titles']['CS'] = 'Core Stability';
+$apiConfig['titles']['CS'] = 'Core stability';
 $apiConfig['titles']['KR'] = 'Kring';
 $apiConfig['titles']['VK'] = 'Vierkant';
 $apiConfig['titles']['OV'] = 'Overig';
@@ -34,21 +35,21 @@ $apiConfig['titles']['TP'] = 'Tussenprogramma';
 
 //$apiConfig['env'] = getenv('appenv') ? getenv('appenv') : 'prod';
 
-$apiConfig['env'] = strstr($_SERVER['HTTP_HOST'], 'runningdrills.local') ? 'dev' : 'prod';
+$apiConfig['env'] = strstr($_SERVER['HTTP_HOST'], 'runningdrillsapi.local') ? 'dev' : 'prod';
 
 // api directory
 $apiConfig['basedir'] = str_replace('www\api','', str_replace ('www/api','', __DIR__) );
 
 // URL
 if ($apiConfig['env'] == "dev") {
-	$apiConfig['baseUrl'] = "http://www.avgoor.nl";
-	//$apiConfig['baseUrl'] = "http://runningdrills.local";
+	//$apiConfig['baseUrl'] = "localhost";
+	$apiConfig['baseUrl'] = "http://runningdrillsapi.local";
 	$apiConfig['imagedir'] = $apiConfig['basedir'] . 'www/images/';
-	$apiConfig['imageUrl'] = $apiConfig['baseUrl'] . '/wp-content/images/drills/images/';
+	$apiConfig['imageUrl'] = $apiConfig['baseUrl'] . '/images/';
 } else {
-	$apiConfig['baseUrl'] = "http://www.avgoor.nl";
-	$apiConfig['imagedir'] = $apiConfig['basedir'] . 'www/wp-content/images/drills/images/';
-	$apiConfig['imageUrl'] = $apiConfig['baseUrl'] . '/wp-content/images/drills/images/';
+	$apiConfig['baseUrl'] = "http://178.62.192.163";
+	$apiConfig['imagedir'] = $apiConfig['basedir'] . 'http://178.62.192.163/images/';
+	$apiConfig['imageUrl'] = $apiConfig['baseUrl'] . '/images/';
 }
 
 // basedir
@@ -63,7 +64,8 @@ $apiConfig['csvsessionsfile'] = $apiConfig['assetsPath'].'sessies.csv';
 $apiConfig['demoToken'] = '1234';
 
 $apiConfig['userGroups']['mpm'] = 'MPM - Hengelo';
-$apiConfig['userGroups']['kettinglopers'] = 'Kettinglopers';
+$apiConfig['userGroups']['clinic-5k'] = 'Clinic - 5km groep';
+$apiConfig['userGroups']['clinic-10k'] = 'Clinic - 10km groep';
 $apiConfig['userGroups']['avgoor'] = 'AV Goor';
 
 

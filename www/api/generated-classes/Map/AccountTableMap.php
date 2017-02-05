@@ -82,24 +82,24 @@ class AccountTableMap extends TableMap
     const COL_GUID = 'account.guid';
 
     /**
-     * the column name for the name field
+     * the column name for the account_name field
      */
-    const COL_NAME = 'account.name';
+    const COL_ACCOUNT_NAME = 'account.account_name';
 
     /**
-     * the column name for the email field
+     * the column name for the account_email field
      */
-    const COL_EMAIL = 'account.email';
+    const COL_ACCOUNT_EMAIL = 'account.account_email';
 
     /**
-     * the column name for the password field
+     * the column name for the account_password field
      */
-    const COL_PASSWORD = 'account.password';
+    const COL_ACCOUNT_PASSWORD = 'account.account_password';
 
     /**
-     * the column name for the removed field
+     * the column name for the is_removed field
      */
-    const COL_REMOVED = 'account.removed';
+    const COL_IS_REMOVED = 'account.is_removed';
 
     /**
      * The default string format for model objects of the related table
@@ -113,10 +113,10 @@ class AccountTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('AccountPk', 'Guid', 'Name', 'Email', 'Password', 'Removed', ),
-        self::TYPE_CAMELNAME     => array('accountPk', 'guid', 'name', 'email', 'password', 'removed', ),
-        self::TYPE_COLNAME       => array(AccountTableMap::COL_ACCOUNT_PK, AccountTableMap::COL_GUID, AccountTableMap::COL_NAME, AccountTableMap::COL_EMAIL, AccountTableMap::COL_PASSWORD, AccountTableMap::COL_REMOVED, ),
-        self::TYPE_FIELDNAME     => array('account_pk', 'guid', 'name', 'email', 'password', 'removed', ),
+        self::TYPE_PHPNAME       => array('AccountPk', 'Guid', 'AccountName', 'AccountEmail', 'AccountPassword', 'IsRemoved', ),
+        self::TYPE_CAMELNAME     => array('accountPk', 'guid', 'accountName', 'accountEmail', 'accountPassword', 'isRemoved', ),
+        self::TYPE_COLNAME       => array(AccountTableMap::COL_ACCOUNT_PK, AccountTableMap::COL_GUID, AccountTableMap::COL_ACCOUNT_NAME, AccountTableMap::COL_ACCOUNT_EMAIL, AccountTableMap::COL_ACCOUNT_PASSWORD, AccountTableMap::COL_IS_REMOVED, ),
+        self::TYPE_FIELDNAME     => array('account_pk', 'guid', 'account_name', 'account_email', 'account_password', 'is_removed', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
     );
 
@@ -127,10 +127,10 @@ class AccountTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('AccountPk' => 0, 'Guid' => 1, 'Name' => 2, 'Email' => 3, 'Password' => 4, 'Removed' => 5, ),
-        self::TYPE_CAMELNAME     => array('accountPk' => 0, 'guid' => 1, 'name' => 2, 'email' => 3, 'password' => 4, 'removed' => 5, ),
-        self::TYPE_COLNAME       => array(AccountTableMap::COL_ACCOUNT_PK => 0, AccountTableMap::COL_GUID => 1, AccountTableMap::COL_NAME => 2, AccountTableMap::COL_EMAIL => 3, AccountTableMap::COL_PASSWORD => 4, AccountTableMap::COL_REMOVED => 5, ),
-        self::TYPE_FIELDNAME     => array('account_pk' => 0, 'guid' => 1, 'name' => 2, 'email' => 3, 'password' => 4, 'removed' => 5, ),
+        self::TYPE_PHPNAME       => array('AccountPk' => 0, 'Guid' => 1, 'AccountName' => 2, 'AccountEmail' => 3, 'AccountPassword' => 4, 'IsRemoved' => 5, ),
+        self::TYPE_CAMELNAME     => array('accountPk' => 0, 'guid' => 1, 'accountName' => 2, 'accountEmail' => 3, 'accountPassword' => 4, 'isRemoved' => 5, ),
+        self::TYPE_COLNAME       => array(AccountTableMap::COL_ACCOUNT_PK => 0, AccountTableMap::COL_GUID => 1, AccountTableMap::COL_ACCOUNT_NAME => 2, AccountTableMap::COL_ACCOUNT_EMAIL => 3, AccountTableMap::COL_ACCOUNT_PASSWORD => 4, AccountTableMap::COL_IS_REMOVED => 5, ),
+        self::TYPE_FIELDNAME     => array('account_pk' => 0, 'guid' => 1, 'account_name' => 2, 'account_email' => 3, 'account_password' => 4, 'is_removed' => 5, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
     );
 
@@ -150,13 +150,14 @@ class AccountTableMap extends TableMap
         $this->setClassName('\\Account');
         $this->setPackage('');
         $this->setUseIdGenerator(true);
+        $this->setPrimaryKeyMethodInfo('account_account_pk_seq');
         // columns
         $this->addPrimaryKey('account_pk', 'AccountPk', 'INTEGER', true, null, null);
-        $this->addColumn('guid', 'Guid', 'VARCHAR', false, 255, null);
-        $this->addColumn('name', 'Name', 'VARCHAR', false, 255, null);
-        $this->addColumn('email', 'Email', 'VARCHAR', false, 255, null);
-        $this->addColumn('password', 'Password', 'VARCHAR', false, 255, null);
-        $this->addColumn('removed', 'Removed', 'BOOLEAN', true, 1, false);
+        $this->addColumn('guid', 'Guid', 'VARCHAR', false, null, null);
+        $this->addColumn('account_name', 'AccountName', 'VARCHAR', false, null, null);
+        $this->addColumn('account_email', 'AccountEmail', 'VARCHAR', false, null, null);
+        $this->addColumn('account_password', 'AccountPassword', 'VARCHAR', false, null, null);
+        $this->addColumn('is_removed', 'IsRemoved', 'BOOLEAN', true, null, false);
     } // initialize()
 
     /**
@@ -164,6 +165,13 @@ class AccountTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('RungroupAccount', '\\RungroupAccount', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':account_fk',
+    1 => ':account_pk',
+  ),
+), null, null, 'RungroupAccounts', false);
     } // buildRelations()
 
     /**
@@ -309,17 +317,17 @@ class AccountTableMap extends TableMap
         if (null === $alias) {
             $criteria->addSelectColumn(AccountTableMap::COL_ACCOUNT_PK);
             $criteria->addSelectColumn(AccountTableMap::COL_GUID);
-            $criteria->addSelectColumn(AccountTableMap::COL_NAME);
-            $criteria->addSelectColumn(AccountTableMap::COL_EMAIL);
-            $criteria->addSelectColumn(AccountTableMap::COL_PASSWORD);
-            $criteria->addSelectColumn(AccountTableMap::COL_REMOVED);
+            $criteria->addSelectColumn(AccountTableMap::COL_ACCOUNT_NAME);
+            $criteria->addSelectColumn(AccountTableMap::COL_ACCOUNT_EMAIL);
+            $criteria->addSelectColumn(AccountTableMap::COL_ACCOUNT_PASSWORD);
+            $criteria->addSelectColumn(AccountTableMap::COL_IS_REMOVED);
         } else {
             $criteria->addSelectColumn($alias . '.account_pk');
             $criteria->addSelectColumn($alias . '.guid');
-            $criteria->addSelectColumn($alias . '.name');
-            $criteria->addSelectColumn($alias . '.email');
-            $criteria->addSelectColumn($alias . '.password');
-            $criteria->addSelectColumn($alias . '.removed');
+            $criteria->addSelectColumn($alias . '.account_name');
+            $criteria->addSelectColumn($alias . '.account_email');
+            $criteria->addSelectColumn($alias . '.account_password');
+            $criteria->addSelectColumn($alias . '.is_removed');
         }
     }
 

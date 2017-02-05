@@ -1,6 +1,6 @@
 {
-  "name": "running-drills",
-  "description": "Running drills",
+  "name": "ketting-lopers",
+  "description": "Kettinglopers",
   "license": "Apache-2.0",
   "dependencies": {
     "@angular/common": "2.0.0-rc.1",

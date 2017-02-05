@@ -15,6 +15,7 @@ export class DrillListPage {
 	drills: any;
 	groups: any;
 	isSummary: boolean;
+	drillIdx: number;
 	static get parameters() {
 		return [[NavController], [NavParams], [DrillData]];
 	}
@@ -27,17 +28,17 @@ export class DrillListPage {
 		this.groups = [];
 		this.isSummary = true;
 		this.trainingSession.groups.forEach(group => {
-			console.debug("sessionGroup():",group.groupName);
+			//console.debug("sessionGroup():",group.groupName);
 			this.drillData.getDrillFilters().forEach(drillFilter => {
 				//console.debug("drillFilter:",drillFilter.title);
-				if (drillFilter.value == true && group.groupName.search(drillFilter.title) >= 0) {
+				if (drillFilter.value == true && group.groupName.toLowerCase().search(drillFilter.title.toLowerCase()) >= 0) {
 
-					console.debug("groups:",this.groups);
-					console.debug("group:",this.groups);
+					//console.debug("groups:",this.groups);
+					//console.debug("group:",this.groups);
 
 					let found = false;
 					this.groups.forEach(function(mygroup) {
-						console.debug("group:"+mygroup);
+						//console.debug("group:"+mygroup);
 						if (mygroup.groupName == group.groupName) {
 							found = true;
 						}
@@ -51,14 +52,16 @@ export class DrillListPage {
 	}
 
 
-	goToDrillDetails(drill) {
+	goToDrillDetails(drill, groupIdx, drillIdx) {
 		//let idx = jQuery.inArray(drill, this.drills);
+		this.drillIdx = drillIdx;
+		console.log("goto drill:",drill);
 		this.drillData.setCurrentTrainingDrill(drill);
 		this.nav.push(DrillDetailPage, {drill:drill});
 	}
 
 	toggleShowSummary() {
-		console.log("toggle");
+		//console.log("toggle");
 		this.drillData.toggleSetting("showSummary");
 	}
 

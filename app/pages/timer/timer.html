@@ -6,6 +6,11 @@
 	font-size: 8rem;
 	height: 1.6em	;
 }
+.timer-button-small {
+	font-size: 2rem;
+	height: 1.1em;
+	text-align: center;
+}
 
 </style>
 
@@ -13,15 +18,18 @@
 	<button menuToggle>
 	<ion-icon name="menu"></ion-icon>
 	</button>
-	<ion-title>Intervals</ion-title>
+	<ion-title>Intervallen</ion-title>
 </ion-navbar>
 
 <ion-content outer-content class="timer">
 
 <ion-card *ngIf="timer">
 <ion-card-header>
-	<button (click)="resumeTimer()" *ngIf="timeInSeconds && timeInSeconds > 0" large block clear class="timer-button">{{timer.displayTime}}</button>
-	<button *ngIf="!timeInSeconds || timeInSeconds == 0" large block clear class="timer-button">Timer set up incorrectly</button>
+	<button (click)="resumeOrPauseTimer()" *ngIf="timeInSeconds && timeInSeconds > 0" large block clear class="timer-button">{{timer.displayTime}}</button>
+	<div block clear class="timer-button-small">Interval:{{intervalDistance}} m | Totaal:{{totalIntervalDistance}} km</div>
+	<button *ngIf="!timeInSeconds || timeInSeconds == 0" large block clear class="timer-button">-</button>
+	<button *ngIf="intervalResult" style="background:#ffc966"> {{intervalResult}}	</button>	
+
 </ion-card-header>
 </ion-card>
 
@@ -29,10 +37,10 @@
 	<ion-icon name="pause"></ion-icon>
 	Pauze
 </button>
-<button large primary (click)="delayTimer(10)" item-right *ngIf="timer.runTimer && timer.hasStarted && !timer.hasFinished" outline full>
+<!--button large primary (click)="delayTimer(10)" item-right *ngIf="timer.runTimer && timer.hasStarted && !timer.hasFinished" outline full>
 	<ion-icon name="plus"></ion-icon>
 	+10
-</button>
+</button-->
 <button large primary (click)="resumeTimer()" item-right *ngIf="!timer.runTimer && timer.hasStarted && !timer.hasFinished" full>
 	<ion-icon name="play"></ion-icon>
 	Hervatten
@@ -61,6 +69,7 @@
 		  <div *ngIf="interval.distance" style="float:left;width:40%"> {{interval.distance}} meter</div>
 		  <h2>{{interval.displayTime}} vlot  -  {{interval.displayTimeRest}} pauze</h2>
 		</ion-item>
+	
 	</div>
 </ion-list>
 </ion-content>

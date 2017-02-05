@@ -4,11 +4,12 @@
         <database>
             <connections>
                 <connection id="runningdrills">
-                    <adapter>mysql</adapter>
+                    <adapter>pgsql</adapter>
                     <classname>Propel\Runtime\Connection\ConnectionWrapper</classname>
-                    <dsn>mysql:host=localhost;dbname=runningdrills</dsn>
-                    <user>runningdrills</user>
-                    <password>Cho1jeex</password>
+                    <dsn>pgsql:host=localhost;dbname=runningdrills</dsn>
+                    <user>postgres</user>
+                    <!--password>Cho1jeex</password-->
+                    <password>von4ooTau</password>
                 </connection>
             </connections>
         </database>
@@ -17,12 +18,12 @@
             <connection>runningdrills</connection>
             <log name="defaultLogger">
                 <type>stream</type>
-                <path>/var/www/html/runningdrills/logs/propel.log</path>
+                <path>/var/www/html/running-drills-api/logs/propel.log</path>
                 <level>300</level>
             </log>
             <log name="runningdrills">
                 <type>stream</type>
-                <path>/var/www/html/runningdrills/logs/propel.log</path>
+                <path>/var/www/html/running-drills-api/logs/propel.log</path>
             </log>            
         </runtime>
         <generator>

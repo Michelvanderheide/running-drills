@@ -26,9 +26,10 @@ export class UserData {
     let localRunningGroups = localStorage.getItem("runningGroups");
     if (localRunningGroups ==  null) {
       this.runningGroups = [ 
-          {title: "Kettinglopers", name:"kettinglopers", value: true},
-          {title: "AV - Goor", name:"avgoor", value: true},
-          {title: "MPM - Hengelo", name:"mpm", value: true}
+          {title: "Clinic 5 km", name:"clinic-5k", value: false},
+          {title: "Clinic 10 km", name:"clinic-10k", value: false},
+          {title: "AV Goor", name:"avgoor", value: false},
+          {title: "MPM - Hengelo", name:"mpm", value: false}
          ];
 
       localStorage.setItem("runningGroups", JSON.stringify(this.runningGroups));

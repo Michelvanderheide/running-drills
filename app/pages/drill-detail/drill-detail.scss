@@ -4,11 +4,11 @@
   text-align: left;
 }
 .drill-detail img {
-	width: 100%;
+	/*width: 100%;*/
 }
 
-ion-slides {
-	height:100%;	
+.ion-slides {
+	height:auto !important;
 }
 
 .swiper-slide {
@@ -17,7 +17,7 @@ ion-slides {
 }
 
 .swiper-slide img {
-	width:100%;
+	/*width:100%;*/
 	border: 3px solid #5e5e5e;
 }
 
@@ -37,7 +37,12 @@ ion-slides {
 	height: 100%;
 }
 
-  .slide-zoom{
+.slide-zoom{
 	text-align:left;
 	max-height: 100%;
+}
+
+p {
+	margin-left:15px;
+	margin-right:15px;
 }

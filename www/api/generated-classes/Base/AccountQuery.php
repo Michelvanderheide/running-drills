@@ -10,6 +10,7 @@ use Map\AccountTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
+use Propel\Runtime\ActiveQuery\ModelJoin;
 use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
@@ -21,17 +22,17 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildAccountQuery orderByAccountPk($order = Criteria::ASC) Order by the account_pk column
  * @method     ChildAccountQuery orderByGuid($order = Criteria::ASC) Order by the guid column
- * @method     ChildAccountQuery orderByName($order = Criteria::ASC) Order by the name column
- * @method     ChildAccountQuery orderByEmail($order = Criteria::ASC) Order by the email column
- * @method     ChildAccountQuery orderByPassword($order = Criteria::ASC) Order by the password column
- * @method     ChildAccountQuery orderByRemoved($order = Criteria::ASC) Order by the removed column
+ * @method     ChildAccountQuery orderByAccountName($order = Criteria::ASC) Order by the account_name column
+ * @method     ChildAccountQuery orderByAccountEmail($order = Criteria::ASC) Order by the account_email column
+ * @method     ChildAccountQuery orderByAccountPassword($order = Criteria::ASC) Order by the account_password column
+ * @method     ChildAccountQuery orderByIsRemoved($order = Criteria::ASC) Order by the is_removed column
  *
  * @method     ChildAccountQuery groupByAccountPk() Group by the account_pk column
  * @method     ChildAccountQuery groupByGuid() Group by the guid column
- * @method     ChildAccountQuery groupByName() Group by the name column
- * @method     ChildAccountQuery groupByEmail() Group by the email column
- * @method     ChildAccountQuery groupByPassword() Group by the password column
- * @method     ChildAccountQuery groupByRemoved() Group by the removed column
+ * @method     ChildAccountQuery groupByAccountName() Group by the account_name column
+ * @method     ChildAccountQuery groupByAccountEmail() Group by the account_email column
+ * @method     ChildAccountQuery groupByAccountPassword() Group by the account_password column
+ * @method     ChildAccountQuery groupByIsRemoved() Group by the is_removed column
  *
  * @method     ChildAccountQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildAccountQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -41,33 +42,45 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAccountQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
  * @method     ChildAccountQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
  *
+ * @method     ChildAccountQuery leftJoinRungroupAccount($relationAlias = null) Adds a LEFT JOIN clause to the query using the RungroupAccount relation
+ * @method     ChildAccountQuery rightJoinRungroupAccount($relationAlias = null) Adds a RIGHT JOIN clause to the query using the RungroupAccount relation
+ * @method     ChildAccountQuery innerJoinRungroupAccount($relationAlias = null) Adds a INNER JOIN clause to the query using the RungroupAccount relation
+ *
+ * @method     ChildAccountQuery joinWithRungroupAccount($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the RungroupAccount relation
+ *
+ * @method     ChildAccountQuery leftJoinWithRungroupAccount() Adds a LEFT JOIN clause and with to the query using the RungroupAccount relation
+ * @method     ChildAccountQuery rightJoinWithRungroupAccount() Adds a RIGHT JOIN clause and with to the query using the RungroupAccount relation
+ * @method     ChildAccountQuery innerJoinWithRungroupAccount() Adds a INNER JOIN clause and with to the query using the RungroupAccount relation
+ *
+ * @method     \RungroupAccountQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ *
  * @method     ChildAccount findOne(ConnectionInterface $con = null) Return the first ChildAccount matching the query
  * @method     ChildAccount findOneOrCreate(ConnectionInterface $con = null) Return the first ChildAccount matching the query, or a new ChildAccount object populated from the query conditions when no match is found
  *
  * @method     ChildAccount findOneByAccountPk(int $account_pk) Return the first ChildAccount filtered by the account_pk column
  * @method     ChildAccount findOneByGuid(string $guid) Return the first ChildAccount filtered by the guid column
- * @method     ChildAccount findOneByName(string $name) Return the first ChildAccount filtered by the name column
- * @method     ChildAccount findOneByEmail(string $email) Return the first ChildAccount filtered by the email column
- * @method     ChildAccount findOneByPassword(string $password) Return the first ChildAccount filtered by the password column
- * @method     ChildAccount findOneByRemoved(boolean $removed) Return the first ChildAccount filtered by the removed column *
+ * @method     ChildAccount findOneByAccountName(string $account_name) Return the first ChildAccount filtered by the account_name column
+ * @method     ChildAccount findOneByAccountEmail(string $account_email) Return the first ChildAccount filtered by the account_email column
+ * @method     ChildAccount findOneByAccountPassword(string $account_password) Return the first ChildAccount filtered by the account_password column
+ * @method     ChildAccount findOneByIsRemoved(boolean $is_removed) Return the first ChildAccount filtered by the is_removed column *
 
  * @method     ChildAccount requirePk($key, ConnectionInterface $con = null) Return the ChildAccount by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildAccount requireOne(ConnectionInterface $con = null) Return the first ChildAccount matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildAccount requireOneByAccountPk(int $account_pk) Return the first ChildAccount filtered by the account_pk column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildAccount requireOneByGuid(string $guid) Return the first ChildAccount filtered by the guid column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildAccount requireOneByName(string $name) Return the first ChildAccount filtered by the name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildAccount requireOneByEmail(string $email) Return the first ChildAccount filtered by the email column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildAccount requireOneByPassword(string $password) Return the first ChildAccount filtered by the password column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildAccount requireOneByRemoved(boolean $removed) Return the first ChildAccount filtered by the removed column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildAccount requireOneByAccountName(string $account_name) Return the first ChildAccount filtered by the account_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildAccount requireOneByAccountEmail(string $account_email) Return the first ChildAccount filtered by the account_email column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildAccount requireOneByAccountPassword(string $account_password) Return the first ChildAccount filtered by the account_password column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildAccount requireOneByIsRemoved(boolean $is_removed) Return the first ChildAccount filtered by the is_removed column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildAccount[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildAccount objects based on current ModelCriteria
  * @method     ChildAccount[]|ObjectCollection findByAccountPk(int $account_pk) Return ChildAccount objects filtered by the account_pk column
  * @method     ChildAccount[]|ObjectCollection findByGuid(string $guid) Return ChildAccount objects filtered by the guid column
- * @method     ChildAccount[]|ObjectCollection findByName(string $name) Return ChildAccount objects filtered by the name column
- * @method     ChildAccount[]|ObjectCollection findByEmail(string $email) Return ChildAccount objects filtered by the email column
- * @method     ChildAccount[]|ObjectCollection findByPassword(string $password) Return ChildAccount objects filtered by the password column
- * @method     ChildAccount[]|ObjectCollection findByRemoved(boolean $removed) Return ChildAccount objects filtered by the removed column
+ * @method     ChildAccount[]|ObjectCollection findByAccountName(string $account_name) Return ChildAccount objects filtered by the account_name column
+ * @method     ChildAccount[]|ObjectCollection findByAccountEmail(string $account_email) Return ChildAccount objects filtered by the account_email column
+ * @method     ChildAccount[]|ObjectCollection findByAccountPassword(string $account_password) Return ChildAccount objects filtered by the account_password column
+ * @method     ChildAccount[]|ObjectCollection findByIsRemoved(boolean $is_removed) Return ChildAccount objects filtered by the is_removed column
  * @method     ChildAccount[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -166,7 +179,7 @@ abstract class AccountQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT account_pk, guid, name, email, password, removed FROM account WHERE account_pk = :p0';
+        $sql = 'SELECT account_pk, guid, account_name, account_email, account_password, is_removed FROM account WHERE account_pk = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -323,90 +336,90 @@ abstract class AccountQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the name column
+     * Filter the query on the account_name column
      *
      * Example usage:
      * <code>
-     * $query->filterByName('fooValue');   // WHERE name = 'fooValue'
-     * $query->filterByName('%fooValue%', Criteria::LIKE); // WHERE name LIKE '%fooValue%'
+     * $query->filterByAccountName('fooValue');   // WHERE account_name = 'fooValue'
+     * $query->filterByAccountName('%fooValue%', Criteria::LIKE); // WHERE account_name LIKE '%fooValue%'
      * </code>
      *
-     * @param     string $name The value to use as filter.
+     * @param     string $accountName The value to use as filter.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildAccountQuery The current query, for fluid interface
      */
-    public function filterByName($name = null, $comparison = null)
+    public function filterByAccountName($accountName = null, $comparison = null)
     {
         if (null === $comparison) {
-            if (is_array($name)) {
+            if (is_array($accountName)) {
                 $comparison = Criteria::IN;
             }
         }
 
-        return $this->addUsingAlias(AccountTableMap::COL_NAME, $name, $comparison);
+        return $this->addUsingAlias(AccountTableMap::COL_ACCOUNT_NAME, $accountName, $comparison);
     }
 
     /**
-     * Filter the query on the email column
+     * Filter the query on the account_email column
      *
      * Example usage:
      * <code>
-     * $query->filterByEmail('fooValue');   // WHERE email = 'fooValue'
-     * $query->filterByEmail('%fooValue%', Criteria::LIKE); // WHERE email LIKE '%fooValue%'
+     * $query->filterByAccountEmail('fooValue');   // WHERE account_email = 'fooValue'
+     * $query->filterByAccountEmail('%fooValue%', Criteria::LIKE); // WHERE account_email LIKE '%fooValue%'
      * </code>
      *
-     * @param     string $email The value to use as filter.
+     * @param     string $accountEmail The value to use as filter.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildAccountQuery The current query, for fluid interface
      */
-    public function filterByEmail($email = null, $comparison = null)
+    public function filterByAccountEmail($accountEmail = null, $comparison = null)
     {
         if (null === $comparison) {
-            if (is_array($email)) {
+            if (is_array($accountEmail)) {
                 $comparison = Criteria::IN;
             }
         }
 
-        return $this->addUsingAlias(AccountTableMap::COL_EMAIL, $email, $comparison);
+        return $this->addUsingAlias(AccountTableMap::COL_ACCOUNT_EMAIL, $accountEmail, $comparison);
     }
 
     /**
-     * Filter the query on the password column
+     * Filter the query on the account_password column
      *
      * Example usage:
      * <code>
-     * $query->filterByPassword('fooValue');   // WHERE password = 'fooValue'
-     * $query->filterByPassword('%fooValue%', Criteria::LIKE); // WHERE password LIKE '%fooValue%'
+     * $query->filterByAccountPassword('fooValue');   // WHERE account_password = 'fooValue'
+     * $query->filterByAccountPassword('%fooValue%', Criteria::LIKE); // WHERE account_password LIKE '%fooValue%'
      * </code>
      *
-     * @param     string $password The value to use as filter.
+     * @param     string $accountPassword The value to use as filter.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildAccountQuery The current query, for fluid interface
      */
-    public function filterByPassword($password = null, $comparison = null)
+    public function filterByAccountPassword($accountPassword = null, $comparison = null)
     {
         if (null === $comparison) {
-            if (is_array($password)) {
+            if (is_array($accountPassword)) {
                 $comparison = Criteria::IN;
             }
         }
 
-        return $this->addUsingAlias(AccountTableMap::COL_PASSWORD, $password, $comparison);
+        return $this->addUsingAlias(AccountTableMap::COL_ACCOUNT_PASSWORD, $accountPassword, $comparison);
     }
 
     /**
-     * Filter the query on the removed column
+     * Filter the query on the is_removed column
      *
      * Example usage:
      * <code>
-     * $query->filterByRemoved(true); // WHERE removed = true
-     * $query->filterByRemoved('yes'); // WHERE removed = true
+     * $query->filterByIsRemoved(true); // WHERE is_removed = true
+     * $query->filterByIsRemoved('yes'); // WHERE is_removed = true
      * </code>
      *
-     * @param     boolean|string $removed The value to use as filter.
+     * @param     boolean|string $isRemoved The value to use as filter.
      *              Non-boolean arguments are converted using the following rules:
      *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
      *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
@@ -415,13 +428,86 @@ abstract class AccountQuery extends ModelCriteria
      *
      * @return $this|ChildAccountQuery The current query, for fluid interface
      */
-    public function filterByRemoved($removed = null, $comparison = null)
+    public function filterByIsRemoved($isRemoved = null, $comparison = null)
     {
-        if (is_string($removed)) {
-            $removed = in_array(strtolower($removed), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        if (is_string($isRemoved)) {
+            $isRemoved = in_array(strtolower($isRemoved), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
         }
 
-        return $this->addUsingAlias(AccountTableMap::COL_REMOVED, $removed, $comparison);
+        return $this->addUsingAlias(AccountTableMap::COL_IS_REMOVED, $isRemoved, $comparison);
+    }
+
+    /**
+     * Filter the query by a related \RungroupAccount object
+     *
+     * @param \RungroupAccount|ObjectCollection $rungroupAccount the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildAccountQuery The current query, for fluid interface
+     */
+    public function filterByRungroupAccount($rungroupAccount, $comparison = null)
+    {
+        if ($rungroupAccount instanceof \RungroupAccount) {
+            return $this
+                ->addUsingAlias(AccountTableMap::COL_ACCOUNT_PK, $rungroupAccount->getAccountFk(), $comparison);
+        } elseif ($rungroupAccount instanceof ObjectCollection) {
+            return $this
+                ->useRungroupAccountQuery()
+                ->filterByPrimaryKeys($rungroupAccount->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByRungroupAccount() only accepts arguments of type \RungroupAccount or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the RungroupAccount relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildAccountQuery The current query, for fluid interface
+     */
+    public function joinRungroupAccount($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('RungroupAccount');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'RungroupAccount');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the RungroupAccount relation RungroupAccount object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \RungroupAccountQuery A secondary query class using the current class as primary query
+     */
+    public function useRungroupAccountQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinRungroupAccount($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'RungroupAccount', '\RungroupAccountQuery');
     }
 
     /**

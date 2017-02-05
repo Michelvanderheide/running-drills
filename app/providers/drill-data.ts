@@ -33,6 +33,11 @@ export class DrillData {
 	public isConnected: boolean;
 	public settings: any;
 	public timesPerDistance: any[];
+	public defaultImg:string;
+
+	public reloadVideo: boolean=false;
+
+	private drillIdx:number = 0;
 
 	static get parameters(){
 
@@ -46,10 +51,12 @@ export class DrillData {
 		this.http = http;
 		this.userData = userData;
     	this.errorMessage = '';
+    	this.defaultImg =AppSettings.defaultImg;
+
 
     	this.initSettings();
     	this.initDrillFilters();
-    	
+    	//this.settings.tenTimeSecs = 2500;
 
 	}
 
@@ -63,9 +70,43 @@ export class DrillData {
 		return Promise.reject(errMsg);
 	}
 
+	changeTimeTen(timeSecsTen) {
+		if (timeSecsTen) {
+			this.settings.tenTime = timeSecsTen;
+			this.settings.fiveTime = '';
+			this.settings.halfTime = '';
+			this.calcTimesPerDistance();
+		} 
 
+	}
+	changeTimeFive(timeSecsFive) {
+		if (timeSecsFive) {
+			this.settings.tenTime = '';
+			this.settings.fiveTime = timeSecsFive;
+			this.settings.halfTime = '';
+			this.calcTimesPerDistance();
+		} 
+	}	
+
+	getDropDownIntervalsForTen() {
+		let result = [];
+		for ( var i=33; i<70; i++) {
+				result.push(i+":00");
+				result.push(i+":30");
+		}
+		return result;
+	}
+
+	getDropDownIntervalsForFive() {
+		let result = [];
+		for ( var i=16; i<35; i++) {
+				result.push(i+":00");
+				result.push(i+":30");
+		}
+		return result;
+	}
 	getTrainingSessions() {
-		console.log("getTrainingSessions...");
+		//console.log("getTrainingSessions...");
 		return this.http.get(AppSettings.BASE_API_URL + "/trainingsessions", this.getRequestOptions()).map(res => {
 		    let result = res.json();
 			if (result.status === false) {
@@ -102,19 +143,19 @@ export class DrillData {
 		if (localTrainingsSession !== null) {
 			this.trainingSessions = JSON.parse(localTrainingsSession);
 		}
-		console.debug("getCachedSessions",localTrainingsSession);
+		//console.debug("getCachedSessions",localTrainingsSession);
 		return this.trainingSessions;
 	}
 
 	initSettings() {
 		let localSettings = localStorage.getItem("settings");
 		if (localSettings ==  null) {
-			this.settings = { showSummary: false, fiveTime: "", tenTime: "", halfTime:"" };
+			this.settings = { showSummary: false, fiveTime: "", tenTime: "", halfTime:"", setTenTime:true };
 			localStorage.setItem("settings", JSON.stringify(this.settings));
 		} else {
 			this.settings = JSON.parse(localSettings);
 		}	
-		console.debug("Init Settings:",this.settings);
+		//console.debug("Init Settings:",this.settings);
 
 		this.calcTimesPerDistance();
 	}
@@ -125,7 +166,7 @@ export class DrillData {
 			this.drillFilters = [ 
 		      {title: "Inleiding", value: true},
 		      {title: "Warming up", value: true},
-		      {title: "Core Stability", value: true},
+		      {title: "Core stability", value: true},
 		      {title: "Kring", value: true},
 		      {title: "Vierkant", value: true},
 		      {title: "400m Baan", value: true},
@@ -179,19 +220,12 @@ export class DrillData {
  		} 		
  	}
 
- 	public setCurrentTrainingSession(trainingSession: TrainingSession) {
- 		this.trainingSession = trainingSession;
- 	}
- 	public setCurrentTrainingDrill(drill: Drill) {
- 		this.drill = drill;
- 	}
-
  	public getTimeForDistance(distance:number, speedRef:string) {
  		let result = 0;
  		for (let i in this.timesPerDistance) {
- console.log("loop:"+this.timesPerDistance[i].distance);
+ //console.log("loop:"+this.timesPerDistance[i].distance);
  			if (this.timesPerDistance[i].distanceMeters == distance) {
- console.log("found dist:"+ distance+":"+speedRef);
+ //console.log("found dist:"+ distance+":"+speedRef);
  				if (speedRef=='5') {
  					result = this.timeToSeconds(this.timesPerDistance[i].timeFive);
  					break;
@@ -201,12 +235,57 @@ export class DrillData {
  				} else if (speedRef=='21') {
  					result = this.timeToSeconds(this.timesPerDistance[i].timeHalf);
  					break;
- 				} 				
+ 				} else if (speedRef=='i') {
+ 					result = this.timeToSeconds(this.timesPerDistance[i].timeInt);
+ 					break;
+ 				} else if (speedRef=='x') {
+ 					result = this.timeToSeconds(this.timesPerDistance[i].timeExt);
+ 					break;
+ 				}			
  			}
  		}
-console.log("result:"+result); 		
+//console.log("result:"+result); 		
  		return result;
  	}
+
+	parseTime(time: string) {
+		let len = time.length;
+		var i;
+
+		if (len == 4 && parseInt(time[2]) >= 0) {
+			time = time.substring(0, 2) + ":" + time.substring(2, 7);
+			len++;
+		} 
+		if (len == 7) {
+			if (time[0] != '0') {
+				time = '0'+time;
+				len++;
+			}
+			if (parseInt(time[5]) >= 0) {
+				time = time.substring(0, 5) + ":" + time.substring(5, 7);
+				len++;
+			}
+		} 
+		let result = time;
+		for (i=0; i < len; i++) {
+  			if (i != 2 && i != 5) {
+  				if (parseInt(time[i]) >= 0) {
+  					console.log("parsed("+i+"):"+time[i]);
+  				} else {
+  					console.log("not parsed("+i+"):"+time[i]);
+  					break;
+  				}
+  			}
+		}
+
+		if (i==2) {
+			result += ":";
+			i++;
+		}
+		result = result.replace(".",":");
+
+		return result.substring(0, i);
+	} 	
 
  	public calcTimesPerDistance() {
  		let distances = [ 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1200, 1500, 2000, 3000];
@@ -218,24 +297,48 @@ console.log("result:"+result);
 console.log("timeSecsFive:"+timeSecsFive);
 console.log("timeSecsTen:"+timeSecsTen);
 console.log("timeSecsHalf:"+timeSecsHalf);
+
+console.log("tempos 5k:"+AppSettings.tempos['wds']['5k']);
+console.log("tempos 10k:"+AppSettings.tempos['wds']['10k']);
+console.log("tempos 21k:"+AppSettings.tempos['wds']['21k']);
+console.debug("1:"+AppSettings.tempos['wds']['10k']/AppSettings.tempos['wds']['5k']);
+console.debug("2:"+Math.floor(AppSettings.tempos['wds']['10k']/AppSettings.tempos['wds']['5k']));
+
 	 	if (timeSecsFive > 0 && timeSecsTen == 0) {
-	 		timeSecsTen = Math.floor(timeSecsFive*2.085);
+	 		//timeSecsTen = Math.floor(timeSecsFive*2.085);
+	 		timeSecsTen = Math.floor(timeSecsFive*(AppSettings.tempos['wds']['10k']/AppSettings.tempos['wds']['5k']));
 	 		this.settings.tenTime = this.secondsToTime(timeSecsTen);
 		}	
 	 	if (timeSecsTen > 0 && timeSecsHalf == 0) {
-	 		timeSecsHalf = Math.floor(timeSecsTen*2.20625);
+	 		//timeSecsHalf = Math.floor(timeSecsTen*2.20625);
+	 		timeSecsHalf = Math.floor(timeSecsTen * (AppSettings.tempos['wds']['21k']/AppSettings.tempos['wds']['10k']));
 	 		this.settings.halfTime = this.secondsToTime(timeSecsHalf);
 		}	
+	 	if (timeSecsTen > 0 && timeSecsFive == 0) {
+	 		//timeSecsFive = Math.floor(timeSecsTen/2.085);
+	 		timeSecsFive = Math.floor(timeSecsTen * (AppSettings.tempos['wds']['5k']/AppSettings.tempos['wds']['10k']));
+	 		this.settings.fiveTime = this.secondsToTime(timeSecsFive);
+		}		
 console.log("timeSecsFive-:"+timeSecsFive);
 console.log("timeSecsTen-:"+timeSecsTen);
 console.log("timeSecsHalf-:"+timeSecsHalf);
-
+console.debug("tempos:",AppSettings.tempos);
+		let baseInt = timeSecsTen/10;
 		for (let i = 0; i < distances.length; i++) { 
 			let distance =  distances[i];
 			let timeStrFive = this.secondsToTime(Math.floor((distance/5000)*timeSecsFive));
 			let timeStrTen = this.secondsToTime(Math.floor((distance/10000)*timeSecsTen));
-			let timeStrHalf = this.secondsToTime(Math.floor((distance/21100)*timeSecsHalf));
-			this.timesPerDistance.push({ distanceMeters: distance, distance: distance + " meter", timeFive: timeStrFive, timeTen: timeStrTen, timeHalf:timeStrHalf});
+			let timeStrHalf = this.secondsToTime(Math.floor((distance/21100)*timeSecsHalf)); 
+			let timeStrInt = '';
+			if (typeof AppSettings.tempos['int'][distance+'m'] !== "undefined") {
+				timeStrInt = this.secondsToTime(Math.floor(baseInt*AppSettings.tempos['int'][distance+'m']));
+			}
+			let timeStrExt = '';
+			if (typeof AppSettings.tempos['ext'][distance+'m'] !== "undefined") {
+				timeStrExt = this.secondsToTime(Math.floor(baseInt*AppSettings.tempos['ext'][distance+'m']));
+			}			
+			this.timesPerDistance.push({ distanceMeters: distance, distance: distance + "", timeFive: timeStrFive
+				, timeTen: timeStrTen, timeHalf:timeStrHalf, timeInt:timeStrInt, timeExt:timeStrExt});
 		}
 
  	}
@@ -290,4 +393,18 @@ console.log("timeSecsHalf-:"+timeSecsHalf);
     	return new RequestOptions({ headers: headers });
 	}
 
+ 	public setCurrentTrainingSession(trainingSession: TrainingSession) {
+ 		this.trainingSession = trainingSession;
+ 	}
+ 	public setCurrentTrainingDrill(drill: Drill) {
+ 		this.drill = drill;
+ 		//this.drillIdx = drillIdx;
+ 	}
+
+	public hasNextTrainingsDrill() {
+		return this.trainingSession.drills.length > (this.drillIdx+1) && (this.drillIdx+1)>=0;
+	}
+	public hasPrevTrainingsDrill() {
+		return this.trainingSession.drills.length > (this.drillIdx-1) && (this.drillIdx-1)>=0;
+	}
 }

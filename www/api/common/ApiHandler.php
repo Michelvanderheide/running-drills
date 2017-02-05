@@ -72,19 +72,28 @@ class ApiHandler {
 		$handler -> logger -> addInfo("getSessionDrills - start");
 		
 		$params = $request -> getParsedBody();
+		try {
 
-		if (!isset($params['sessionId']) && ($trainingsSessions = $handler -> getSessionDrills($params['sessionId']) == false)) {
-			$result['data'] = array();
-			$result ["status"] = false;
-			$result ["message"] = $handler -> getErrorMessage();
-		} else {
-			$result['data'] = $trainingsSessions;
-			$result['status'] = true;
-			$result ["message"] = '';
+			if (($trainingsSessions = $handler -> getSessionDrills()) == false) {
+				$result['data'] = array();
+				$result ["status"] = false;
+				$result ["message"] = $handler -> getErrorMessage();
+			} else {
+				$result['data'] = $trainingsSessions;
+				$result['status'] = true;
+				$result ["message"] = '';
+			}
+		} catch (Exception $e) {
+			print_r($e);exit;
 		}
 
 		$handler -> logger -> addInfo("getSessionDrills - done");
 		echo json_encode($result);
+	}
+
+	public static function importSessionDrills() {
+		global $handler;
+		$handler -> importSessionDrills();
 	}
 
 }
