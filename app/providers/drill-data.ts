@@ -164,17 +164,10 @@ export class DrillData {
 		let localDrillFilter = localStorage.getItem("drillFilters");
 		if (localDrillFilter ==  null) {
 			this.drillFilters = [ 
-		      {title: "Inleiding", value: true},
 		      {title: "Warming up", value: true},
 		      {title: "Core stability", value: true},
-		      {title: "Kring", value: true},
-		      {title: "Vierkant", value: true},
-		      {title: "400m Baan", value: true},
-		      {title: "Loopscholing", value: true},
-		      {title: "Tussenprogramma", value: true},
 		      {title: "Hoofdprogramma", value: true},
 		      {title: "Cooling down", value: true},
-		      {title: "Overig", value: true}
 	   		];
 
 			localStorage.setItem("drillFilters", JSON.stringify(this.drillFilters));

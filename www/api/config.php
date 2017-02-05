@@ -44,11 +44,11 @@ $apiConfig['basedir'] = str_replace('www\api','', str_replace ('www/api','', __D
 if ($apiConfig['env'] == "dev") {
 	//$apiConfig['baseUrl'] = "localhost";
 	$apiConfig['baseUrl'] = "http://runningdrillsapi.local";
-	$apiConfig['imagedir'] = $apiConfig['basedir'] . 'www/images/';
+	$apiConfig['imagedir'] = $apiConfig['basedir'] . 'www/api/images/';
 	$apiConfig['imageUrl'] = $apiConfig['baseUrl'] . '/images/';
 } else {
 	$apiConfig['baseUrl'] = "http://178.62.192.163";
-	$apiConfig['imagedir'] = $apiConfig['basedir'] . 'http://178.62.192.163/images/';
+	$apiConfig['imagedir'] = $apiConfig['basedir'] . 'http://178.62.192.163/api/images/';
 	$apiConfig['imageUrl'] = $apiConfig['baseUrl'] . '/images/';
 }
 

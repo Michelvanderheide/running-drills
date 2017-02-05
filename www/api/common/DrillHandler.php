@@ -323,6 +323,7 @@ class DrillHandler {
 			}
 
 			$drillIdx = count($arrResult[$sessionIdx]['drills']);
+			$drill['title'] = $values['DrillTitle'];
 			$drill['description'] = $values['DrillDescription'];
 			$drill['descriptionHtml'] = $values['DrillDescriptionHtml'];
 			$drill['drillIdx'] = $drillIdx+1;
@@ -339,6 +340,8 @@ class DrillHandler {
 			$drill['imgUrls'] = array();
 			$this -> logger -> addInfo("Check if File exists:".$apiConfig['imagedir'].$filename);
 			$drill['imgUrl'] = ""; //$apiConfig['imageUrl'].'kettinglopers.png';
+
+			//print_r($apiConfig['imagedir'].$filename);exit;
 			while (file_exists($apiConfig['imagedir'].$filename)) {
 				$this -> logger -> addInfo("File exists!");
 				$drill['imgUrls'][] = $drill['imgUrl'] = $apiConfig['imageUrl'].$filename;
