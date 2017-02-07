@@ -3,10 +3,11 @@ export class AppSettings {
 	public static setDevEnvironment() {
 		console.log("set dev environment");
 		this.BASE_URL = 'http://runningdrillsapi.local'
+		//this.BASE_URL = 'http://178.62.192.163'
 		this.BASE_API_URL = this.BASE_URL
 	}
 	public static BASE_URL: string = 'http://178.62.192.163';
-	public static BASE_API_URL: string = 'http://178.62.192.163';
+	public static BASE_API_URL: string = 'http://178.62.192.163/api';
 	public static defaultImg:string = 'http://178.62.192.163/images/kettinglopers.png';
 
 	public static isNative:boolean = false;
