@@ -48,7 +48,7 @@ if ($apiConfig['env'] == "dev") {
 	$apiConfig['imageUrl'] = $apiConfig['baseUrl'] . '/images/';
 } else {
 	$apiConfig['baseUrl'] = "http://178.62.192.163";
-	$apiConfig['imagedir'] = $apiConfig['basedir'] . 'api/images/';
+	$apiConfig['imagedir'] = $apiConfig['basedir'] . 'www/api/images/';
 	$apiConfig['imageUrl'] = $apiConfig['baseUrl'] . '/api/images/';
 }
 
