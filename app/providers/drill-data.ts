@@ -166,7 +166,8 @@ export class DrillData {
 			this.drillFilters = [ 
 		      {title: "Warming up", value: true},
 		      {title: "Core stability", value: true},
-		      {title: "Hoofdprogramma", value: true},
+		      {title: "Loopscholing", value: true},
+		      {title: "Kern", value: true},
 		      {title: "Cooling down", value: true},
 	   		];
 

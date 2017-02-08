@@ -254,22 +254,38 @@ class DrillHandler {
 	 * @return array
 	 */
 	public function getSessionDrills($filter=array()) {
+
+		$query = SessionQuery::create();
+
+
+		$query -> join('Session.SessionRungroup');
+		$query -> join('SessionRungroup.Rungroup');
+		$query -> orderBySessionPk();
+		$sessions = $query -> find() -> toArray();
+		foreach($sessions as $session) {
+			$arrResult[] = $this -> getDrillsForSessionDrills($session['SessionPk']);
+		}
+
+		//print_r($arrResult);exit("Done");
+		$this -> trainingSessions = $arrResult;
+		return true;
+	}
+
+	public function getDrillsForSessionDrills($SessionPk) {		
 		global  $apiConfig;
 		$result = array();
 		$this -> logger -> addInfo("getSessionDrills:".print_r($this -> trainingSessions,true));
 
-		extract($filter);
+		//extract($filter);
 
 		$query = DrillQuery::create();
 
-		if (isset($SessionPk)) {
-			$query->filterBySessionPk($SessionPk);
-		}
 		$query -> join('Drill.Category');
 		$query -> Join('Drill.SessionDrill');
 		$query -> join('SessionDrill.Session');
 		$query -> join('Drill.Category');
 		$query -> join('Session.SessionRungroup');
+		$query -> where('Session.SessionPk = ?', $SessionPk);
 		$query -> join('SessionRungroup.Rungroup');
 		$query -> withColumn('Session.SessionPk', 'SessionPk');
 		$query -> withColumn('Session.SessionName', 'SessionName');
@@ -290,11 +306,13 @@ class DrillHandler {
 		$query -> withColumn('Drill.DrillIntervals', 'DrillIntervals');
 		$query -> withColumn('Drill.DrillImage', 'DrillImage');
 		$query -> withColumn('Drill.DrillVideo', 'DrillVideo');
+
 		$query -> orderBySessionPk();
 		$query -> orderBySortOrder();
 		$query -> distinct();
 
 		$sessionDrills = $query -> find() -> toArray(); //-> toString();
+		//print_r($sessionDrills);
 		$arrResult = array();
 		$idx = 0;
 
@@ -302,27 +320,36 @@ class DrillHandler {
 		$categoryName = false;
 		$sessionName = false;
 		$categoryIdx = -1;
-		$sessionIdx = -1;
+		//$sessionIdx = -1;
 		$groups = array();
 		foreach ($sessionDrills as $i => $values) {
+			//$sessionIdx = $values['SessionPk'];
+			//print("\nSessionidx:".$sessionIdx);
 			if ($sessionName !== $values['SessionName']) {
 				$categoryIdx = -1;
-				$sessionIdx++;
+				//$sessionIdx++;
+				
 				$sessionName = $values['SessionName'];
-				$arrResult[$sessionIdx]['description'] = $values['SessionDescription'];
-				$arrResult[$sessionIdx]['descriptionHtml'] = $values['SessionDescriptionHtml'];
-				$arrResult[$sessionIdx]['drills'] = array();
-				$arrResult[$sessionIdx]['groups'] = array();
-				$arrResult[$sessionIdx]['id'] = $values['SessionPk'];
-				//$arrResult[$sessionIdx]['show'] = true;
-				$arrResult[$sessionIdx]['userGroupName'] = $values['RungroupName'];
+
+				$prefix = '';
+				if ($values['SessionDate'] && strlen($values['SessionDate']) == 10) {
+					$prefix = substr($values['SessionDate'],8,2) . '-' . substr($values['SessionDate'],5,2) . '-'. substr($values['SessionDate'],0,4) . ' - ';
+				}
+				$arrResult['name'] = $prefix. $values['SessionName'];
+				$arrResult['description'] = $values['SessionDescription'];
+				$arrResult['descriptionHtml'] = $values['SessionDescriptionHtml'];
+				$arrResult['drills'] = array();
+				$arrResult['groups'] = array();
+				$arrResult['id'] = $values['SessionPk'];
+				//$arrResult['show'] = true;
+				$arrResult['userGroupName'] = $values['RungroupName'];
 			}
 			if ($categoryName !== $values['CategoryName']) {
 				$categoryIdx++;
 				$categoryName = $values['CategoryName'];
 			}
 
-			$drillIdx = count($arrResult[$sessionIdx]['drills']);
+			$drillIdx = count($arrResult['drills']);
 			$drill['title'] = $values['DrillTitle'];
 			$drill['description'] = $values['DrillDescription'];
 			$drill['descriptionHtml'] = $values['DrillDescriptionHtml'];
@@ -358,11 +385,11 @@ class DrillHandler {
 
 			$drill['tags'] = '';
 
-			$arrResult[$sessionIdx]['drills'][$drillIdx] = $drill;
-			$arrResult[$sessionIdx]['groups'][$categoryIdx]['drills'][] = $drill;
-			$arrResult[$sessionIdx]['groups'][$categoryIdx]['groupName'] = $categoryName;
+			$arrResult['drills'][$drillIdx] = $drill;
+			$arrResult['groups'][$categoryIdx]['drills'][] = $drill;
+			$arrResult['groups'][$categoryIdx]['groupName'] = $categoryName;
 		}
-		$this -> trainingSessions = $arrResult;
+		
 		//print_r($arrResult);exit;
 
 /*
@@ -400,7 +427,7 @@ print_r($sessionDrills->toArray());exit;
 */
 		//ksort ($sessionDrills)
 
-		return true;
+		return $arrResult;
 	}
 
 	public function importSessionDrills($filter=array()) {
