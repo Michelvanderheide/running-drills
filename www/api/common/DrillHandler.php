@@ -345,6 +345,9 @@ class DrillHandler {
 				$arrResult['name'] = $prefix. $values['SessionName'];
 				$arrResult['description'] = $values['SessionDescription'];
 				$arrResult['descriptionHtml'] = $values['SessionDescriptionHtml'];
+				if ($categoryPk !== false) {
+					$arrResult['name'] = $arrResult['description'] = $arrResult['descriptionHtml'] = $values['CategoryName'];
+				}
 				$arrResult['drills'] = array();
 				$arrResult['groups'] = array();
 				$arrResult['id'] = $values['SessionPk'];
