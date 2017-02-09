@@ -24,11 +24,6 @@ export class SessionListPage {
     this.userData = userData;
     this.trainingSessions = [];
 
-    if (!this.userData.isInitialized()) {
-      //console.log("settings..");
-      this.nav.push(SettingsPage);
-    }
-
     if (drillData.isConnected) {
       //console.log("Is connected")
       drillData.getTrainingSessions().subscribe(trainingSessions => {

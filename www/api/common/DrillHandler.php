@@ -263,7 +263,9 @@ class DrillHandler {
 		$query -> orderBySessionPk();
 		$sessions = $query -> find() -> toArray();
 		foreach($sessions as $session) {
-			$arrResult[] = $this -> getDrillsForSessionDrills($session['SessionPk']);
+			if ($session['SessionPk']>1) {
+				$arrResult[] = $this -> getDrillsForSessionDrills($session['SessionPk']);
+			}
 		}
 
 		//print_r($arrResult);exit("Done");
