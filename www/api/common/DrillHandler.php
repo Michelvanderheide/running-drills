@@ -271,7 +271,7 @@ class DrillHandler {
 		return true;
 	}
 
-	public function getDrillsForSessionDrills($SessionPk) {		
+	public function getDrillsForSessionDrills($SessionPk, $categoryPk=false) {		
 		global  $apiConfig;
 		$result = array();
 		$this -> logger -> addInfo("getSessionDrills:".print_r($this -> trainingSessions,true));
@@ -286,6 +286,11 @@ class DrillHandler {
 		$query -> join('Drill.Category');
 		$query -> join('Session.SessionRungroup');
 		$query -> where('Session.SessionPk = ?', $SessionPk);
+		if ($categoryPk !== false) {
+			$query -> where('Drill.CategoryFk = ?', $categoryPk);
+		}
+
+
 		$query -> join('SessionRungroup.Rungroup');
 		$query -> withColumn('Session.SessionPk', 'SessionPk');
 		$query -> withColumn('Session.SessionName', 'SessionName');
@@ -352,7 +357,7 @@ class DrillHandler {
 			$drillIdx = count($arrResult['drills']);
 			$drill['title'] = $values['DrillTitle'];
 			$drill['description'] = $values['DrillDescription'];
-			$drill['descriptionHtml'] = $values['DrillDescriptionHtml'];
+			$drill['descriptionHtml'] = $this -> toHTML($values['DrillDescription']);
 			$drill['drillIdx'] = $drillIdx+1;
 			$drill['group'] = $values['CategoryName'];
 			$drill['id'] = $values['DrillId'];

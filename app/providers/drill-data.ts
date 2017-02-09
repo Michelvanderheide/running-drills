@@ -34,6 +34,9 @@ export class DrillData {
 	public settings: any;
 	public timesPerDistance: any[];
 	public defaultImg:string;
+	public coreStretchDrills: TrainingSession;
+	public loopscholingDrills: TrainingSession;
+	public kernDrills: TrainingSession;
 
 	public reloadVideo: boolean=false;
 
@@ -56,6 +59,7 @@ export class DrillData {
 
     	this.initSettings();
     	this.initDrillFilters();
+
     	//this.settings.tenTimeSecs = 2500;
 
 	}
@@ -120,6 +124,29 @@ export class DrillData {
 				return this.trainingSessions;
 			}		    
 		});
+	}
+	getCategoryDrills(cat: number) {
+		return this.http.get(AppSettings.BASE_API_URL + "/drillsforcategory/"+cat, this.getRequestOptions()).map(res => {
+				    let result = res.json();
+					if (result.status === false) {
+						this.errorMessage = result.message;
+						return false;
+					} else {
+						console.debug("getCategoryDrills:",result.data);
+						if (cat == 2) {
+							this.coreStretchDrills = result.data;
+							localStorage.setItem("coreStretchDrills", JSON.stringify(result.data));
+						} else if (cat == 3) {
+							this.loopscholingDrills = result.data;
+							localStorage.setItem("loopscholingDrills", JSON.stringify(result.data));
+						} else if (cat == 4) {
+							this.kernDrills = result.data;
+							localStorage.setItem("kernDrills", JSON.stringify(result.data));
+						}
+						return result.data;
+					}		    
+				});
+
 	}
 
 	filterOnUserGroups() {

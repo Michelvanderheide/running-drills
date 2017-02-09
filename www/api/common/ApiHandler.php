@@ -91,6 +91,35 @@ class ApiHandler {
 		echo json_encode($result);
 	}
 
+	public static function getDrillsForCategory($request, $response, $args)   {
+		global $apiConfig, $handler;
+		$handler -> logger -> addInfo("getSessionDrills - start");
+		
+		$params = $request -> getParsedBody();
+		$categoryPk = 0;
+		if (@isset($args['id'])) {
+			$categoryPk = $args['id'];
+		}
+		try {
+
+			if (($drillsForSession = $handler -> getDrillsForSessionDrills(1, $categoryPk)) == false) {
+				$result['data'] = array();
+				$result ["status"] = false;
+				$result ["message"] = $handler -> getErrorMessage();
+			} else {
+				$result['data'] = $drillsForSession;
+				$result['status'] = true;
+				$result ["message"] = '';
+			}
+		} catch (Exception $e) {
+			print_r($e);exit;
+		}
+
+		$handler -> logger -> addInfo("getSessionDrills - done");
+		echo json_encode($result);
+	}
+
+
 	public static function importSessionDrills() {
 		global $handler;
 		$handler -> importSessionDrills();

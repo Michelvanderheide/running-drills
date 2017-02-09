@@ -73,6 +73,8 @@ $app->get('/sessiondrills', '\ApiHandler:getSessionDrills');
 $app->get('/sessiongroups', '\ApiHandler:getSessionGroups');
 $app->get('/assets/{id}', '\ApiHandler:getAsset');
 
+$app->get('/drillsforcategory/{id}', '\ApiHandler:getDrillsForCategory');
+
 $app->get('/import', '\ApiHandler:importSessionDrills');
 
 
