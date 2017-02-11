@@ -42,7 +42,27 @@
 	max-height: 100%;
 }
 
-p {
-	margin-left:15px;
-	margin-right:15px;
+.b_lockimg {
+	width: 90% !important;
+	height:0 !important;
+	padding: 0 0 90% 0 !important;
+}
+
+.b_lockimg span {
+	padding-top: 50%;
+}
+.blockimg {
+	width:100% !important;
+}
+
+.right {
+	float:right;
+}
+
+
+.playbutton{
+    position:absolute;
+    top: 45%;
+    left:45%;
+    border: 0px !important;
 }

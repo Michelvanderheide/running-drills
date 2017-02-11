@@ -340,9 +340,15 @@ class DrillHandler {
 
 				$prefix = '';
 				if ($values['SessionDate'] && strlen($values['SessionDate']) == 10) {
-					$prefix = substr($values['SessionDate'],8,2) . '-' . substr($values['SessionDate'],5,2) . '-'. substr($values['SessionDate'],0,4) . ' - ';
+					//date_default_timezone_set ('Europe/Amsterdam');
+					//setlocale(LC_TIME, 'NL_nl');
+					//$prefix = $this -> toNLDate(strftime('%e %B %Y', $values['SessionDate'])). ' - ';
+					$prefix = $this -> toNLDate(strftime('%A %d-%m-%Y', mktime(0,0,0,substr($values['SessionDate'],8,2),substr($values['SessionDate'],5,2),intval(substr($values['SessionDate'],0,4)))));
+					//$prefix = substr($values['SessionDate'],8,2) . '-' . substr($values['SessionDate'],5,2) . '-'. substr($values['SessionDate'],0,4) . ' - ';
+
 				}
-				$arrResult['name'] = $prefix. $values['SessionName'];
+				$arrResult['sessionDate'] = $prefix;
+				$arrResult['name'] = $values['SessionName'];
 				$arrResult['description'] = $values['SessionDescription'];
 				$arrResult['descriptionHtml'] = $values['SessionDescriptionHtml'];
 				if ($categoryPk !== false) {
@@ -438,6 +444,25 @@ print_r($sessionDrills->toArray());exit;
 		//ksort ($sessionDrills)
 
 		return $arrResult;
+	}
+
+	private function toNLDate($dateStr, $useShort=true) {
+		$lang = array();
+		$lang['en'] = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday','january','februari','march','april','may','june','july','august','september','october','november','december'];
+		$lang['nl'] = ['maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag','zondag','januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
+
+		$formattedDate = ucfirst(str_replace($lang['en'], $lang['nl'], strtolower($dateStr)));
+		
+		if ($useShort) {
+			$langShort['en'] = ['mon','tue','wed','thu','fri','sat','sun','jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
+			$langShort['nl'] = ['maa','din','woe','don','vrij','zat','zon','jan','feb','maa','apr','mei','jun','jul','aug','sep','okt','nov','dec'];
+			$formattedDate = ucfirst(str_replace($langShort['en'], $langShort['nl'], strtolower($formattedDate)));
+		}
+
+		
+		
+
+		return $formattedDate;
 	}
 
 	public function importSessionDrills($filter=array()) {
