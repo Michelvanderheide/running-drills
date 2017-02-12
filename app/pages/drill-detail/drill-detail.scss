@@ -66,3 +66,8 @@
     left:45%;
     border: 0px !important;
 }
+
+video, iframe {
+	width: 100%;
+	min-height:300px;
+}

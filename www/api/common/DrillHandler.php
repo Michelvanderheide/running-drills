@@ -394,9 +394,13 @@ class DrillHandler {
 
 			$drill['videoUrl'] = '';
 			$drill['hasVideo'] = false;
+			$drill['hasYoutubeVideo'] = false;
 			if ($values['DrillVideo']) {
 				$drill['videoUrl'] = $values['DrillVideo'];
 				$drill['hasVideo'] = true;
+				if (stristr($drill['videoUrl'], "youtube")) {
+					$drill['hasYoutubeVideo'] = true;
+				}
 			}
 
 			$drill['tags'] = '';
