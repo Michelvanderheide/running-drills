@@ -343,8 +343,10 @@ class DrillHandler {
 					//date_default_timezone_set ('Europe/Amsterdam');
 					//setlocale(LC_TIME, 'NL_nl');
 					//$prefix = $this -> toNLDate(strftime('%e %B %Y', $values['SessionDate'])). ' - ';
-					$prefix = $this -> toNLDate(strftime('%A %d-%m-%Y', mktime(0,0,0,substr($values['SessionDate'],8,2),substr($values['SessionDate'],5,2),intval(substr($values['SessionDate'],0,4)))));
-					//$prefix = substr($values['SessionDate'],8,2) . '-' . substr($values['SessionDate'],5,2) . '-'. substr($values['SessionDate'],0,4) . ' - ';
+					$prefix = $this -> toNLDate(strftime('%A %d-%m-%Y', mktime(0,0,0,substr($values['SessionDate'],5,2),intval(substr($values['SessionDate'],8,2)),intval(substr($values['SessionDate'],0,4)))));
+
+			//exit(substr($values['SessionDate'],8,2).",".intval(substr($values['SessionDate'],5,2)).",".intval(substr($values['SessionDate'],0,4)));
+					//2017-02-22 $prefix = substr($values['SessionDate'],8,2) . '-' . substr($values['SessionDate'],5,2) . '-'. substr($values['SessionDate'],0,4) . ' - ';
 
 				}
 				$arrResult['sessionDate'] = $prefix;

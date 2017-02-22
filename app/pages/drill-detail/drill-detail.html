@@ -10,7 +10,7 @@
 			<img class="playbutton" src="/api/images/play.png">
 			<img  class="blockimg" [src]="imgUrl">
 			</div-->
-			<img  *ngIf="!drillData.drill.videoUrl" class="blockimg" [src]="imgUrl">
+			<img *ngIf="!drillData.drill.videoUrl" class="blockimg" [src]="imgUrl">
 
 			<div *ngIf="drillData.drill.hasVideo && !drillData.drill.hasYoutubeVideo">
 			<video controls class="video_content" [poster]="imgUrl">

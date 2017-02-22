@@ -15,9 +15,9 @@
 		<ion-item-group  *ngFor="let group of groups; let groupIdx = index" >
 			<ion-item-divider light>{{group.groupName}}</ion-item-divider>  
 			<ion-item *ngFor="let drill of group.drills; let drillIdx = index" (click)="goToDrillDetails(drill, groupIdx, drillIdx)">
-				<ion-thumbnail item-left>
-					<img *ngIf="drill.imgUrl" width="70px" [src]="drill.imgUrl">
-					<img *ngIf="drill.imgUrl==''" style="opacity: 0.1" width="70px" [src]="drillData.defaultImg">
+				<ion-thumbnail *ngIf="drill.imgUrl" item-left>
+					<img  width="70px" [src]="drill.imgUrl">
+					<!--img *ngIf="drill.imgUrl==''" style="opacity: 1" width="70px" [src]="drillData.defaultImg"-->
 				</ion-thumbnail>
 				<h2>{{drill.title}}</h2>
 				<p>{{drill.description}}</p>
