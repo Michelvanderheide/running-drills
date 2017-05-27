@@ -47,7 +47,7 @@ if ($apiConfig['env'] == "dev") {
 	$apiConfig['imagedir'] = $apiConfig['basedir'] . 'www/api/images/';
 	$apiConfig['imageUrl'] = $apiConfig['baseUrl'] . '/images/';
 } else {
-	$apiConfig['baseUrl'] = "http://178.62.192.163";
+	$apiConfig['baseUrl'] = "http://app.kettinglopers.nl";
 	$apiConfig['imagedir'] = $apiConfig['basedir'] . 'www/api/images/';
 	$apiConfig['imageUrl'] = $apiConfig['baseUrl'] . '/api/images/';
 }
