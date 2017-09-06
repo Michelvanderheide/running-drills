@@ -23,3 +23,4 @@ INSERT INTO tag (tag_pk, tag_name) VALUES (103, 'Heup');
 INSERT INTO tag (tag_pk, tag_name) VALUES (104, 'Beenspieren');
 
 INSERT INTO tag (tag_pk, tag_name) VALUES (200, 'Duovorm');
+

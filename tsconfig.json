@@ -1,10 +1,18 @@
 {
     "compilerOptions": {
-        "target": "es5",
-        "module": "commonjs",
-        "noEmitOnError": false,
+        "allowSyntheticDefaultImports": true,
+        "declaration": false,
         "emitDecoratorMetadata": true,
-        "experimentalDecorators": true
+        "experimentalDecorators": true,
+        "noImplicitAny": true,
+        "module": "es2015",
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "target": "es5",
+        "lib": [
+            "dom",
+            "es2015"
+        ]
     },
     "filesGlob": [
         "**/*.ts",
@@ -26,32 +34,34 @@
         "sourceType": "module"
     },
     "files": [
-        "app/app.ts",
-        "app/pages/account/account.ts",
-        "app/pages/detail-tabs/detail-tabs.ts",
-        "app/pages/drill-detail/drill-detail.ts",
-        "app/pages/drill-list/drill-list.ts",
-        "app/pages/drill-youtube/drill-youtube.ts",
-        "app/pages/login/login.ts",
-        "app/pages/session-list/session-list.ts",
-        "app/pages/signup/signup.ts",
-        "app/pages/tabs/tabs.ts",
-        "app/providers/app-settings.ts",
-        "app/providers/drill-data.ts",
-        "app/providers/user-data.ts",
-        "platforms/android/assets/www/api/vendor/symfony/translation/Tests/fixtures/resources.ts",
-        "platforms/android/build/intermediates/assets/debug/www/api/vendor/symfony/translation/Tests/fixtures/resources.ts",
+        "src/app/app.component.ts",
+        "src/app/app.module.ts",
+        "src/app/main.ts",
+        "src/declarations.d.ts",
+        "src/pages/dashboard/dashboard.ts",
+        "src/pages/detail-tabs/detail-tabs.ts",
+        "src/pages/drill-detail/drill-detail.ts",
+        "src/pages/drill-list/drill-list.ts",
+        "src/pages/drill-youtube/drill-youtube.ts",
+        "src/pages/home/home.ts",
+        "src/pages/session-list/session-list.ts",
+        "src/pages/settings/settings.ts",
+        "src/pages/tabs/tabs.ts",
+        "src/pages/timer/countdownTimer.ts",
+        "src/pages/timer/timer.ts",
+        "src/pages/timer/timer_new.ts",
+        "src/providers/app-settings.ts",
+        "src/providers/drill-data.ts",
+        "src/providers/user-data.ts",
         "typings/angularjs/angular.d.ts",
         "typings/browser.d.ts",
+        "typings/browser/ambient/cordova-plugin-drills/countdownTimer.ts",
         "typings/browser/ambient/cordova-plugin-drills/index.d.ts",
-        "typings/browser/ambient/es6-shim/es6-shim.d.ts",
+        "typings/globals/cordova/index.d.ts",
         "typings/globals/jquery/index.d.ts",
         "typings/index.d.ts",
-        "typings/jquery/jquery.d.ts",
         "typings/main.d.ts",
         "typings/main/ambient/cordova-plugin-drills/index.d.ts",
-        "typings/main/ambient/es6-shim/es6-shim.d.ts",
-        "typings/tsd.d.ts",
-        "www/api/vendor/symfony/translation/Tests/fixtures/resources.ts"
+        "typings/tsd.d.ts"
     ]
 }

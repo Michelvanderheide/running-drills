@@ -1,0 +1,107 @@
+
+.drill-detail p {
+  color: #60646B;
+  text-align: left;
+}
+.drill-detail img {
+	/*width: 100%;*/
+}
+
+.ion-slides {
+	height:auto !important;
+}
+
+.swiper-slide {
+	display:flex;		
+    align-items:stretch;
+}
+
+.swiper-slide img {
+	/*width:100%;*/
+	border: 3px solid #5e5e5e;
+}
+
+.video-container {
+	position: relative;
+	padding-bottom: 56.25%;
+	padding-top: 30px; height: 0; overflow: hidden;
+}
+
+.video-container iframe,
+.video-container object,
+.video-container embed {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.slide-zoom{
+	text-align:left;
+	max-height: 100%;
+}
+
+.b_lockimg {
+	width: 90% !important;
+	height:0 !important;
+	padding: 0 0 90% 0 !important;
+}
+
+.b_lockimg span {
+	padding-top: 50%;
+}
+.blockimg {
+	width:100% !important;
+}
+
+.right {
+	float:right;
+}
+
+
+.playbutton{
+    position:absolute;
+    top: 45%;
+    left:45%;
+    border: 0px !important;
+}
+
+video, iframe {
+	width: 100%;
+	min-height:300px;
+}
+
+
+/* Empty. Add your own CSS if you like */
+.float-button {
+ 
+	background-color:#303f9f;
+	opacity: 0.9;
+	color: white;
+	border-radius: 50%;
+	/*border-radius:15% 0 0 0;*/
+	width: 30px;
+	padding: 25px;
+	font-size: 40px;
+	position: fixed;
+	bottom: 10%; /* Adjust height */
+	right: 10%; /* Adjust position */
+	z-index: 1000;
+}
+ 
+.float-button .height_fix {
+  margin-top: 100%;
+  border: 1px solid red;
+}
+ 
+.float-button .content {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  margin-top: -20px;
+  color: white;
+}

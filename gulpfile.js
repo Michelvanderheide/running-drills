@@ -39,8 +39,8 @@ gulp.task('watch', ['clean'], function(done){
   runSequence(
     ['sass', 'html', 'fonts', 'scripts', 'audio', 'video'],
     function(){
-      gulpWatch('app/**/*.scss', function(){ gulp.start('sass'); });
-      gulpWatch('app/**/*.html', function(){ gulp.start('html'); });
+      gulpWatch('src/**/*.scss', function(){ gulp.start('sass'); });
+      gulpWatch('src/**/*.html', function(){ gulp.start('html'); });
       buildBrowserify({ watch: true }).on('end', done);
     }
   );
@@ -69,11 +69,11 @@ gulp.task('fonts', copyFonts);
 gulp.task('scripts', copyScripts);
 
 gulp.task("audio", function() {
-    return gulp.src(["app/assets/audio/*"])
+    return gulp.src(["src/assets/audio/*"])
         .pipe(gulp.dest("www/build/audio"));
 });
 gulp.task("video", function() {
-    return gulp.src(["app/assets/video/*"])
+    return gulp.src(["src/assets/video/*"])
         .pipe(gulp.dest("www/build/video"));
 });
 

@@ -1,0 +1,36 @@
+<ion-navbar *navbar>
+	<ion-title>Details</ion-title>
+</ion-navbar>
+<ion-content padding class="drill-detail">
+	
+	<h3>{{drillData.drill.title}}</h3>
+	<p [innerHTML]="drillData.drill.descriptionHtml"></p>
+	<ion-slides style="height:auto" *ngIf="drillData.drill.imgUrls.length>0">
+		<ion-slide *ngFor="let imgUrl of drillData.drill.imgUrls">
+			<!--div *ngIf="drillData.drill.videoUrl || drillData.drill.hasVideo" (click)="goToYoutube(drillData.drill)">
+			<img class="playbutton" src="/api/images/play.png">
+			<img  class="blockimg" [src]="imgUrl">
+			</div-->
+			<img *ngIf="!drillData.drill.videoUrl" class="blockimg" [src]="imgUrl">
+
+			<div *ngIf="drillData.drill.hasYoutubeVideo">
+			<iframe name="drillvideo" id="drillvideo" [src]="youtubeUrl" frameborder="0" allowfullscreen></iframe>
+			</div>
+		</ion-slide>
+	</ion-slides>
+	<!--div style="width: 100%" -->
+	<video style="z-index:500; min-height: auto !important;  width: 100%; position: relative" *ngIf="drillData.drill.hasVideo && !drillData.drill.hasYoutubeVideo" controls class="video_content" [poster]="imgUrl">
+	    <source [src]="drillData.drill.videoUrl" type='video/mp4' />
+	</video>
+	<!--/div-->
+
+
+  <ion-fab middle right #fab>
+    <button style="opacity: 0.5" ion-fab (click)="gotoNextDrill()"><ion-icon name="arrow-dropright" ></ion-icon></button>
+  </ion-fab>
+  <ion-fab middle left #fab>
+    <button style="opacity: 0.5" ion-fab (click)="gotoPrevDrill()"><ion-icon name="arrow-dropleft"></ion-icon></button>
+  </ion-fab>  
+</ion-content>
+
+

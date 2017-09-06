@@ -67,6 +67,7 @@ interface Drill {
   locations: string;
   tags: string;
   orderBy: number;
+  videoUrl: string;
 }
 
 interface RunningGroup {
