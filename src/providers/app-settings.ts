@@ -3,7 +3,8 @@ export class AppSettings {
 	public static setDevEnvironment() {
 		console.log("set dev environment");
 		//this.BASE_URL = this.BASE_API_URL = 'http://runningdrillsapi.local'; // activate for dev api locally
-		this.BASE_URL = this.BASE_API_URL = 'http://app.kettinglopers.nl';
+		this.BASE_URL = 'http://app.kettinglopers.nl';
+		this.BASE_API_URL = 'http://api.kettinglopers.nl'; // activate to build android app
 
 	}
 	public static BASE_URL: string = 'http://app.kettinglopers.nl';
