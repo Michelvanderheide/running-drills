@@ -6,7 +6,7 @@ export class AppSettings {
 		this.BASE_API_URL = this.BASE_URL
 	}
 	public static BASE_URL: string = 'http://app.kettinglopers.nl';
-	public static BASE_API_URL: string = 'http://app.kettinglopers.nl/api';
+	public static BASE_API_URL: string = 'http://api.kettinglopers.nl'; //'http://app.kettinglopers.nl/api';
 	public static defaultImg:string = 'http://app.kettinglopers.nl/api/images/kettinglopers.png';
 
 	public static isNative:boolean = false;

@@ -29,6 +29,7 @@ export class SessionListPage {
       //console.log("Is connected")
       drillData.getTrainingSessions().subscribe(trainingSessions => {
         this.trainingSessions = trainingSessions;
+        
       });
     } else{
       console.log("Is not connected")

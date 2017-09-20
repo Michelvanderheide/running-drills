@@ -111,7 +111,7 @@ export class DrillData {
 	}
 	getTrainingSessions() {
 		//console.log("getTrainingSessions...");
-		return this.http.get(AppSettings.BASE_API_URL + "/trainingsessions", this.getRequestOptions()).map(res => {
+		return this.http.get(AppSettings.BASE_API_URL + "/trainingsessions/", this.getRequestOptions()).map(res => {
 		    let result = res.json();
 			if (result.status === false) {
 				this.errorMessage = result.message;
@@ -120,6 +120,7 @@ export class DrillData {
 				this.trainingSessions = result.data;
 				console.debug("getTrainingSessions:",this.trainingSessions);
 				localStorage.setItem("trainingSessions", JSON.stringify(this.trainingSessions));
+				console.debug("getTrainingSessions 2:",localStorage.getItem("trainingSessions"));
 				this.filterOnUserGroups();
 				return this.trainingSessions;
 			}		    
@@ -151,14 +152,18 @@ export class DrillData {
 
 	filterOnUserGroups() {
 		let runningGroups = this.userData.getRunningGroups();
-		for(var i = 0; i < this.trainingSessions.length; i++) {
-			this.trainingSessions[i].show = false;
-			if (this.trainingSessions[i].userGroupName == "alle") {
-				this.trainingSessions[i].show = true;
-			} else {
-				for (let j in runningGroups) {
-					if (runningGroups[j].name == this.trainingSessions[i].userGroupName && runningGroups[j].value===true) {
-						this.trainingSessions[i].show = true;
+		if (typeof this.trainingSessions !== "undefined") {
+
+			for(var i = 0; i < this.trainingSessions.length; i++) {
+				this.trainingSessions[i].show = false;
+				if (this.trainingSessions[i].userGroupName == "alle") {
+					this.trainingSessions[i].show = true;
+				} else {
+					for (let j in runningGroups) {
+						console.log("name:"+runningGroups[j].name);
+						if (runningGroups[j].name == this.trainingSessions[i].userGroupName && runningGroups[j].value===true) {
+							this.trainingSessions[i].show = true;
+						}
 					}
 				}
 			}
