@@ -23,6 +23,7 @@ export class DashboardPage {
 		this.myRange= {"lower": "0", "upper": "20"};
         //this.dropDownIntervals = this.drillData.getDropDownIntervalsForTen();
         this.initDropDown();
+        console.log("dashboard...")
 	}
 
 	ngOnInit() {
@@ -44,6 +45,7 @@ export class DashboardPage {
 	changeMyTime() {
 		console.log("changeMyTime:");
 	}
+	
 	toggleFiveTenTime() {
 		this.drillData.toggleSetting('setTenTime');
 		this.drillData.settings.fiveTime = this.drillData.settings.tenTime = this.drillData.settings.halfTime = this.selectedTime = '';

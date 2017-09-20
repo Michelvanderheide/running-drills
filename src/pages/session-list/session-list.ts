@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import {NavController, ActionSheet} from 'ionic-angular';
+import {NavController} from 'ionic-angular';
 import {DrillListPage} from '../drill-list/drill-list';
 import { DrillData } from "../../providers/drill-data";
-import {SettingsPage} from '../../pages/settings/settings';
 import { UserData } from "../../providers/user-data";
 
 

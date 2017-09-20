@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { NavParams} from 'ionic-angular';
 import {DashboardPage} from '../dashboard/dashboard';
-import {SessionListPage} from '../session-list/session-list';
 import {HomePage} from '../home/home';
 
 

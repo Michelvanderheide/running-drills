@@ -39160,7 +39160,3 @@ video {
 .session-list ion-card.speaker ion-card-content .list ion-item-content {
   padding: 0;
 }
-
-.active {
-  background: blue;
-}

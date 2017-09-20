@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import {NavController, NavParams} from 'ionic-angular';
 import {DrillDetailPage} from '../drill-detail/drill-detail';
-import {DetailTabsPage} from '../detail-tabs/detail-tabs';
 import { DrillData } from "../../providers/drill-data";
 //import * as jQuery from 'jquery';
 
@@ -26,6 +25,7 @@ export class DrillListPage {
 		this.drillData = drillData;
 		this.trainingSession = navParams.get("trainingSession");
 		this.drills = this.trainingSession.drills;
+		console.debug("Drills:",this.drills);
 		this.groups = [];
 		this.isSummary = true;
 		this.trainingSession.groups.forEach(group => {

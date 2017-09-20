@@ -14,7 +14,7 @@
 </ion-row>
 <ion-row>	      
 	      <ion-item><ion-label>Mijn tijd op deze afstand</ion-label>	
-			<ion-select [(ngModel)]="selectedTime" (change)="changeTimes()">
+			<ion-select [(ngModel)]="selectedTime" (ionChange)="changeTimes()">
 				<ion-option *ngFor="let dropDownInterval of dropDownIntervals" [value]="dropDownInterval">{{dropDownInterval}}</ion-option>
 			</ion-select>
 		</ion-item>

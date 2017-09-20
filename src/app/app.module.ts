@@ -18,7 +18,6 @@ import { HomePage } from '../pages/home/home';
 import { SessionListPage } from '../pages/session-list/session-list';
 import { SettingsPage } from '../pages/settings/settings';
 import { TabsPage } from '../pages/tabs/tabs';
-import { TimerPage } from '../pages/timer/timer';
 
 import { DrillData } from '../providers/drill-data';
 import { AppSettings } from '../providers/app-settings';
@@ -36,8 +35,7 @@ import { UserData } from '../providers/user-data';
     HomePage,
     SessionListPage,
     SettingsPage,
-    TabsPage,
-    TimerPage
+    TabsPage
   ],
   imports: [
     BrowserModule,
@@ -53,8 +51,7 @@ import { UserData } from '../providers/user-data';
         { component: HomePage, name: 'Home', segment: 'home' },
         { component: SessionListPage, name: 'SessionList', segment: 'sessionList' },
         { component: SettingsPage, name: 'Settings', segment: 'settings' },
-        { component: TabsPage, name: 'Tabs', segment: 'tabs' },
-        { component: TimerPage, name: 'TimerPage', segment: 'timer' }
+        { component: TabsPage, name: 'Tabs', segment: 'tabs' }
       ]
     }),
     IonicStorageModule.forRoot()
@@ -71,8 +68,7 @@ import { UserData } from '../providers/user-data';
     HomePage,
     SessionListPage,
     SettingsPage,
-    TabsPage,
-    TimerPage
+    TabsPage
   ],
   providers: [
     { provide: ErrorHandler, useClass: IonicErrorHandler },

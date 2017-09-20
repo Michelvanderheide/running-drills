@@ -34,6 +34,7 @@
         "sourceType": "module"
     },
     "files": [
+        "plugins/cordova-plugin-splashscreen/types/index.d.ts",
         "src/app/app.component.ts",
         "src/app/app.module.ts",
         "src/app/main.ts",
@@ -47,9 +48,6 @@
         "src/pages/session-list/session-list.ts",
         "src/pages/settings/settings.ts",
         "src/pages/tabs/tabs.ts",
-        "src/pages/timer/countdownTimer.ts",
-        "src/pages/timer/timer.ts",
-        "src/pages/timer/timer_new.ts",
         "src/providers/app-settings.ts",
         "src/providers/drill-data.ts",
         "src/providers/user-data.ts",

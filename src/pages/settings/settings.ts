@@ -2,9 +2,6 @@ import { Component } from '@angular/core';
 
 
 import { NavController } from 'ionic-angular';
-import { FormBuilder,  Validators, AbstractControl} from '@angular/forms';
-
-import { SessionListPage } from '../session-list/session-list';
 import { DrillData } from '../../providers/drill-data';
 import { UserData } from '../../providers/user-data';
 
@@ -13,7 +10,6 @@ import { UserData } from '../../providers/user-data';
 	templateUrl: 'settings.html'
 })
 export class SettingsPage {
-	private myTenTime: number;
 	selectedTime: string;
 	dropDownIntervals: any[];
 

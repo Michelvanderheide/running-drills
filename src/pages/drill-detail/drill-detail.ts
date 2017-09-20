@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import {NavController, NavParams} from 'ionic-angular';
 import {DrillYoutubePage} from '../drill-youtube/drill-youtube';
 import { DrillData } from "../../providers/drill-data";
-import {TimerPage} from '../timer/timer';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 
 @Component({
@@ -63,10 +62,6 @@ onPageWillEnter() {
 }
 goToYoutube(drill:Drill):void {
 	this.nav.push(DrillYoutubePage, {drill});
-}
-
-goToTiming() {
-	this.nav.push(TimerPage); 
 }
 
 gotoNextDrill() {
