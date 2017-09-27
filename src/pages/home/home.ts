@@ -6,6 +6,7 @@ import { SessionListPage } from "../session-list/session-list";
 import { DrillListPage } from "../drill-list/drill-list";
 import { SettingsPage } from '../../pages/settings/settings'
 import { DashboardPage } from "../dashboard/dashboard";
+import { IntervalsPage } from "../intervals/intervals";
 import { UserData } from "../../providers/user-data";
 
 
@@ -28,7 +29,7 @@ export class HomePage {
 		SessionListPage, 
 		SessionListPage,
 		DashboardPage,
-		DashboardPage
+		IntervalsPage
 	];
 	userData: UserData;
 
@@ -64,7 +65,7 @@ export class HomePage {
 			this.navCtrl.push(SessionListPage);			
 		} else {
 			console.log("hother...")
-			this.navCtrl.push(DashboardPage);
+			this.navCtrl.push(IntervalsPage);
 		}
 
 	}

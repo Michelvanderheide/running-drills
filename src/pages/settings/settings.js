@@ -105,7 +105,7 @@ var SettingsPage = (function () {
         }
         console.debug("dist(" + dist + "):" + this.drillData.settings);
         this.drillData.storeSettings();
-        this.drillData.calcTimesPerDistance();
+        this.drillData.calcTimesPerDistance(this.drillData.settings.fiveTime, this.drillData.settings.tenTime, this.drillData.settings.halfTime);
     };
     SettingsPage.prototype.done = function () {
         this.userData.setInitialized();

@@ -12,7 +12,7 @@
         </ion-list-header>
           <ion-item *ngFor="let runningGroup of userData.runningGroups; let i = index">
             <ion-label>{{runningGroup.title}}</ion-label>
-            <ion-toggle [checked]="runningGroup.value" (click)="toggleRunningGroup(i)"></ion-toggle>      
+            <ion-toggle [checked]="runningGroup.value" (ionChange)="toggleRunningGroup(i)"></ion-toggle>      
           </ion-item> 
 
         <ion-list-header>

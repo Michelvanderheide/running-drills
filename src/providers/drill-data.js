@@ -41,6 +41,7 @@ var DrillData = (function () {
         this.defaultImg = AppSettings.defaultImg;
         this.initSettings();
         this.initDrillFilters();
+        this.calcAllIntervalTimes();
         //this.settings.tenTimeSecs = 2500;
     }
     Object.defineProperty(DrillData, "parameters", {
@@ -64,7 +65,7 @@ var DrillData = (function () {
             this.settings.tenTime = timeSecsTen;
             this.settings.fiveTime = '';
             this.settings.halfTime = '';
-            this.calcTimesPerDistance();
+            this.calcTimesPerDistance(this.settings.fiveTime, this.settings.tenTime, this.settings.halfTime);
         }
     };
     DrillData.prototype.changeTimeFive = function (timeSecsFive) {
@@ -72,7 +73,7 @@ var DrillData = (function () {
             this.settings.tenTime = '';
             this.settings.fiveTime = timeSecsFive;
             this.settings.halfTime = '';
-            this.calcTimesPerDistance();
+            this.calcTimesPerDistance(this.settings.fiveTime, this.settings.tenTime, this.settings.halfTime);
         }
     };
     DrillData.prototype.getDropDownIntervalsForTen = function () {
@@ -94,7 +95,7 @@ var DrillData = (function () {
     DrillData.prototype.getTrainingSessions = function () {
         var _this = this;
         //console.log("getTrainingSessions...");
-        return this.http.get(AppSettings.BASE_API_URL + "/trainingsessions", this.getRequestOptions()).map(function (res) {
+        return this.http.get(AppSettings.BASE_API_URL + "/trainingsessions/", this.getRequestOptions()).map(function (res) {
             var result = res.json();
             if (result.status === false) {
                 _this.errorMessage = result.message;
@@ -104,6 +105,7 @@ var DrillData = (function () {
                 _this.trainingSessions = result.data;
                 console.debug("getTrainingSessions:", _this.trainingSessions);
                 localStorage.setItem("trainingSessions", JSON.stringify(_this.trainingSessions));
+                console.debug("getTrainingSessions 2:", localStorage.getItem("trainingSessions"));
                 _this.filterOnUserGroups();
                 return _this.trainingSessions;
             }
@@ -137,15 +139,18 @@ var DrillData = (function () {
     };
     DrillData.prototype.filterOnUserGroups = function () {
         var runningGroups = this.userData.getRunningGroups();
-        for (var i = 0; i < this.trainingSessions.length; i++) {
-            this.trainingSessions[i].show = false;
-            if (this.trainingSessions[i].userGroupName == "alle") {
-                this.trainingSessions[i].show = true;
-            }
-            else {
-                for (var j in runningGroups) {
-                    if (runningGroups[j].name == this.trainingSessions[i].userGroupName && runningGroups[j].value === true) {
-                        this.trainingSessions[i].show = true;
+        if (typeof this.trainingSessions !== "undefined") {
+            for (var i = 0; i < this.trainingSessions.length; i++) {
+                this.trainingSessions[i].show = false;
+                if (this.trainingSessions[i].userGroupName == "alle") {
+                    this.trainingSessions[i].show = true;
+                }
+                else {
+                    for (var j in runningGroups) {
+                        console.log("name:" + runningGroups[j].name);
+                        if (runningGroups[j].name == this.trainingSessions[i].userGroupName && runningGroups[j].value === true) {
+                            this.trainingSessions[i].show = true;
+                        }
                     }
                 }
             }
@@ -169,7 +174,7 @@ var DrillData = (function () {
             this.settings = JSON.parse(localSettings);
         }
         //console.debug("Init Settings:",this.settings);
-        this.calcTimesPerDistance();
+        this.calcTimesPerDistance(this.settings.fiveTime, this.settings.tenTime, this.settings.halfTime);
     };
     DrillData.prototype.initDrillFilters = function () {
         var localDrillFilter = localStorage.getItem("drillFilters");
@@ -283,12 +288,59 @@ var DrillData = (function () {
         result = result.replace(".", ":");
         return result.substring(0, i);
     };
-    DrillData.prototype.calcTimesPerDistance = function () {
+    DrillData.prototype.calcAllIntervalTimes = function () {
+        var intervalsForTen = this.getDropDownIntervalsForTen();
+        var intervalsForFive = this.getDropDownIntervalsForFive();
+        this.allIntervalTimes = [];
+        for (var i in intervalsForFive) {
+            var timesPerDistance = this.calcTimesPerDistance(intervalsForFive[i], '', '');
+            console.debug("handle interval:" + intervalsForFive[i] + ":", timesPerDistance);
+            for (var j in timesPerDistance) {
+                this.allIntervalTimes;
+                timesPerDistance.distance;
+            }
+        }
+        for (var i in intervalsForTen) {
+            var timesPerDistance = this.calcTimesPerDistance('', intervalsForTen[i], '');
+            console.debug("handle interval:" + intervalsForTen[i] + ":", timesPerDistance);
+        }
+        /*
+
+
+        arr['10K']['int'][100][0]['pace'] = ...
+        arr['10K']['int'][100][0]['time'] = ...
+
+        */
+    };
+    DrillData.prototype.calcTimesPerDistanceForSettings = function () {
         var distances = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1200, 1500, 2000, 3000];
         this.timesPerDistance = [];
-        var timeSecsFive = this.timeToSeconds(this.settings.fiveTime);
-        var timeSecsTen = this.timeToSeconds(this.settings.tenTime);
-        var timeSecsHalf = this.timeToSeconds(this.settings.halfTime);
+        var timeSecsFive = this.timeToSeconds(fiveTime);
+        var timeSecsTen = this.timeToSeconds(tenTime);
+        var timeSecsHalf = this.timeToSeconds(halfTime);
+        if (timeSecsFive > 0 && timeSecsTen == 0) {
+            //timeSecsTen = Math.floor(timeSecsFive*2.085);
+            timeSecsTen = Math.floor(timeSecsFive * (AppSettings.tempos['wds']['10k'] / AppSettings.tempos['wds']['5k']));
+            this.settings.tenTime = this.secondsToTime(timeSecsTen);
+        }
+        if (timeSecsTen > 0 && timeSecsHalf == 0) {
+            //timeSecsHalf = Math.floor(timeSecsTen*2.20625);
+            timeSecsHalf = Math.floor(timeSecsTen * (AppSettings.tempos['wds']['21k'] / AppSettings.tempos['wds']['10k']));
+            this.settings.halfTime = this.secondsToTime(timeSecsHalf);
+        }
+        if (timeSecsTen > 0 && timeSecsFive == 0) {
+            //timeSecsFive = Math.floor(timeSecsTen/2.085);
+            timeSecsFive = Math.floor(timeSecsTen * (AppSettings.tempos['wds']['5k'] / AppSettings.tempos['wds']['10k']));
+            this.settings.fiveTime = this.secondsToTime(timeSecsFive);
+        }
+        this.calcTimesPerDistance(fiveTime, string, tenTime, string, halfTime, string);
+    };
+    DrillData.prototype.calcTimesPerDistance = function (timeSecsFive, tenTime, halfTime) {
+        var distances = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1200, 1500, 2000, 3000];
+        this.timesPerDistance = [];
+        var timeSecsFive = this.timeToSeconds(fiveTime);
+        var timeSecsTen = this.timeToSeconds(tenTime);
+        var timeSecsHalf = this.timeToSeconds(halfTime);
         if (timeSecsFive > 0 && timeSecsTen == 0) {
             //timeSecsTen = Math.floor(timeSecsFive*2.085);
             timeSecsTen = Math.floor(timeSecsFive * (AppSettings.tempos['wds']['10k'] / AppSettings.tempos['wds']['5k']));
@@ -321,6 +373,7 @@ var DrillData = (function () {
             this.timesPerDistance.push({ distanceMeters: distance, distance: distance + "", timeFive: timeStrFive,
                 timeTen: timeStrTen, timeHalf: timeStrHalf, timeInt: timeStrInt, timeExt: timeStrExt });
         }
+        return this.timesPerDistance;
     };
     DrillData.prototype.timeToSeconds = function (timeStr) {
         // time to seconds

@@ -35,6 +35,10 @@ export class DrillData {
 	public coreStretchDrills: TrainingSession;
 	public loopscholingDrills: TrainingSession;
 	public kernDrills: TrainingSession;
+	public athleteTimes: any;
+	public intervalPauzes: any;
+
+	public intervalSettings:any;
 
 	public reloadVideo: boolean=false;
 
@@ -56,9 +60,26 @@ export class DrillData {
     	this.errorMessage = '';
     	this.defaultImg =AppSettings.defaultImg;
 
+    	this.intervalSettings = { distances: [ 100, 200, 300, 400, 500, 600, 700, 800, 1000, 1200, 1500], 
+		pacebaceBaseDistance: "10K", intervalPace: "Ext.", intervalDistance: 400, allIntervalTimes: { 	"5K": { "5K": {},"10K": {}, "H.Mar.": {}, "Int.": {}, "Ext.": {}},
+									"10K": { "5K": {},"10K": {}, "H.Mar.": {}, "Int.": {}, "Ext.": {}}}};
 
     	this.initSettings();
     	this.initDrillFilters();
+    	this.calcAllIntervalTimes();
+	    if (this.isConnected) {
+	      //console.log("Is connected")
+	      this.getIntervalTimes().subscribe(intervalTimes => {
+	        this.athleteTimes = intervalTimes['athleteTimes'];
+	        this.intervalPauzes = intervalTimes['intervalPauzes'];
+	        localStorage.setItem("athleteTimes", JSON.stringify(this.athleteTimes));
+	        localStorage.setItem("intervalPauzes", JSON.stringify(this.intervalPauzes));
+	      });
+	    } else{
+	      console.log("Is not connected")
+	      this.athleteTimes = JSON.parse(localStorage.getItem("athleteTimes"));
+	      this.intervalPauzes = JSON.parse(localStorage.getItem("intervalPauzes"));
+	    }
 
     	//this.settings.tenTimeSecs = 2500;
 
@@ -79,7 +100,7 @@ export class DrillData {
 			this.settings.tenTime = timeSecsTen;
 			this.settings.fiveTime = '';
 			this.settings.halfTime = '';
-			this.calcTimesPerDistance();
+			this.calcTimesPerDistanceForSettings();
 		} 
 
 	}
@@ -88,7 +109,7 @@ export class DrillData {
 			this.settings.tenTime = '';
 			this.settings.fiveTime = timeSecsFive;
 			this.settings.halfTime = '';
-			this.calcTimesPerDistance();
+			this.calcTimesPerDistanceForSettings();
 		} 
 	}	
 
@@ -109,6 +130,29 @@ export class DrillData {
 		}
 		return result;
 	}
+
+	getAthleteTimes() {
+		console.log("athleteTimes...");
+		return this.http.get(AppSettings.BASE_API_URL + "/athletetimes/", this.getRequestOptions()).map(res => {
+		    let result = res.json();
+			if (result.status === false) {
+				this.errorMessage = result.message;
+				return this.athleteTimes;
+			} else {
+				return result.data;
+			}		    
+		});
+	}
+
+	getIntervalTimes() {
+		console.log("athleteTimes...");
+		return this.http.get(AppSettings.BASE_API_URL + "/intervaltimes/", this.getRequestOptions()).map(res => {
+		    let result = res.json();
+			return result.data;
+		    
+		});
+	}	
+
 	getTrainingSessions() {
 		//console.log("getTrainingSessions...");
 		return this.http.get(AppSettings.BASE_API_URL + "/trainingsessions/", this.getRequestOptions()).map(res => {
@@ -126,6 +170,7 @@ export class DrillData {
 			}		    
 		});
 	}
+
 	getCategoryDrills(cat: number) {
 		return this.http.get(AppSettings.BASE_API_URL + "/drillsforcategory/"+cat, this.getRequestOptions()).map(res => {
 				    let result = res.json();
@@ -189,7 +234,7 @@ export class DrillData {
 		}	
 		//console.debug("Init Settings:",this.settings);
 
-		this.calcTimesPerDistance();
+		//this.calcTimesPerDistanceForSettings();
 	}
 
 	initDrillFilters() {
@@ -313,8 +358,71 @@ export class DrillData {
 		return result.substring(0, i);
 	} 	
 
- 	public calcTimesPerDistance() {
- 		let distances = [ 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1200, 1500, 2000, 3000];
+	public calcAllIntervalTimes() {
+
+		if (localStorage.getItem("IntervalSettings") != null) {
+			this.intervalSettings = JSON.parse(localStorage.getItem("IntervalSettings"));
+		}
+
+console.debug("calcAllIntervalTimes()",AppSettings.tempos)
+		let intervalsForFive = this.getDropDownIntervalsForFive();
+		let intervalsForTen = this.getDropDownIntervalsForTen();
+
+		for (let i = 0; i < this.intervalSettings.distances.length; i++) {
+			let distance = this.intervalSettings.distances[i];
+			this.intervalSettings.allIntervalTimes["5K"]["5K"][distance] = [];
+			this.intervalSettings.allIntervalTimes["5K"]["10K"][distance] = [];
+			this.intervalSettings.allIntervalTimes["5K"]["H.Mar."][distance] = [];
+			this.intervalSettings.allIntervalTimes["5K"]["Int."][distance] = [];
+			this.intervalSettings.allIntervalTimes["5K"]["Ext."][distance] = [];
+			for (let k=0; k<intervalsForFive.length; k++){
+				let timeSecsFive = this.timeToSeconds(intervalsForFive[k]);
+				let timePerDistance:any = this.calcTimesPerDistance(timeSecsFive, 0, 0, distance);
+				this.intervalSettings.allIntervalTimes["5K"]["5K"][distance].push({pace: intervalsForFive[k], time: timePerDistance.timeFive});
+				this.intervalSettings.allIntervalTimes["5K"]["10K"][distance].push({pace: intervalsForFive[k], time: timePerDistance.timeTen});
+				this.intervalSettings.allIntervalTimes["5K"]["H.Mar."][distance].push({pace: intervalsForFive[k], time: timePerDistance.timeHalf});
+				this.intervalSettings.allIntervalTimes["5K"]["Int."][distance].push({pace: intervalsForFive[k], time: timePerDistance.timeInt});
+				this.intervalSettings.allIntervalTimes["5K"]["Ext."][distance].push({pace: intervalsForFive[k], time: timePerDistance.timeExt});
+			}
+		}
+
+		for (let i = 0; i < this.intervalSettings.distances.length; i++) {
+			let distance = this.intervalSettings.distances[i];
+			this.intervalSettings.allIntervalTimes["10K"]["5K"][distance] = [];
+			this.intervalSettings.allIntervalTimes["10K"]["10K"][distance] = [];
+			this.intervalSettings.allIntervalTimes["10K"]["H.Mar."][distance] = [];
+			this.intervalSettings.allIntervalTimes["10K"]["Int."][distance] = [];
+			this.intervalSettings.allIntervalTimes["10K"]["Ext."][distance] = [];
+			for (let k=0; k<intervalsForTen.length; k++){
+				let timeSecsTen = this.timeToSeconds(intervalsForTen[k]);
+				let timePerDistance:any = this.calcTimesPerDistance(0, timeSecsTen, 0, distance);
+				this.intervalSettings.allIntervalTimes["10K"]["5K"][distance].push({pace: intervalsForTen[k], time: timePerDistance.timeFive});
+				this.intervalSettings.allIntervalTimes["10K"]["10K"][distance].push({pace: intervalsForTen[k], time: timePerDistance.timeTen});
+				this.intervalSettings.allIntervalTimes["10K"]["H.Mar."][distance].push({pace: intervalsForTen[k], time: timePerDistance.timeHalf});
+				this.intervalSettings.allIntervalTimes["10K"]["Int."][distance].push({pace: intervalsForTen[k], time: timePerDistance.timeInt});
+				this.intervalSettings.allIntervalTimes["10K"]["Ext."][distance].push({pace: intervalsForTen[k], time: timePerDistance.timeExt});
+			}
+		}
+		this.storeIntervalSettings();
+
+		console.debug("calcAllIntervalTimes:", this.intervalSettings.allIntervalTimes);
+	
+		
+
+		/*
+		arr['10K']['int'][100][0]['pace'] = ...
+		arr['10K']['int'][100][0]['time'] = ...
+
+		*/
+	}
+
+	public storeIntervalSettings() {
+		//localStorage.setItem("IntervalSettings",JSON.stringify(this.intervalSettings));
+	}
+
+
+ 	public calcTimesPerDistanceForSettings() {
+ 		
 
  		this.timesPerDistance = [];
  		let timeSecsFive = this.timeToSeconds(this.settings.fiveTime);
@@ -335,29 +443,38 @@ export class DrillData {
 	 		//timeSecsFive = Math.floor(timeSecsTen/2.085);
 	 		timeSecsFive = Math.floor(timeSecsTen * (AppSettings.tempos['wds']['5k']/AppSettings.tempos['wds']['10k']));
 	 		this.settings.fiveTime = this.secondsToTime(timeSecsFive);
-		}		
+		}
+		for (let i = 0; i < this.intervalSettings.distances.length; i++) { 
+			this.timesPerDistance.push(this.calcTimesPerDistance(timeSecsFive, timeSecsTen, timeSecsHalf, this.intervalSettings.distances[i]));
+		}
+	}
 
-		let baseInt = timeSecsTen/10;
-		for (let i = 0; i < distances.length; i++) { 
-			let distance =  distances[i];
-			let timeStrFive = this.secondsToTime(Math.floor((distance/5000)*timeSecsFive));
-			let timeStrTen = this.secondsToTime(Math.floor((distance/10000)*timeSecsTen));
-			let timeStrHalf = this.secondsToTime(Math.floor((distance/21100)*timeSecsHalf)); 
-			let timeStrInt = '';
-			if (typeof <number>AppSettings.tempos['int'][distance+'m'] !== "undefined") {
-				timeStrInt = this.secondsToTime(Math.floor(baseInt* <number>AppSettings.tempos['int'][distance+'m']));
-			}
-			let timeStrExt = '';
-			if (typeof AppSettings.tempos['ext'][distance+'m'] !== "undefined") {
-				timeStrExt = this.secondsToTime(Math.floor(baseInt*AppSettings.tempos['ext'][distance+'m']));
-			}			
-			this.timesPerDistance.push({ distanceMeters: distance, distance: distance + "", timeFive: timeStrFive
-				, timeTen: timeStrTen, timeHalf:timeStrHalf, timeInt:timeStrInt, timeExt:timeStrExt});
+ 	public calcTimesPerDistance(timeSecsFive: number, timeSecsTen: number, timeSecsHalf: number, distance:number) {
+
+	 	if (timeSecsTen == 0) {
+	 		timeSecsTen = Math.floor(timeSecsFive*(AppSettings.tempos['wds']['10k']/AppSettings.tempos['wds']['5k']));
+		} else {
+			timeSecsFive = Math.floor(timeSecsTen * (AppSettings.tempos['wds']['5k']/AppSettings.tempos['wds']['10k']));
 		}
 
+		let baseInt = timeSecsTen/10;
+		let timeStrFive = this.secondsToTime(Math.floor((distance/5000)*timeSecsFive));
+		let timeStrTen = this.secondsToTime(Math.floor((distance/10000)*timeSecsTen));
+		let timeStrHalf = this.secondsToTime(Math.floor((distance/21100)*timeSecsHalf)); 
+		let timeStrInt = '';
+		if (typeof <number>AppSettings.tempos['int'][distance+'m'] !== "undefined") {
+			timeStrInt = this.secondsToTime(Math.floor(baseInt* <number>AppSettings.tempos['int'][distance+'m']));
+		}
+		let timeStrExt = '';
+		if (typeof AppSettings.tempos['ext'][distance+'m'] !== "undefined") {
+			timeStrExt = this.secondsToTime(Math.floor(baseInt*AppSettings.tempos['ext'][distance+'m']));
+		}
+		return 	{ distanceMeters: distance, distance: distance + "", timeFive: timeStrFive
+			, timeTen: timeStrTen, timeHalf:timeStrHalf, timeInt:timeStrInt, timeExt:timeStrExt};	
  	}
 
  	private timeToSeconds(timeStr: string) {
+
  		// time to seconds
  		let timeSecs = 0;
  		if (timeStr.indexOf(":")) {

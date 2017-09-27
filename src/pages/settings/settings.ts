@@ -106,7 +106,7 @@ export class SettingsPage {
 		}
 		console.debug("dist("+dist+"):"+this.drillData.settings);
 		this.drillData.storeSettings();
-		this.drillData.calcTimesPerDistance();
+		this.drillData.calcTimesPerDistanceForSettings();
 	}
 
 	done() {

@@ -1,0 +1,34 @@
+<ion-header #head>
+  <ion-navbar>
+    <ion-title >Intervaltijden o.b.v. je 10 km tijd</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content hide-header [header]="head">
+		<ion-slides [initialSlide]="idx">
+			<ion-slide>
+
+				<ion-row>
+					<button ion-button outline full color="twitter">Afstand</button><button *ngFor="let distance of drillData.intervalSettings.distances" ion-button (click)="changeIntervalDistance(distance)" [class.selected]="distance === drillData.intervalSettings.intervalDistance">{{distance}}</button>
+				</ion-row>
+				<ion-row>
+					<button color="secondary" full ion-button outline>Tempo</button><button *ngFor="let pace of ['5K','10K','Int.','Ext.']" ion-button color="secondary" (click)="changeIntervalPace(pace)" [class.selected]="pace === drillData.intervalSettings.intervalPace">{{pace}}</button>
+					<button color="dark" ion-button outline right>P={{pauseTime}}</button>
+				</ion-row>
+				<hr/>
+				<ion-row>
+					<button *ngFor="let intervalTime of intervalTimes" ion-button outline><span><span style='color:green !important'>{{intervalTime.pace}}</span> | {{intervalTime.time}}</span></button>
+				</ion-row>
+
+			</ion-slide>
+
+			<ion-slide>
+				<ion-list>
+				<ion-item *ngFor="let athleteIntervalTime of athleteIntervalTimes">
+						<button ion-button outline><span><span style='color:green !important'>{{athleteIntervalTime.pace}}</span> | {{athleteIntervalTime.time}}</span></button>
+						<div class="item-text"><p><span *ngFor="let name of athleteIntervalTime.names"><span ngShow="index>0">&nbsp;-&nbsp;</span>{{name}}</span></p></div>
+				</ion-item>
+				</ion-list>
+			</ion-slide>
+
+		</ion-slides>
+</ion-content>

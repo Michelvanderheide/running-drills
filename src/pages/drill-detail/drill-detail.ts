@@ -1,13 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import {NavController, NavParams} from 'ionic-angular';
 import {DrillYoutubePage} from '../drill-youtube/drill-youtube';
 import { DrillData } from "../../providers/drill-data";
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
+import { Slides } from 'ionic-angular';
 
 @Component({
 	templateUrl: 'drill-detail.html'
 })
 export class DrillDetailPage {
+	@ViewChild(Slides) slides: Slides;
+
 	nav: NavController;
 	navParams: NavParams;
 	drillData: DrillData;
@@ -29,6 +32,10 @@ constructor(nav: NavController, navParams: NavParams, drillData: DrillData, priv
 	this.navParams = navParams;
 	this.drillData = drillData;
 
+	this.drills = this.drillData.trainingSession.drills;
+
+
+
 
 	//this.drill = navParams.get("drill"); //navParams.data;
 	this.idx = this.drillData.drill.drillIdx-1;
@@ -37,6 +44,8 @@ constructor(nav: NavController, navParams: NavParams, drillData: DrillData, priv
 	console.debug("sanitizer:",this.sanitizer);
 	this.youtubeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.drillData.drill.videoUrl);
 	this.init();
+
+	this.slideOptions = { initialSlide: 4};
 
 	//this.drills = this.drillData.trainingSession.drills.slice(this.idx, this.idx+1);
 	//console.debug("drills"+this.idx+":",this.drills);
@@ -51,6 +60,18 @@ init() {
 
 goBack():void {
 	this.nav.pop();
+}
+
+ngOnInit() {
+	console.log("slide to....")
+	//this.slides.slideTo(3, 500);
+}
+	
+ngAfterViewInit() {
+	console.debug("drills:",this.drills);
+	console.debug("slides:",this.slides);
+	console.debug("slides:",this.slides.length);
+	//this.slides.slideTo(3, 500);
 }
 
 onPageWillEnter() {

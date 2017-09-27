@@ -19,6 +19,7 @@ var DrillListPage = (function () {
         this.drillData = drillData;
         this.trainingSession = navParams.get("trainingSession");
         this.drills = this.trainingSession.drills;
+        console.debug("Drills:", this.drills);
         this.groups = [];
         this.isSummary = true;
         this.trainingSession.groups.forEach(function (group) {

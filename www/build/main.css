@@ -38941,6 +38941,10 @@ ion-navbar.toolbar {
   display: none;
 }
 
+.toolbar-background {
+  background: #dc4a38;
+}
+
 .drill-detail p {
   color: #60646B;
   text-align: left;
@@ -39055,6 +39059,10 @@ video, iframe {
   color: white;
 }
 
+ion-slides {
+  height: auto;
+}
+
 .drill-list ion-card.drill ion-card-header .item {
   padding: 12px;
 }
@@ -39145,6 +39153,14 @@ video {
 
 .pastelcafenoir {
   background-color: #4B3621;
+}
+
+.selected {
+  background-color: #6b6868;
+}
+
+.item-text {
+  margin-top: 15px;
 }
 
 .session-list ion-card.speaker ion-card-header .item {

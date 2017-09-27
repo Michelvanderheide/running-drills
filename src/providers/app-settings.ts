@@ -56,7 +56,36 @@ export class AppSettings {
 
 	};
 
+/*
 
+		arr['10K']['int'][100][0]['pace'] = ...
+		arr['10K']['int'][100][0]['time'] = ...
+
+		paceAthletes[	name: <string>,
+						paceIdx:<number>,
+						pace: <string>
+						intervalTime: <string>
+					]
+
+		paceGroups[	{
+					paceIdx:<number>,
+					pace: <string>
+					intervalTime: <string>,
+					athletes: [ <string>,... ]
+					} ]
+
+
+		<groupName> | <pace> | <intervaltime> | <timing-buttons> : <tijd mm:ss>
+
+
+Timingsbuttons
+		Start
+		Stop, Ronde
+		Reset, Hervatten
+									
+ 
+
+*/
 	
 }
 

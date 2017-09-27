@@ -1,4 +1,4 @@
-<ion-navbar *navbar>
+<!--ion-navbar *navbar>
 	<button menuToggle>
 		<ion-icon name="menu"></ion-icon>
 	</button>
@@ -9,8 +9,13 @@
 			<ion-icon *ngIf="!drillData.settings.showSummary" name="list" ></ion-icon>
 		</button>  
 	</ion-buttons>
-</ion-navbar>
-<ion-content class="outer-content drill-list">
+</ion-navbar-->
+<ion-header #head>
+  <ion-navbar>
+    <ion-title>Oefeningen</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content class="outer-content drill-list" hide-header [header]="head">
 	<ion-list *ngIf="!drillData.settings.showSummary">
 		<ion-item-group  *ngFor="let group of groups; let groupIdx = index" >
 			<ion-item-divider light>{{group.groupName}}</ion-item-divider>  

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavParams} from 'ionic-angular';
-import {DashboardPage} from '../dashboard/dashboard';
+import {IntervalsPage} from '../intervals/intervals';
 import {HomePage} from '../home/home';
 
 
@@ -23,7 +23,7 @@ export class TabsPage {
     // set the root pages for each tab
     //this.tab1Root = SessionListPage;
     this.tab1Root = HomePage;
-    this.tab2Root = DashboardPage;
+    this.tab2Root = IntervalsPage;
   }
 
 

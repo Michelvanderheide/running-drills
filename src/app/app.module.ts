@@ -10,6 +10,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { IonicStorageModule } from '@ionic/storage';
 import { KettinglopersApp } from './app.component';
 import { DashboardPage } from '../pages/dashboard/dashboard';
+import { IntervalsPage } from '../pages/intervals/intervals';
 import { DetailTabsPage } from '../pages/detail-tabs/detail-tabs';
 import { DrillDetailPage } from '../pages/drill-detail/drill-detail';
 import { DrillListPage } from '../pages/drill-list/drill-list';
@@ -22,12 +23,14 @@ import { TabsPage } from '../pages/tabs/tabs';
 import { DrillData } from '../providers/drill-data';
 import { AppSettings } from '../providers/app-settings';
 import { UserData } from '../providers/user-data';
+import { HideHeaderDirective } from '../directives/hide-header/hide-header';
 
 
 @NgModule({
   declarations: [
     KettinglopersApp,
     DashboardPage,
+    IntervalsPage,
     DetailTabsPage,
     DrillDetailPage,
     DrillListPage,
@@ -35,7 +38,8 @@ import { UserData } from '../providers/user-data';
     HomePage,
     SessionListPage,
     SettingsPage,
-    TabsPage
+    TabsPage,
+    HideHeaderDirective
   ],
   imports: [
     BrowserModule,
@@ -44,6 +48,7 @@ import { UserData } from '../providers/user-data';
       links: [
         { component: TabsPage, name: 'TabsPage', segment: 'tabs' },
         { component: DashboardPage, name: 'Dashboard', segment: 'dashboard' },
+        { component: IntervalsPage, name: 'Intervals', segment: 'intervals' },
         { component: DetailTabsPage, name: 'DetailTabs', segment: 'detailTabs' },
         { component: DrillDetailPage, name: 'DrillDetail', segment: 'drillDetail/:id' },
         { component: DrillListPage, name: 'DrillList', segment: 'drillList' },
@@ -61,6 +66,7 @@ import { UserData } from '../providers/user-data';
     KettinglopersApp,
     TabsPage,
     DashboardPage,
+    IntervalsPage,
     DetailTabsPage,
     DrillDetailPage,
     DrillListPage,

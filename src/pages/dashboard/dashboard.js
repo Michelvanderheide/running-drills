@@ -21,6 +21,7 @@ var DashboardPage = (function () {
         this.myRange = { "lower": "0", "upper": "20" };
         //this.dropDownIntervals = this.drillData.getDropDownIntervalsForTen();
         this.initDropDown();
+        console.log("dashboard...");
     }
     DashboardPage.prototype.ngOnInit = function () {
         //this.myform.myTenTime = 150;
@@ -41,6 +42,7 @@ var DashboardPage = (function () {
         console.log("changeMyTime:");
     };
     DashboardPage.prototype.toggleFiveTenTime = function () {
+        console.log("toggleFiveTenTime...");
         this.drillData.toggleSetting('setTenTime');
         this.drillData.settings.fiveTime = this.drillData.settings.tenTime = this.drillData.settings.halfTime = this.selectedTime = '';
         this.initDropDown();

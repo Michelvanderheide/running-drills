@@ -9,7 +9,7 @@
 		<ion-item>
 	        <ion-label *ngIf="drillData.settings.setTenTime">10 km (of 5 km)</ion-label>
 	        <ion-label *ngIf="!drillData.settings.setTenTime">5 km (of 10 km)</ion-label>
-	        <ion-toggle [checked]="drillData.settings.setTenTime" (click)="toggleFiveTenTime()"></ion-toggle>      
+	        <ion-toggle [checked]="drillData.settings.setTenTime" (ionChange)="toggleFiveTenTime()"></ion-toggle>      
 	      </ion-item> 
 </ion-row>
 <ion-row>	      

@@ -47,6 +47,7 @@ export class DashboardPage {
 	}
 	
 	toggleFiveTenTime() {
+		console.log("toggleFiveTenTime...");
 		this.drillData.toggleSetting('setTenTime');
 		this.drillData.settings.fiveTime = this.drillData.settings.tenTime = this.drillData.settings.halfTime = this.selectedTime = '';
 		this.initDropDown();

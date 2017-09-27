@@ -3,14 +3,15 @@ var AppSettings = (function () {
     }
     AppSettings.setDevEnvironment = function () {
         console.log("set dev environment");
-        this.BASE_URL = 'http://runningdrills.local/api';
-        this.BASE_API_URL = this.BASE_URL;
+        //this.BASE_URL = this.BASE_API_URL = 'http://runningdrillsapi.local'; // activate for dev api locally
+        this.BASE_URL = 'http://app.kettinglopers.nl';
+        this.BASE_API_URL = 'http://api.kettinglopers.nl'; // activate to build android app
     };
     return AppSettings;
 }());
 export { AppSettings };
 AppSettings.BASE_URL = 'http://app.kettinglopers.nl';
-AppSettings.BASE_API_URL = 'http://app.kettinglopers.nl/api';
+AppSettings.BASE_API_URL = 'http://api.kettinglopers.nl'; //'http://app.kettinglopers.nl/api';
 AppSettings.defaultImg = 'http://app.kettinglopers.nl/api/images/kettinglopers.png';
 AppSettings.isNative = false;
 AppSettings.tempos = {
