@@ -38942,7 +38942,35 @@ ion-navbar.toolbar {
 }
 
 .toolbar-background {
-  background: #dc4a38;
+  background: #484848;
+}
+
+.pastelblue {
+  background-color: #779ECB;
+}
+
+.pastelgreen {
+  background-color: #1D6660;
+}
+
+.pastelorange {
+  background-color: #FFB347;
+}
+
+.pastelred {
+  background-color: #C23B22;
+}
+
+.pastelblush {
+  background-color: #DE5D83;
+}
+
+.pastelfandango {
+  background-color: #B53389;
+}
+
+.pastelcafenoir {
+  background-color: #4B3621;
 }
 
 .drill-detail p {
@@ -39081,6 +39109,24 @@ ion-slides {
   height: 40px;
 }
 
+.drill-list ion-card.drill ion-card-header .item {
+  padding: 12px;
+}
+
+.drill-list ion-card.drill ion-card-content .list {
+  margin: 0;
+}
+
+.drill-list ion-card.drill ion-card-header,
+.drill-list ion-card.drill ion-card-content,
+.drill-list ion-card.drill ion-card-content .list ion-item-content {
+  padding: 0;
+}
+
+.drill-list p {
+  height: 40px;
+}
+
 .drill-youtube p {
   color: #60646B;
 }
@@ -39127,40 +39173,16 @@ video {
   padding-top: 50%;
 }
 
-.pastelblue {
-  background-color: #779ECB;
-}
-
-.pastelgreen {
-  background-color: #1D6660;
-}
-
-.pastelorange {
-  background-color: #FFB347;
-}
-
-.pastelred {
-  background-color: #C23B22;
-}
-
-.pastelblush {
-  background-color: #DE5D83;
-}
-
-.pastelfandango {
-  background-color: #B53389;
-}
-
-.pastelcafenoir {
-  background-color: #4B3621;
-}
-
 .selected {
   background-color: #6b6868;
 }
 
 .item-text {
   margin-top: 15px;
+}
+
+img {
+  margin-bottom: 15px;
 }
 
 .session-list ion-card.speaker ion-card-header .item {

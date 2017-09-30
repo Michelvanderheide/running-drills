@@ -5,8 +5,8 @@
 </ion-header>
 <ion-content class="outer-content session-list"  hide-header [header]="head">
   <ion-list>
- <div *ngFor="let trainingSession of trainingSessions">
-    <ion-item *ngIf="trainingSession.show" (click)="goToDrillList(trainingSession)">
+ <div *ngFor="let trainingSession of drillData.trainingSessions">
+    <ion-item *ngIf="trainingSession.show" (click)="gotoSessionDetails(trainingSession)">
       <h2>{{trainingSession.sessionDate}}</h2>
       <p>{{trainingSession.name}}</p>
     </ion-item>

@@ -1,0 +1,23 @@
+<ion-header #head>
+  <ion-navbar>
+    <ion-title >Training - {{drillData.trainingSession.sessionDate}}</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content class="outer-content session-details"  hide-header [header]="head">
+	<ion-slides [initialSlide]="0">
+		<ion-slide>
+		<ion-card>
+			<ion-card-header>
+			{{drillData.trainingSession.name}}
+			</ion-card-header>
+			<ion-card-content>
+				<img *ngIf="drillData.trainingSession.image" [src]="drillData.trainingSession.image" />
+				<div [innerHTML]="drillData.trainingSession.descriptionHtml"></div>
+			</ion-card-content>
+		</ion-card>
+		</ion-slide>			
+		<ion-slide>
+			<drill-list-component></drill-list-component>
+		</ion-slide>
+	</ion-slides>
+</ion-content>

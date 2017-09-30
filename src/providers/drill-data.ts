@@ -3,7 +3,9 @@ import { Http, Headers, RequestOptions } from '@angular/http';
 import { AppSettings } from './app-settings';
 import {UserData} from './user-data';
 import {Network} from '@ionic-native/network';
+import { LoadingController } from 'ionic-angular';
 import 'rxjs/add/operator/map';
+import {Observable} from "rxjs/Rx";
 
 
 /*
@@ -22,7 +24,7 @@ drill
 @Injectable()
 export class DrillData {
 	public drill: Drill;
-	private trainingSessions: TrainingSession[];
+	public trainingSessions: TrainingSession[];
 	public trainingSession: TrainingSession;
 	private http: Http;
 	private userData: UserData;
@@ -44,12 +46,15 @@ export class DrillData {
 
 	private drillIdx:number = 0;
 	private network: Network;
+	private loader: any;
+
+	public menuItemColors = [ "pastelorange","pastelred","pastelgreen", "pastelcafenoir" ];
 
 	static get parameters(){
 
-		return [[Http],[UserData]];
+		return [[Http],[UserData], [LoadingController]];
 	}	
-	constructor(http: Http, userData: UserData) {
+	constructor(http: Http, userData: UserData, public loadingCtrl: LoadingController) {
 		this.network = new Network();
 		this.isConnected = true;
 		if (this.network.type == "none") {
@@ -66,23 +71,6 @@ export class DrillData {
 
     	this.initSettings();
     	this.initDrillFilters();
-    	this.calcAllIntervalTimes();
-	    if (this.isConnected) {
-	      //console.log("Is connected")
-	      this.getIntervalTimes().subscribe(intervalTimes => {
-	        this.athleteTimes = intervalTimes['athleteTimes'];
-	        this.intervalPauzes = intervalTimes['intervalPauzes'];
-	        localStorage.setItem("athleteTimes", JSON.stringify(this.athleteTimes));
-	        localStorage.setItem("intervalPauzes", JSON.stringify(this.intervalPauzes));
-	      });
-	    } else{
-	      console.log("Is not connected")
-	      this.athleteTimes = JSON.parse(localStorage.getItem("athleteTimes"));
-	      this.intervalPauzes = JSON.parse(localStorage.getItem("intervalPauzes"));
-	    }
-
-    	//this.settings.tenTimeSecs = 2500;
-
 	}
 
 /*	private handleError (error: any) {
@@ -145,9 +133,13 @@ export class DrillData {
 	}
 
 	getIntervalTimes() {
-		console.log("athleteTimes...");
+		console.log("getIntervalTimes...");
 		return this.http.get(AppSettings.BASE_API_URL + "/intervaltimes/", this.getRequestOptions()).map(res => {
 		    let result = res.json();
+   			this.athleteTimes = result.data['athleteTimes'];
+			this.intervalPauzes = result.data['intervalPauzes'];
+			localStorage.setItem("athleteTimes", JSON.stringify(this.athleteTimes));
+			localStorage.setItem("intervalPauzes", JSON.stringify(this.intervalPauzes));
 			return result.data;
 		    
 		});
@@ -162,9 +154,7 @@ export class DrillData {
 				return this.trainingSessions;
 			} else {
 				this.trainingSessions = result.data;
-				console.debug("getTrainingSessions:",this.trainingSessions);
 				localStorage.setItem("trainingSessions", JSON.stringify(this.trainingSessions));
-				console.debug("getTrainingSessions 2:",localStorage.getItem("trainingSessions"));
 				this.filterOnUserGroups();
 				return this.trainingSessions;
 			}		    
@@ -173,25 +163,25 @@ export class DrillData {
 
 	getCategoryDrills(cat: number) {
 		return this.http.get(AppSettings.BASE_API_URL + "/drillsforcategory/"+cat, this.getRequestOptions()).map(res => {
-				    let result = res.json();
-					if (result.status === false) {
-						this.errorMessage = result.message;
-						return false;
-					} else {
-						console.debug("getCategoryDrills:",result.data);
-						if (cat == 2) {
-							this.coreStretchDrills = result.data;
-							localStorage.setItem("coreStretchDrills", JSON.stringify(result.data));
-						} else if (cat == 3) {
-							this.loopscholingDrills = result.data;
-							localStorage.setItem("loopscholingDrills", JSON.stringify(result.data));
-						} else if (cat == 4) {
-							this.kernDrills = result.data;
-							localStorage.setItem("kernDrills", JSON.stringify(result.data));
-						}
-						return result.data;
-					}		    
-				});
+		    let result = res.json();
+			if (result.status === false) {
+				this.errorMessage = result.message;
+				return false;
+			} else {
+				console.debug("getCategoryDrills:",result.data);
+				if (cat == 2) {
+					this.coreStretchDrills = result.data;
+					localStorage.setItem("coreStretchDrills", JSON.stringify(result.data));
+				} else if (cat == 3) {
+					this.loopscholingDrills = result.data;
+					localStorage.setItem("loopscholingDrills", JSON.stringify(result.data));
+				} else if (cat == 4) {
+					this.kernDrills = result.data;
+					localStorage.setItem("kernDrills", JSON.stringify(result.data));
+				}
+				return result.data;
+			}		    
+		});
 
 	}
 
@@ -252,6 +242,35 @@ export class DrillData {
 		} else {
 			this.drillFilters = JSON.parse(localDrillFilter);
 		}
+	}
+
+	initData() {
+
+		if (this.isConnected) {
+			console.log("Is connected, get data from server...");
+			this.presentLoading("Loading data...");
+			Observable.zip(
+				this.getTrainingSessions(),
+				this.getIntervalTimes(),
+				this.getCategoryDrills(2),
+				this.getCategoryDrills(3),
+				this.getCategoryDrills(4)
+			).subscribe(() => {
+				this.calcAllIntervalTimes();
+				console.log("Init data, all done");
+				this.loader.dismiss();
+
+			});
+	    } else {
+	    	console.log("Is NOT connected, get cached data...");
+			this.trainingSessions = JSON.parse(localStorage.getItem("trainingSessions"));
+			this.athleteTimes = JSON.parse(localStorage.getItem("athleteTimes"));
+			this.intervalPauzes = JSON.parse(localStorage.getItem("intervalPauzes"));	
+			this.coreStretchDrills = JSON.parse(localStorage.getItem("coreStretchDrills"));	
+			this.loopscholingDrills = JSON.parse(localStorage.getItem("loopscholingDrills"));	
+			this.kernDrills = JSON.parse(localStorage.getItem("kernDrills"));
+			this.calcAllIntervalTimes();
+	    }
 	}
 
 	public getDrillFilters(){
@@ -538,4 +557,12 @@ console.debug("calcAllIntervalTimes()",AppSettings.tempos)
 	public hasPrevTrainingsDrill() {
 		return this.trainingSession.drills.length > (this.drillIdx-1) && (this.drillIdx-1)>=0;
 	}
+
+	private presentLoading(message: string) {
+		this.loader = this.loadingCtrl.create({
+		content: message
+		});
+    	this.loader.present();
+
+	}	
 }

@@ -6,13 +6,19 @@
 <ion-content padding class="drill-detail">
 		<ion-slides [initialSlide]="idx">
 			<ion-slide *ngFor="let mydrill of drills">
-				<h2>{{mydrill.title}}</h2>
-				<hr/>
-				<p [innerHTML]="mydrill.descriptionHtml"></p>
-				<hr/>
-				<video style="z-index:500; min-height: auto !important;  width: 100%; position: relative" *ngIf="mydrill.hasVideo && !mydrill.hasYoutubeVideo" controls class="video_content" [poster]="mydrill.imgUrl">
-				<source [src]="mydrill.videoUrl" type='video/mp4' />
-				</video>
+				<ion-card>
+				<ion-card-header>
+					<h2>{{mydrill.title}}</h2>
+				</ion-card-header>
+				<ion-card-content>
+					<p [innerHTML]="mydrill.descriptionHtml"></p>
+					<hr/>
+					<video style="z-index:500; min-height: auto !important;  width: 100%; position: relative" *ngIf="mydrill.hasVideo && !mydrill.hasYoutubeVideo" controls class="video_content" [poster]="mydrill.imgUrl">
+					<source [src]="mydrill.videoUrl" type='video/mp4' />
+					</video>
+					<img width="100%" *ngIf="mydrill.imgUrl && !mydrill.hasVideo" [src]="mydrill.imgUrl">
+				</ion-card-content>
+				</ion-card>
 			</ion-slide>
 	  </ion-slides>
 </ion-content>

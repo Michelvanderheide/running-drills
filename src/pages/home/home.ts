@@ -4,8 +4,7 @@ import { NavController } from 'ionic-angular';
 import { DrillData } from "../../providers/drill-data";
 import { SessionListPage } from "../session-list/session-list";
 import { DrillListPage } from "../drill-list/drill-list";
-import { SettingsPage } from '../../pages/settings/settings'
-import { DashboardPage } from "../dashboard/dashboard";
+import { SettingsPage } from '../../pages/settings/settings';
 import { IntervalsPage } from "../intervals/intervals";
 import { UserData } from "../../providers/user-data";
 
@@ -28,7 +27,6 @@ export class HomePage {
 		SessionListPage, 
 		SessionListPage, 
 		SessionListPage,
-		DashboardPage,
 		IntervalsPage
 	];
 	userData: UserData;
@@ -40,15 +38,16 @@ export class HomePage {
 		this.navCtrl = navCtrl;
 		this.userData = userData;
 
-    	for (var i=2; i<=4; i++) {
- 			drillData.getCategoryDrills(i).subscribe(drills => {
-				console.debug("loaded..."+drills);
-			});		
-    	}
+		
+   	
+	}
+
+	ngOnInit() {
+		this.drillData.initData();
 	    if (!this.userData.isInitialized()) {
 	      //console.log("settings..");
 	      this.navCtrl.push(SettingsPage);
-	    }    	
+	    } 		
 	}
 	gotoPage(idx: number) {
 		console.log("Gotopage:"+idx);

@@ -9,14 +9,15 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { IonicStorageModule } from '@ionic/storage';
 import { KettinglopersApp } from './app.component';
-import { DashboardPage } from '../pages/dashboard/dashboard';
 import { IntervalsPage } from '../pages/intervals/intervals';
 import { DetailTabsPage } from '../pages/detail-tabs/detail-tabs';
 import { DrillDetailPage } from '../pages/drill-detail/drill-detail';
 import { DrillListPage } from '../pages/drill-list/drill-list';
+import { DrillListComponent } from '../pages/drill-list/drill-list-component';
 import { DrillYoutubePage } from '../pages/drill-youtube/drill-youtube';
 import { HomePage } from '../pages/home/home';
 import { SessionListPage } from '../pages/session-list/session-list';
+import { SessionDetailsPage } from '../pages/session-details/session-details';
 import { SettingsPage } from '../pages/settings/settings';
 import { TabsPage } from '../pages/tabs/tabs';
 
@@ -29,14 +30,15 @@ import { HideHeaderDirective } from '../directives/hide-header/hide-header';
 @NgModule({
   declarations: [
     KettinglopersApp,
-    DashboardPage,
     IntervalsPage,
     DetailTabsPage,
     DrillDetailPage,
     DrillListPage,
+    DrillListComponent,
     DrillYoutubePage,
     HomePage,
     SessionListPage,
+    SessionDetailsPage,
     SettingsPage,
     TabsPage,
     HideHeaderDirective
@@ -47,14 +49,15 @@ import { HideHeaderDirective } from '../directives/hide-header/hide-header';
     IonicModule.forRoot(KettinglopersApp, {}, {
       links: [
         { component: TabsPage, name: 'TabsPage', segment: 'tabs' },
-        { component: DashboardPage, name: 'Dashboard', segment: 'dashboard' },
         { component: IntervalsPage, name: 'Intervals', segment: 'intervals' },
         { component: DetailTabsPage, name: 'DetailTabs', segment: 'detailTabs' },
         { component: DrillDetailPage, name: 'DrillDetail', segment: 'drillDetail/:id' },
         { component: DrillListPage, name: 'DrillList', segment: 'drillList' },
+        { component: DrillListComponent, name: 'DrillList', segment: 'drillList' },
         { component: DrillYoutubePage, name: 'DrillYoutube', segment: 'drillYoutube' },
         { component: HomePage, name: 'Home', segment: 'home' },
         { component: SessionListPage, name: 'SessionList', segment: 'sessionList' },
+        { component: SessionDetailsPage, name: 'SessionDetails', segment: 'sessionDetails' },
         { component: SettingsPage, name: 'Settings', segment: 'settings' },
         { component: TabsPage, name: 'Tabs', segment: 'tabs' }
       ]
@@ -65,14 +68,15 @@ import { HideHeaderDirective } from '../directives/hide-header/hide-header';
   entryComponents: [
     KettinglopersApp,
     TabsPage,
-    DashboardPage,
     IntervalsPage,
     DetailTabsPage,
     DrillDetailPage,
     DrillListPage,
+    DrillListComponent,
     DrillYoutubePage,
     HomePage,
     SessionListPage,
+    SessionDetailsPage,
     SettingsPage,
     TabsPage
   ],
